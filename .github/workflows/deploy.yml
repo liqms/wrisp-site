@@ -73,6 +73,18 @@ jobs:
           # 字体必须是系统栈，不允许引入 webfont 负载
           if grep -rn '@font-face' dist --include='*.css' --include='*.html'; then
             echo "::error::webfont payload detected"; exit 1; fi
+          # 站点地图与 robots 属构建期产物：缺文件即等于没配 SEO，直接挡下
+          [[ -f dist/robots.txt && -f dist/sitemap.xml ]] || {
+            echo "::error::robots.txt or sitemap.xml missing — pnpm build must generate them"; exit 1; }
+          # 域名口径只在 robots.txt 里读一次：站点地图的每条 loc 都得长在同一个源上
+          origin=$(sed -n 's|^Sitemap: \(.*\)/sitemap\.xml$|\1|p' dist/robots.txt)
+          [[ -n "$origin" ]] || { echo "::error::robots.txt has no absolute Sitemap URL"; exit 1; }
+          while IFS= read -r loc; do
+            rel="${loc#"$origin"/}"
+            rel="${rel%/}"
+            if [[ -z "$rel" ]]; then target=dist/index.html; else target="dist/$rel/index.html"; fi
+            [[ -f "$target" ]] || { echo "::error::sitemap lists $loc but $target is missing"; exit 1; }
+          done < <(grep -o '<loc>[^<]*' dist/sitemap.xml | sed 's|<loc>||')
 
       - name: Copy coverage
         run: pnpm check

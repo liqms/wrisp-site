@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/gen-seo.mjs",
     "check": "node scripts/check-copy-coverage.mjs",
     "preview": "astro preview"
   },

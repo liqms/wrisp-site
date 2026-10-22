@@ -21,7 +21,7 @@ src/components/pages/  辅助页整页装配，Privacy.astro 是隐私与数据�
 src/content/copy/ 全站文案，每条都是 { zh, en } 一个叶子
 src/layouts/      页面外壳（head 元数据、样式挂载）
 src/styles/       设计令牌与共享基元
-scripts/          构建后校验（文案落地与英文页语言纯净度）
+scripts/          构建期生成 sitemap/robots，并校验文案落地与英文页语言纯净度
 public/assets/    图标与社交分享卡片（og-zh.png / og-en.png，1200×630）
 ```
 
@@ -36,7 +36,7 @@ public/assets/    图标与社交分享卡片（og-zh.png / og-en.png，1200×63
 ```bash
 pnpm install
 pnpm dev      # 开发服务器
-pnpm build    # 产出 dist/
+pnpm build    # 产出 dist/（末尾顺带生成 sitemap.xml 与 robots.txt）
 pnpm preview  # 预览构建产物
 ```
 
@@ -48,10 +48,14 @@ pnpm preview  # 预览构建产物
 
 按访问地区选择默认语言由边缘层承担（GitHub Pages 没有地区路由能力，它不能 302），未接边缘层之前 `/` 就是默认落地页。
 
+## 索引文件
+
+`sitemap.xml` 与 `robots.txt` 由 `pnpm build` 末尾的 `scripts/gen-seo.mjs` 生成：不入库，`pnpm dev` 也不提供它们（它不读 `dist/`）。站点地图不另抄一份地址表——它读构建产物里每页自己的 `canonical` 与 `hreflang`，所以新增一页只要构建过就自动进图，页面与图不可能各说一套口径。CI 会反过来验一遍：图里每条地址都得有对应的真实页面。
+
 ## 已知缺口
 
 - **等待名单表单还没有后端。** 提交只在前端校验并给出提示，数据不会离开浏览器。接通入库与发信通道之前，请不要把它当作报名渠道。
-- **`sitemap.xml` 与按地区跳转还没接。** 隐私声明页已成对上线，`sitemap.xml` 现在可以按「每语言的每个页面」直接生成，排在下一批；按地区跳转需要边缘层。
+- **按地区跳转还没接。** 需要边缘层按访问地区 302，GitHub Pages 做不到。
 
 ## 许可
 
