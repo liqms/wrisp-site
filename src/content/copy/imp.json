@@ -1,0 +1,58 @@
+{
+  "eyebrow": {
+    "zh": "05 · 导入与兼容",
+    "en": "05 · Import & compatibility"
+  },
+  "title": {
+    "zh": "你现在的文件夹，就是 Wrisp 的文件夹",
+    "en": "Your current folder is already Wrisp's folder"
+  },
+  "sub": {
+    "zh": "切过来不需要搬家，也不需要重做一遍整理。",
+    "en": "Switching doesn't mean moving house, or re-doing your organizing."
+  },
+  "1t": {
+    "zh": "一键导入",
+    "en": "One-click import"
+  },
+  "1b": {
+    "zh": "Markdown 就是文件真源。现有目录直接指进来就能用——不转格式、不重打标、不动你的目录结构。",
+    "en": "Markdown is the source of truth. Point Wrisp at your existing folder and start — no format conversion, no re-tagging, no new structure."
+  },
+  "2t": {
+    "zh": "写法照旧",
+    "en": "Your syntax keeps working"
+  },
+  "2b": {
+    "zh": "双链、标签、任务列表这些你已经在用的写法继续有效，Obsidian / Logseq 习惯不用改。",
+    "en": "Backlinks, tags and task lists you already write stay valid, so Obsidian / Logseq habits carry over."
+  },
+  "3t": {
+    "zh": "模型装在你机器上",
+    "en": "Models live on your machine"
+  },
+  "3b": {
+    "zh": "想要更聪明的召回，本机自动下载对应模型；装了哪些、占多大、走哪一档，设置里都看得见。不装也能先用云端 Key。",
+    "en": "For sharper recall the matching models download locally; which ones, how big, which tier — all visible in Settings. Skip them and use your own key instead."
+  },
+  "dzTag": {
+    "zh": "指向现有目录",
+    "en": "point at an existing folder"
+  },
+  "dz1": {
+    "zh": "会议纪要 · 需求评审",
+    "en": "Meeting notes · requirements review"
+  },
+  "dz2": {
+    "zh": "竞品动态 · 语音转写",
+    "en": "Competitor news · voice transcription"
+  },
+  "dz3": {
+    "zh": "双链与标签保持原样",
+    "en": "Backlinks and tags untouched"
+  },
+  "dzFoot": {
+    "zh": "文件仍是你原来的文件；Wrisp 只在其上建可删除、可重建的索引。",
+    "en": "They're still your files. Wrisp only builds an index on top — one you can delete and rebuild."
+  }
+}

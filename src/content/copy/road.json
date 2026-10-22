@@ -1,0 +1,54 @@
+{
+  "eyebrow": {
+    "zh": "08 · 路线图",
+    "en": "08 · Roadmap"
+  },
+  "title": {
+    "zh": "三个阶段，一步一步走",
+    "en": "Three stages, one at a time"
+  },
+  "now": {
+    "zh": "当前阶段",
+    "en": "Current stage"
+  },
+  "v1sub": {
+    "zh": "记忆召回",
+    "en": "Memory recall"
+  },
+  "v1t": {
+    "zh": "先让它记得住、找得回",
+    "en": "First it remembers, then it finds"
+  },
+  "v1b": {
+    "zh": "我们在这里：把你每天说过的、看过的、开过的会变成随叫随到的底座。",
+    "en": "This is where we are: what you say, read and sit through each day becomes a base you can call on."
+  },
+  "v2sub": {
+    "zh": "知识与洞察",
+    "en": "Knowledge & insight"
+  },
+  "v2t": {
+    "zh": "碎片连成体系",
+    "en": "Fragments connect"
+  },
+  "v2b": {
+    "zh": "下一步：整理出概念与关联，创作开始带引用。",
+    "en": "Next: concepts and connections get organized, and writing starts carrying citations."
+  },
+  "v3sub": {
+    "zh": "创作与代理",
+    "en": "Creation & agency"
+  },
+  "v3t": {
+    "zh": "分身替你写",
+    "en": "Your twin writes"
+  },
+  "v3b": {
+    "zh": "再往后：按你的风格成稿，可授权、可代理，判断权仍在你在。",
+    "en": "Later: finished pieces in your style, with delegation and authorization — judgment stays yours."
+  },
+  "note": {
+    "zh": "现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱。",
+    "en": "Still iterating in private beta, which is why there is no download button here — leave an email instead."
+  }
+}

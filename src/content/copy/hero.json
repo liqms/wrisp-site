@@ -1,0 +1,98 @@
+{
+  "kicker": {
+    "zh": "本地优先 · 个人创作 AI",
+    "en": "Local-first · Personal creation AI"
+  },
+  "title1": {
+    "zh": "今天，你需要",
+    "en": "Today, you need"
+  },
+  "title2": {
+    "zh": "一个创作分身。",
+    "en": "a creation twin."
+  },
+  "sub": {
+    "zh": "说话代替打字，整理交给 AI，数据永远留在你的机器。",
+    "en": "Talk instead of type. AI does the organizing. Your data stays on your machine."
+  },
+  "guard": {
+    "zh": "现在能用上的是它的记忆底座：说一句话，它替你记好、整理好、在你写东西时找回来。",
+    "en": "What works today is its memory core: say a line, and it files it, organizes it, and surfaces it when you write."
+  },
+  "cta1": {
+    "zh": "加入内测",
+    "en": "Join the beta"
+  },
+  "cta2": {
+    "zh": "看它怎么工作",
+    "en": "See how it works"
+  },
+  "formph": {
+    "zh": "留下邮箱，发布时通知你",
+    "en": "Leave your email — we'll notify you at launch"
+  },
+  "formq": {
+    "zh": "现在最挡着你的一件事是什么？（选填）",
+    "en": "What blocks you the most today? (optional)"
+  },
+  "formbtn": {
+    "zh": "加入等待名单",
+    "en": "Join waitlist"
+  },
+  "formerr": {
+    "zh": "请填写一个可用的邮箱地址。",
+    "en": "Please enter a valid email address."
+  },
+  "formok": {
+    "zh": "已加入内测等待名单，发布时第一时间通知你。",
+    "en": "You're on the waitlist — we'll notify you first at launch."
+  },
+  "formnote": {
+    "zh": "仅用于内测通知 · 不用于营销 · 可随时退订",
+    "en": "Beta notices only · no marketing · unsubscribe anytime"
+  },
+  "window": {
+    "zh": "Wrisp · 日志流",
+    "en": "Wrisp · Journal stream"
+  },
+  "stream": {
+    "zh": "今天",
+    "en": "Today"
+  },
+  "mic": {
+    "zh": "🎙 也可以直接说",
+    "en": "🎙 or just talk"
+  },
+  "micLabel": {
+    "zh": "口述中",
+    "en": "Dictating"
+  },
+  "micSource": {
+    "zh": "口述",
+    "en": "Dictated"
+  },
+  "pause": {
+    "zh": "暂停演示",
+    "en": "Pause demo"
+  },
+  "play": {
+    "zh": "播放演示",
+    "en": "Play demo"
+  },
+  "fType": {
+    "zh": "类型",
+    "en": "Type"
+  },
+  "fSource": {
+    "zh": "来源",
+    "en": "Source"
+  },
+  "fStatus": {
+    "zh": "状态",
+    "en": "Status"
+  },
+  "cardhint": {
+    "zh": "卡片由这条记录直接生成 · 可改写 · 可撤回",
+    "en": "Card generated from this entry · editable · revocable"
+  }
+}

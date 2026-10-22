@@ -1,0 +1,54 @@
+{
+  "eyebrow": {
+    "zh": "07 · 数据主权",
+    "en": "07 · Data sovereignty"
+  },
+  "title": {
+    "zh": "你的记忆，只属于你",
+    "en": "Your memory belongs only to you"
+  },
+  "sub": {
+    "zh": "这些是你能自己验证的承诺，不是形容词。",
+    "en": "Promises you can verify yourself — not adjectives."
+  },
+  "1t": {
+    "zh": "文件在你目录里",
+    "en": "Files in your folder"
+  },
+  "1b": {
+    "zh": "记录与作品以 Markdown 存在你自己的文件夹；数据库与索引删掉也能重建。",
+    "en": "Entries and works are Markdown in your own directory; the database and indexes can be deleted and rebuilt."
+  },
+  "2t": {
+    "zh": "默认本机处理",
+    "en": "Local by default"
+  },
+  "2b": {
+    "zh": "识别、整理、嵌入、问答都能在本机跑完，敏感内容不必出机器。",
+    "en": "Recognition, organizing, embedding and Q&A all run on your machine — sensitive content doesn't have to leave."
+  },
+  "3t": {
+    "zh": "BYOK · 不为 AI 付订阅费",
+    "en": "BYOK · no AI subscription"
+  },
+  "3b": {
+    "zh": "要用云端模型就接你自己的 Key——模型要么在你本机跑，要么走你自己的 Key。",
+    "en": "Want a cloud model? Bring your own key — the model either runs on your machine or bills through your own key."
+  },
+  "4t": {
+    "zh": "随时带走",
+    "en": "Take it with you"
+  },
+  "4b": {
+    "zh": "导出仍是 Markdown，不锁格式、不设退出成本。",
+    "en": "Export is Markdown. No format lock-in, no exit cost."
+  },
+  "note": {
+    "zh": "会离开本机的路径，页脚「隐私与数据声明」逐条列了什么发出去、默认开还是关。",
+    "en": "For every path that can leave your machine, the Privacy statement below lists what goes out and when it happens."
+  },
+  "link": {
+    "zh": "看这份清单 ↓",
+    "en": "Read that list ↓"
+  }
+}

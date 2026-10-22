@@ -1,0 +1,50 @@
+{
+  "eyebrow": {
+    "zh": "10 · 常见问题",
+    "en": "10 · FAQ"
+  },
+  "title": {
+    "zh": "先回答五个最常被问的",
+    "en": "Five questions people always ask"
+  },
+  "1q": {
+    "zh": "我的数据会被上传吗？",
+    "en": "Does my data get uploaded?"
+  },
+  "1a": {
+    "zh": "默认不会。识别、整理、嵌入与问答都能在本机完成；只有你亲自填入云端 Key 并主动发起那次请求时，内容才会走你自己的账户。页脚「隐私与数据声明」逐条列出了会离开本机的路径。",
+    "en": "Not by default. Recognition, organizing, embedding and Q&A all run locally; content only travels through your own account when you enter a cloud key and make that request yourself. The Privacy statement below lists every path that can leave your machine."
+  },
+  "2q": {
+    "zh": "要订阅才能用吗？",
+    "en": "Do I need a subscription?"
+  },
+  "2a": {
+    "zh": "不需要。Community 免费且功能完整，模型费用由你自己的 Key 结算。Pro 从 V2 起提供同步、便利与优先支持，不会把基础能力锁进付费墙，也不卖你的数据。",
+    "en": "No. Community is free and fully usable, and model costs are billed by your own key. From V2, Pro adds sync, convenience and priority support — it never puts basic capability behind the paywall, and we don't sell your data."
+  },
+  "3q": {
+    "zh": "我现有的笔记怎么办？",
+    "en": "What about the notes I already have?"
+  },
+  "3a": {
+    "zh": "不用搬家。Markdown 就是文件真源，现有目录直接指进来就能用——不转格式、不重打标；哪天想走，导出的还是这些 Markdown。",
+    "en": "Nothing to move. Markdown is the source of truth: point Wrisp at your current folder and it works — no conversion, no re-tagging. And if you ever leave, the export is still those same Markdown files."
+  },
+  "4q": {
+    "zh": "需要独立显卡吗？",
+    "en": "Do I need a dedicated GPU?"
+  },
+  "4a": {
+    "zh": "不需要。本地推理默认走 CPU；有兼容显卡时可以在设置里开启加速，显存不足会自动退回 CPU。本地模型还是可选的——不下载也能直接用云端 Key。",
+    "en": "No. Local inference runs on CPU by default; with a supported GPU you can turn acceleration on in Settings, and low VRAM falls back to CPU automatically. Local models are optional too — skip them and use your own key."
+  },
+  "5q": {
+    "zh": "内测什么时候发？",
+    "en": "When does the beta ship?"
+  },
+  "5a": {
+    "zh": "现在还在内测迭代中，没有对外公布日期。加入名单，首个可下载版本就绪时第一批通知你。",
+    "en": "We're still iterating privately and haven't published a date. Join the waitlist and you're in the first batch when a downloadable build is ready."
+  }
+}

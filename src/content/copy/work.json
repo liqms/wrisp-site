@@ -1,0 +1,46 @@
+{
+  "eyebrow": {
+    "zh": "04 · 工作流",
+    "en": "04 · Workflow"
+  },
+  "title": {
+    "zh": "碎片，变成你的知识",
+    "en": "Fragments become your knowledge"
+  },
+  "sub": {
+    "zh": "一条记录从你嘴里到能召回，走这四步。",
+    "en": "Four steps from something you said to something you can recall."
+  },
+  "1t": {
+    "zh": "说或写一句",
+    "en": "Say it or type it"
+  },
+  "1b": {
+    "zh": "自然语言进来，不用先想该放哪个文件夹。",
+    "en": "Plain language in — no deciding which folder it belongs to first."
+  },
+  "2t": {
+    "zh": "它认类型",
+    "en": "It works out the type"
+  },
+  "2b": {
+    "zh": "认得清就直接往下走；认不清最多追问两轮，也可以跳过。",
+    "en": "Clear enough, it just proceeds; unclear, at most two quick follow-ups you can skip."
+  },
+  "3t": {
+    "zh": "落进今天的记录流",
+    "en": "It lands in today's stream"
+  },
+  "3b": {
+    "zh": "落下来还能改：改文字、换类型都算数。",
+    "en": "Still yours to fix afterwards: change the text, change the type."
+  },
+  "4t": {
+    "zh": "整理成卡片",
+    "en": "Organized into cards"
+  },
+  "4b": {
+    "zh": "有把握的直接整理好，拿不准的先问你；之后随时能改写、能撤回。",
+    "en": "Confident ones get filed right away, unsure ones ask first — and every one stays editable and revocable."
+  }
+}

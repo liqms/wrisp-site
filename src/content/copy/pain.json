@@ -1,0 +1,42 @@
+{
+  "eyebrow": {
+    "zh": "02 · 痛点",
+    "en": "02 · The problem"
+  },
+  "title": {
+    "zh": "信息太多，没时间整理，创作时又忘了。",
+    "en": "Too much to capture, no time to organize, forgotten when you create."
+  },
+  "sub": {
+    "zh": "不是记不住——是散落、沉不下、用的时候调不出来。",
+    "en": "It isn't memory — it's scattered, never settled, and unavailable when you write."
+  },
+  "1t": {
+    "zh": "散落",
+    "en": "Scattered"
+  },
+  "1b": {
+    "zh": "随手记在各处：聊天里、备忘录里、邮件里。要用时，翻不到。",
+    "en": "Jotted everywhere: chat, notes app, email. When you need it, it's gone."
+  },
+  "2t": {
+    "zh": "沉不下",
+    "en": "Never settles"
+  },
+  "2b": {
+    "zh": "收藏过、读过、开过的会，没沉淀成能复用的东西，等于没发生。",
+    "en": "Saved, read, sat through — none of it became anything reusable, so it might as well not have happened."
+  },
+  "3t": {
+    "zh": "用不出",
+    "en": "Doesn't come out"
+  },
+  "3b": {
+    "zh": "动笔时明明看过，却调不出来，只能重新搜一遍——而这一次往往就放弃了。",
+    "en": "You know you saw it, but you can't pull it up, so you search again — and usually just give up."
+  },
+  "3tag": {
+    "zh": "Wrisp 接的就是这一环",
+    "en": "This is the link Wrisp closes"
+  }
+}

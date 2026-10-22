@@ -1,0 +1,11 @@
+---
+import Page from '@/layouts/Page.astro';
+import { leafKey, loadCopy } from '@/lib/copy';
+
+const key = leafKey(Astro.currentLocale);
+const copy = await loadCopy(key);
+---
+<Page title={copy.meta.docTitle} description={copy.meta.docDesc}>
+  <p>{copy.hero.title1} {copy.hero.title2}</p>
+  <p>{copy.diff.title}{copy.diff.title2}</p>
+</Page>

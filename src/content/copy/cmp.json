@@ -1,0 +1,30 @@
+{
+  "1t": {
+    "zh": "大厂 AI 助手",
+    "en": "Big-tech AI assistants"
+  },
+  "1b": {
+    "zh": "记忆绑在它的生态里，你的数据喂它的模型。",
+    "en": "Memory locked inside their ecosystem; your data feeds their models."
+  },
+  "2t": {
+    "zh": "云端笔记",
+    "en": "Cloud note apps"
+  },
+  "2b": {
+    "zh": "AI 能力强，但内容上传的那一刻就不再由你掌控。",
+    "en": "Strong AI, but your content is out of your control the moment you upload it."
+  },
+  "3t": {
+    "zh": "本地笔记工具",
+    "en": "Local note tools"
+  },
+  "3b": {
+    "zh": "数据在你手里，分类、打标、链接、召回全靠手。",
+    "en": "Your data stays put, yet filing, tagging, linking and recall are all manual."
+  },
+  "4b": {
+    "zh": "本地优先 + AI 自动整理 + 数据主权 + BYOK + 对话式输入——这个组合还没人占。",
+    "en": "Local-first + AI auto-organization + data sovereignty + BYOK + conversational input — no one holds this combination."
+  }
+}

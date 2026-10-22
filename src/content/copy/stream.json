@@ -1,0 +1,116 @@
+{
+  "prefix": {
+    "zh": "记录：",
+    "en": "Noted: "
+  },
+  "rows": [
+    {
+      "time": "09:41",
+      "mode": "type",
+      "badge": {
+        "zh": "待办",
+        "en": "To-do"
+      },
+      "cls": "todo",
+      "text": {
+        "zh": "周五前给客户回话：进度与风险",
+        "en": "Reply to the client by Friday"
+      },
+      "type": {
+        "zh": "待办",
+        "en": "To-do"
+      },
+      "status": {
+        "zh": "已整理 · 可撤回",
+        "en": "Filed · revocable"
+      }
+    },
+    {
+      "time": "10:02",
+      "mode": "type",
+      "badge": {
+        "zh": "竞品动态",
+        "en": "Competitor update"
+      },
+      "cls": "comp",
+      "text": {
+        "zh": "竞品上了语音转写，主打会议",
+        "en": "A rival shipped voice notes"
+      },
+      "type": {
+        "zh": "竞品动态",
+        "en": "Competitor update"
+      },
+      "status": {
+        "zh": "已整理 · 可撤回",
+        "en": "Filed · revocable"
+      }
+    },
+    {
+      "time": "10:26",
+      "mode": "type",
+      "badge": {
+        "zh": "会议纪要",
+        "en": "Meeting notes"
+      },
+      "cls": "meet",
+      "text": {
+        "zh": "评审定了：周报先按模板出",
+        "en": "Settled: template report first"
+      },
+      "type": {
+        "zh": "会议纪要",
+        "en": "Meeting notes"
+      },
+      "status": {
+        "zh": "已整理 · 可撤回",
+        "en": "Filed · revocable"
+      }
+    }
+  ],
+  "incoming": [
+    {
+      "time": "11:48",
+      "mode": "voice",
+      "badge": {
+        "zh": "决策",
+        "en": "Decision"
+      },
+      "cls": "decide",
+      "text": {
+        "zh": "定了：先做三个平台，移动端下阶段",
+        "en": "Three platforms first, mobile next"
+      },
+      "type": {
+        "zh": "决策",
+        "en": "Decision"
+      },
+      "status": {
+        "zh": "已整理 · 可撤回",
+        "en": "Filed · revocable"
+      },
+      "dur": "0:07"
+    },
+    {
+      "time": "12:05",
+      "mode": "type",
+      "badge": {
+        "zh": "用户需求",
+        "en": "Requirement"
+      },
+      "cls": "need",
+      "text": {
+        "zh": "希望导出把图片一起带走",
+        "en": "Exports should carry images"
+      },
+      "type": {
+        "zh": "用户需求",
+        "en": "Requirement"
+      },
+      "status": {
+        "zh": "已整理 · 可撤回",
+        "en": "Filed · revocable"
+      }
+    }
+  ]
+}

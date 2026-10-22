@@ -1,0 +1,34 @@
+{
+  "p": {
+    "zh": "三个平台",
+    "en": "Three platforms"
+  },
+  "pv": {
+    "zh": "Windows / macOS / Linux",
+    "en": "Windows / macOS / Linux"
+  },
+  "m": {
+    "zh": "本地模型可选，按需下载",
+    "en": "Local models optional, downloaded on demand"
+  },
+  "mv": {
+    "zh": "体积在设置里可见",
+    "en": "size visible in Settings"
+  },
+  "g": {
+    "zh": "无需独立显卡",
+    "en": "No dedicated GPU needed"
+  },
+  "gv": {
+    "zh": "默认走 CPU",
+    "en": "CPU by default"
+  },
+  "u": {
+    "zh": "自动更新",
+    "en": "Auto-update"
+  },
+  "uv": {
+    "zh": "更新通道可选",
+    "en": "opt-in channels"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "hero": {
+    "zh": "开场",
+    "en": "Start"
+  },
+  "pain": {
+    "zh": "痛点",
+    "en": "Problem"
+  },
+  "diff": {
+    "zh": "定位",
+    "en": "Positioning"
+  },
+  "how": {
+    "zh": "工作流",
+    "en": "Workflow"
+  },
+  "import": {
+    "zh": "导入",
+    "en": "Import"
+  },
+  "proofs": {
+    "zh": "产物",
+    "en": "Output"
+  },
+  "data": {
+    "zh": "数据",
+    "en": "Your data"
+  },
+  "road": {
+    "zh": "路线图",
+    "en": "Roadmap"
+  },
+  "price": {
+    "zh": "定价",
+    "en": "Pricing"
+  },
+  "cta": {
+    "zh": "内测",
+    "en": "Beta"
+  }
+}

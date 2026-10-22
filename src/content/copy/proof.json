@@ -1,0 +1,106 @@
+{
+  "eyebrow": {
+    "zh": "06 · 你会拿到什么",
+    "en": "06 · What you get"
+  },
+  "title": {
+    "zh": "整理是过程，产物才是你能用的东西",
+    "en": "Organizing is the process; the output is what you use"
+  },
+  "m1t": {
+    "zh": "待办",
+    "en": "To-do"
+  },
+  "m1a": {
+    "zh": "周五前给客户回话：进度 / 风险 / 下周计划",
+    "en": "Reply to the client by Friday: progress / risks / next week"
+  },
+  "m1b": {
+    "zh": "会议纪要",
+    "en": "Meeting notes"
+  },
+  "m1c": {
+    "zh": "评审结论：周报先模板化，智能化留给下个版本",
+    "en": "Review call: ship the template-based report first, intelligence next release"
+  },
+  "m1d": {
+    "zh": "竞品动态",
+    "en": "Competitor update"
+  },
+  "m1e": {
+    "zh": "竞品 App 上了语音转写，主打会议场景",
+    "en": "A rival app shipped voice transcription for meeting use cases"
+  },
+  "1t": {
+    "zh": "信息卡片",
+    "en": "Knowledge cards"
+  },
+  "1b": {
+    "zh": "待办、会议纪要、竞品动态、用户需求、数据指标、用户故事、决策——七种常见卡片自动归位，随时可改写、可撤回。",
+    "en": "Todo, meeting notes, competitor news, user needs, metrics, user stories, decisions — seven everyday card types filed automatically, always editable and revocable."
+  },
+  "m2a": {
+    "zh": "给客户回话（周五）",
+    "en": "Reply to the client (Friday)"
+  },
+  "m2b": {
+    "zh": "整理评审结论进周报",
+    "en": "Fold review conclusions into the report"
+  },
+  "m2c": {
+    "zh": "试一遍竞品的新功能",
+    "en": "Try the rival's new feature"
+  },
+  "2t": {
+    "zh": "待办清单",
+    "en": "Todo list"
+  },
+  "2b": {
+    "zh": "待办从记录里长出来，勾完就沉进历史，不用另开一个清单应用。",
+    "en": "Todos grow out of your entries and sink into history once done — no second checklist app."
+  },
+  "m3a": {
+    "zh": "本周 · W42",
+    "en": "THIS WEEK · W42"
+  },
+  "3t": {
+    "zh": "周报",
+    "en": "Weekly report"
+  },
+  "3b": {
+    "zh": "按你选的模板把这一周组织成稿，直接拿去发。",
+    "en": "Your template assembles the week into a draft you can send as is."
+  },
+  "m4q": {
+    "zh": "「上次客户提的风险是什么？」",
+    "en": "\"What risk did the client raise last time?\""
+  },
+  "m4a": {
+    "zh": "来自 3 条记录",
+    "en": "from 3 entries"
+  },
+  "4t": {
+    "zh": "检索问答",
+    "en": "Search & Q&A"
+  },
+  "4b": {
+    "zh": "从关键词到智能问答，四种找法按需开启；答案带着出处，点得回原文。",
+    "en": "Keyword through smart Q&A — four ways to look, enabled as you need them; answers cite their sources back to the original."
+  },
+  "m5a": {
+    "zh": "手边素材",
+    "en": "AT HAND"
+  },
+  "m5b": {
+    "zh": "竞品动态 · 评审结论 · 客户回话",
+    "en": "competitor news · review call · client reply"
+  },
+  "5t": {
+    "zh": "作品创作",
+    "en": "Writing works"
+  },
+  "5b": {
+    "zh": "结构化编辑器，写作时随手把你自己的资料摆到手边。",
+    "en": "A structured editor that keeps your own material within reach while you write."
+  }
+}

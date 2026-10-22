@@ -1,0 +1,18 @@
+{
+  "docTitle": {
+    "zh": "Wrisp — 今天，你需要一个创作分身",
+    "en": "Wrisp — Today, you need a creation twin"
+  },
+  "docDesc": {
+    "zh": "说话代替打字，整理交给 AI，数据永远留在你的机器。通用 AI 帮你写作，Wrisp 为你创作。",
+    "en": "Talk instead of type. AI does the organizing. Your data stays on your machine. Generic AI helps you write. Wrisp creates for you."
+  },
+  "ogImage": {
+    "zh": "assets/og-zh.png",
+    "en": "assets/og-en.png"
+  },
+  "ogLocale": {
+    "zh": "zh_CN",
+    "en": "en_US"
+  }
+}

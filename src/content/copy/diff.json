@@ -1,0 +1,18 @@
+{
+  "eyebrow": {
+    "zh": "03 · 产品定位",
+    "en": "03 · Positioning"
+  },
+  "title": {
+    "zh": "通用 AI 帮你写作，",
+    "en": "Generic AI helps you write,"
+  },
+  "title2": {
+    "zh": "Wrisp 为你创作。",
+    "en": "Wrisp creates for you."
+  },
+  "qual": {
+    "zh": "<b>分身替你起草，你负责判断。</b>它负责识别、关联、归纳与召回；判断、取舍与记忆始终在你这边。",
+    "en": "<b>Your twin drafts; you decide.</b> It handles recognition, linking, summarizing and recall. Judgment, selection and memory stay with you."
+  }
+}

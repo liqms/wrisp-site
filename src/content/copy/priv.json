@@ -1,0 +1,86 @@
+{
+  "eyebrow": {
+    "zh": "隐私与数据声明",
+    "en": "Privacy & data statement"
+  },
+  "title": {
+    "zh": "会离开本机的，只有下面这几条",
+    "en": "Only these few things can leave your machine"
+  },
+  "sub": {
+    "zh": "闭源分发要靠可验证的承诺建立信任，所以这里不写形容词，只写路径、内容与默认状态。",
+    "en": "Closed-source distribution earns trust with verifiable promises, so this lists paths, payloads and defaults — not adjectives."
+  },
+  "hPath": {
+    "zh": "路径",
+    "en": "Path"
+  },
+  "hSend": {
+    "zh": "发出去的是什么",
+    "en": "What goes out"
+  },
+  "hDefault": {
+    "zh": "什么时候发生",
+    "en": "When it happens"
+  },
+  "1b": {
+    "zh": "不出本机——识别、整理、嵌入、问答都在本地完成。",
+    "en": "Nothing — recognition, organizing, embedding and Q&A run locally."
+  },
+  "1s": {
+    "zh": "默认路径",
+    "en": "default path"
+  },
+  "2k": {
+    "zh": "云端",
+    "en": "cloud"
+  },
+  "2b": {
+    "zh": "只有那次请求的正文与追问上下文，走你自己填的 Key、你自己的账户。",
+    "en": "Just that request's text and follow-up context, through the key you entered and your own account."
+  },
+  "2s": {
+    "zh": "你填入 Key 并主动发起时",
+    "en": "when you add a key and ask"
+  },
+  "3k": {
+    "zh": "属地",
+    "en": "location"
+  },
+  "3b": {
+    "zh": "优先用本地 IP 数据包离线解析；未命中才联网，且只发 IP，不发任何内容。",
+    "en": "An offline IP pack is tried first; only a miss goes online, and it sends the IP — never your content."
+  },
+  "3s": {
+    "zh": "记录属地识别时",
+    "en": "during location tagging"
+  },
+  "4b": {
+    "zh": "当前版本号与资源清单的哈希，用于比对是否有新发布物；不含你的任何内容。",
+    "en": "The current version number and resource manifest hashes, used to check for new releases. None of your content."
+  },
+  "4s": {
+    "zh": "检查更新时",
+    "en": "when checking for updates"
+  },
+  "5b": {
+    "zh": "你在表单里填的邮箱，和那句「现在最挡着你的一件事」。",
+    "en": "The email you submit, plus the one line about what blocks you most."
+  },
+  "5s": {
+    "zh": "你主动提交时",
+    "en": "only when you submit"
+  },
+  "m1": {
+    "zh": "邮箱只用于内测通知，不用于营销，不共享给第三方；可随时退订或要求删除。",
+    "en": "Emails are used for beta notices only — no marketing, no third-party sharing, unsubscribe or request deletion anytime."
+  },
+  "m2": {
+    "zh": "不卖数据、不投广告、不做行为画像。",
+    "en": "No selling data, no ads, no behavioural profiling."
+  },
+  "m3": {
+    "zh": "数据库与索引是可删除、可重建的派生数据，用户内容的真源始终是你目录里的 Markdown 文件。",
+    "en": "The database and indexes are derived data you can delete and rebuild; the source of truth for your content stays the Markdown files in your folder."
+  }
+}

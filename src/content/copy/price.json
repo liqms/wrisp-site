@@ -1,0 +1,42 @@
+{
+  "eyebrow": {
+    "zh": "09 · 定价",
+    "en": "09 · Pricing"
+  },
+  "title": {
+    "zh": "免费 + BYOK，不卖数据、不投广告",
+    "en": "Free + BYOK — no data selling, no ads"
+  },
+  "body": {
+    "zh": "Community 完整可用；AI 用量走你自己的 Key。Pro 从 V2 起提供，卖同步与便利，不解锁基础能力。",
+    "en": "Community is fully usable; AI usage goes through your own key. Pro arrives with V2, selling sync and convenience rather than unlocking basics."
+  },
+  "sub": {
+    "zh": "不卖数据、不投广告；数据可迁移，随时带走。",
+    "en": "No selling your data, no ads; your data stays portable, take it anytime."
+  },
+  "t1t": {
+    "zh": "不为 AI 付订阅费",
+    "en": "No AI subscription"
+  },
+  "t1b": {
+    "zh": "本机跑，或走你自己的 Key",
+    "en": "Runs locally, or on your own key"
+  },
+  "t2t": {
+    "zh": "找东西不设付费墙",
+    "en": "No paywall on finding"
+  },
+  "t2b": {
+    "zh": "四种找法都在 Community",
+    "en": "All four ways to search, in Community"
+  },
+  "t3t": {
+    "zh": "Pro 卖服务",
+    "en": "Pro sells service"
+  },
+  "t3b": {
+    "zh": "同步 / 便利 / 优先支持",
+    "en": "Sync / convenience / priority support"
+  }
+}
