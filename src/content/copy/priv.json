@@ -112,8 +112,8 @@
     "en": "Three things this list does not include"
   },
   "n1": {
-    "zh": "这个站点是纯静态页面：不加载第三方脚本、不种 cookie、没有分析与广告，字体用系统字体栈，因此打开它不会向任何内容网络发请求。",
-    "en": "This site is plain static HTML: no third-party scripts, no cookies, no analytics or ads, and system fonts — opening it sends no request to any content network."
+    "zh": "这个站点是纯静态页面：不加载第三方脚本、没有分析与广告，字体用系统字体栈，因此打开它不会向任何内容网络发请求。全站唯一会留下的 cookie 是你点语言开关时写下的那份偏好（名为 wrisp_lang，存一年，只挂在本站地址上），它只用来决定你下次落地先看哪一种语言；不点开关就没有它。",
+    "en": "This site is plain static HTML: no third-party scripts, no analytics or ads, and system fonts — opening it sends no request to any content network. The only cookie it can leave behind is the language you pick (wrisp_lang, kept for a year, scoped to this site's own address); it only decides which language you see first next time. Don't touch the switch and there is no cookie."
   },
   "n2": {
     "zh": "应用没有行为追踪：不采集使用统计，也不上传崩溃日志。会主动联网的就是上面那张表里的几条，没有别的路径。",

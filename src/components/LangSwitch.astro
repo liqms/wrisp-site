@@ -8,9 +8,22 @@ interface Props {
 }
 const { seg = '' } = Astro.props;
 const here = leafKey(Astro.currentLocale);
+/*
+ * 显式选择要落到 cookie，而不是 localStorage：边缘层（一个 Worker）读得到请求头里的 cookie，
+ * 读不到浏览器存储。path 必须是站点根——首屏请求打的是 '/'，作用域窄了就带不上这份偏好。
+ * 值只有 en / zh 两种，与 URL 前缀同名，边缘层拿到它就能直接决定 302 的目标。
+ */
 ---
-<span class="lang">
-  <a href={`${localeRoot.zh}${seg}`} lang="zh-Hans" aria-current={here === 'zh' ? 'true' : undefined}>中文</a>
+<span class="lang" data-langswitch>
+  <a href={`${localeRoot.zh}${seg}`} data-lang="zh" lang="zh-Hans" aria-current={here === 'zh' ? 'true' : undefined}>中文</a>
   <span class="sep">/</span>
-  <a href={`${localeRoot.en}${seg}`} lang="en" aria-current={here === 'en' ? 'true' : undefined}>EN</a>
+  <a href={`${localeRoot.en}${seg}`} data-lang="en" lang="en" aria-current={here === 'en' ? 'true' : undefined}>EN</a>
 </span>
+
+<script>
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('[data-langswitch] a[data-lang]')) {
+    a.addEventListener('click', () => {
+      document.cookie = `wrisp_lang=${a.dataset.lang}; path=/; max-age=31536000; SameSite=Lax`;
+    });
+  }
+</script>
