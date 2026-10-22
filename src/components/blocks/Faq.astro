@@ -7,6 +7,11 @@ interface Props {
 const { copy } = Astro.props;
 const faq = copy.faq;
 const spec = copy.spec;
+// 按编号键渲染：加一条问答只改文案文件，不必再动这个组件
+const questions = Object.keys(faq)
+  .filter((k) => /^\d+q$/.test(k))
+  .map((k) => Number(k.slice(0, -1)))
+  .sort((a, b) => a - b);
 ---
 
 <section class="reveal faq-sec" id="waitlist">
@@ -14,26 +19,12 @@ const spec = copy.spec;
     <div class="eyebrow">{faq.eyebrow}</div>
     <h2 class="h-2">{faq.title}</h2>
     <div class="faq">
-      <details open>
-        <summary><span class="qmk">Q1</span><span>{faq['1q']}</span><span class="chev">›</span></summary>
-        <div class="ans">{faq['1a']}</div>
-      </details>
-      <details>
-        <summary><span class="qmk">Q2</span><span>{faq['2q']}</span><span class="chev">›</span></summary>
-        <div class="ans">{faq['2a']}</div>
-      </details>
-      <details>
-        <summary><span class="qmk">Q3</span><span>{faq['3q']}</span><span class="chev">›</span></summary>
-        <div class="ans">{faq['3a']}</div>
-      </details>
-      <details>
-        <summary><span class="qmk">Q4</span><span>{faq['4q']}</span><span class="chev">›</span></summary>
-        <div class="ans">{faq['4a']}</div>
-      </details>
-      <details>
-        <summary><span class="qmk">Q5</span><span>{faq['5q']}</span><span class="chev">›</span></summary>
-        <div class="ans">{faq['5a']}</div>
-      </details>
+      {questions.map((n) => (
+        <details open={n === 1}>
+          <summary><span class="qmk">Q{n}</span><span>{faq[`${n}q`]}</span><span class="chev">›</span></summary>
+          <div class="ans">{faq[`${n}a`]}</div>
+        </details>
+      ))}
     </div>
     <div class="spec">
       <span class="chip"><span>{spec.p}</span><span class="mono">{spec.pv}</span></span>

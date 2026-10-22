@@ -4,8 +4,8 @@
     "en": "10 · FAQ"
   },
   "title": {
-    "zh": "先回答五个最常被问的",
-    "en": "Five questions people always ask"
+    "zh": "先回答六个最常被问的",
+    "en": "Six questions people always ask"
   },
   "1q": {
     "zh": "我的数据会被上传吗？",
@@ -40,10 +40,18 @@
     "en": "No. Local inference runs on CPU by default; with a supported GPU you can turn acceleration on in Settings, and low VRAM falls back to CPU automatically. Local models are optional too — skip them and use your own key."
   },
   "5q": {
+    "zh": "本地模型要下多少？我的机器跑得动吗？",
+    "en": "How much do the local models take? Will my machine run them?"
+  },
+  "5a": {
+    "zh": "三个模型全部下载约 4.4 GB——嵌入约 0.6、重排序约 0.9、负责生成的那个约 2.9。运行时的内存门槛以生成模型最高，约 5 GB，另外两个各需 1–1.5 GB。全部可选：一个都不下载，照样能用云端 Key。",
+    "en": "All three together come to about 4.4 GB — roughly 0.6 GB for embeddings, 0.9 GB for reranking and 2.9 GB for the one that does generation. At runtime generation asks for the most, about 5 GB of memory; the other two need 1–1.5 GB each. Every one of them is optional: download nothing and your cloud key still works."
+  },
+  "6q": {
     "zh": "内测什么时候发？",
     "en": "When does the beta ship?"
   },
-  "5a": {
+  "6a": {
     "zh": "现在还在内测迭代中，没有对外公布日期。加入名单，首个可下载版本就绪时第一批通知你。",
     "en": "We're still iterating privately and haven't published a date. Join the waitlist and you're in the first batch when a downloadable build is ready."
   }
