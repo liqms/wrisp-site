@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wrisp — 今天，你需要一个创作分身</title>
+<meta name="description" content="说话代替打字，整理交给 AI，数据永远留在你的机器。通用 AI 帮你写作，Wrisp 为你创作。">
+<meta name="theme-color" content="#FAFAF7">
+
+<!--
+  双语与元数据：正式版由静态站点生成 / （EN）与 /zh/（中文）两份可爬页面，canonical / hreflang / og 三元组各出一份。
+  本单文件演示页用 JS 切语言，因此以 ?lang= 作为两种语言的可寻址形态，并在 applyLang() 里同步改写
+  description / og:title / og:description / og:image / og:locale。默认落地语言为中文（当前托管层没有地区路由，
+  也不做浏览器语言嗅探）；地区跳转与两份独立可索引页面在重建时落地。
+  下面 og:url 与 canonical 的域名是占位，最终国际域确定后一次性替换为绝对地址。
+-->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wrisp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:url" content="./">
+<meta property="og:title" content="Wrisp — 今天，你需要一个创作分身">
+<meta property="og:description" content="说话代替打字，整理交给 AI，数据永远留在你的机器。通用 AI 帮你写作，Wrisp 为你创作。">
+<meta property="og:image" content="assets/og-zh.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Wrisp — 今天，你需要一个创作分身">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wrisp — 今天，你需要一个创作分身">
+<meta name="twitter:description" content="说话代替打字，整理交给 AI，数据永远留在你的机器。">
+<meta name="twitter:image" content="assets/og-zh.png">
+<link rel="canonical" href="./">
+<link rel="alternate" hreflang="zh" href="./?lang=zh">
+<link rel="alternate" hreflang="en" href="./?lang=en">
+<link rel="alternate" hreflang="x-default" href="./">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/wrisp.png">
+<link rel="apple-touch-icon" href="assets/wrisp.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Wrisp",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "url": "./",
+  "description": "本地优先的个人创作 AI：对话式输入、日志流、信息卡片、检索问答与作品创作。通用 AI 帮你写作，Wrisp 为你创作。",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Community 免费，AI 用量走用户自带 Key（BYOK），不代扣模型费用。"
+  }
+}
+</script>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#FAFAF7;--paper-2:#F2F1EC;--paper-3:#ECEADF;
+  --ink:#1F2328;--ink-2:#363C43;--muted:#6B7280;
+  --line:#E7E5DE;--line-2:#D9D7CE;
+  --accent:#4C5FD5;--accent-ink:#3B4BBA;--accent-soft:#EDF0FB;
+  --ok:#2E9E6B;--warn:#B8871F;
+  /* 深色底上的次级文字用实色 token，不用 opacity 调淡：叠透明度会让对比度跌破 WCAG AA */
+  --on-dark:#F5F5F1;--on-dark-2:#CFCFC8;--on-dark-3:#B4B4AC;
+  /*
+    字体：只「复用字形」，不「复用文件」。桌面端整包可变字体约 18.2 MB，且 @font-face 未写
+    unicode-range 时任何中文字符都会触发全量下载，所以这里走系统字体栈（零下载）。
+    若日后需跨平台字形一致，改用 woff2 子集 + unicode-range 分片，中文总负载控制在 300 KB 以内。
+  */
+  --mono:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI Variable Text','Segoe UI',Inter,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans CJK SC',sans-serif;
+  --display:'Segoe UI Variable Display','Segoe UI',Inter,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  --radius:11px;--radius-sm:7px;--maxw:1120px;--nav-h:64px;--chapter-h:44px;
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + var(--chapter-h) + 12px)}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+::selection{background:var(--accent-soft)}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono)}
+.nowrap{white-space:nowrap}
+
+/* ---------- top nav：顶部只放动作类入口，章节定位归左侧目录 ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(250,250,247,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:var(--maxw);margin:0 auto;height:var(--nav-h);display:flex;align-items:center;gap:14px;padding:0 28px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;letter-spacing:-.01em;font-size:16px;white-space:nowrap}
+.brand .dot{color:var(--accent)}
+.nav-spacer{flex:1}
+.lang{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.lang b{cursor:pointer;font-weight:600;white-space:nowrap}
+.lang b.active{color:var(--accent)}
+.lang .sep{color:var(--line-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;font-weight:600;font-size:15px;padding:10px 20px;transition:transform .16s ease,border-color .16s ease,background .16s ease,color .16s ease;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-ink)}
+.btn-ghost{border-color:var(--line-2);background:#fff;color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink)}
+.btn:active{transform:translateY(1px)}
+.btn-sm{padding:7px 14px;font-size:13.5px}
+
+/* ---------- 左侧微缩目录（signature） ---------- */
+.blocknav{position:fixed;left:26px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:1px;font-size:12.5px}
+.blocknav a{display:flex;align-items:center;gap:9px;color:var(--muted);padding:4px 9px;border-radius:7px;white-space:nowrap;transition:color .15s,background .15s}
+.blocknav a .mk{color:var(--line-2);font-size:10px}
+.blocknav a:hover{color:var(--ink);background:var(--paper-2)}
+.blocknav a.active{color:var(--accent)}
+.blocknav a.active .mk{color:var(--accent)}
+.blocknav a .num{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:18px}
+.blocknav a.active .num{color:var(--accent)}
+@media(max-width:1180px){.blocknav{display:none}}
+
+/* ---------- ≤1180px 的替代：吸顶横向章节条，不能什么都不留 ---------- */
+.chapter{display:none;position:sticky;top:var(--nav-h);z-index:55;height:var(--chapter-h);align-items:center;gap:10px;background:rgba(250,250,247,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 14px}
+.chapter .cnum{font-family:var(--mono);font-size:11.5px;color:var(--accent);min-width:18px}
+.chapter .cname{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chapter .cbar{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.chapter .cbar i{display:block;height:100%;background:var(--accent);width:10%;transition:width .3s ease}
+.chapter button{width:32px;height:32px;border:1px solid var(--line-2);border-radius:50%;background:#fff;color:var(--ink-2);font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;flex:none}
+.chapter button:hover{border-color:var(--ink)}
+@media(max-width:1180px){.chapter{display:flex}}
+@media(max-width:560px){.chapter{padding:0 10px;gap:8px}}
+
+/* ---------- 区块骨架 ---------- */
+section{padding-block:96px}
+@media(max-width:760px){section{padding-block:64px}}
+.eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--accent);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px;white-space:nowrap}
+.eyebrow::after{content:"";height:1px;width:46px;background:var(--line-2);flex:none}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.022em;line-height:1.1;font-weight:700}
+.h-title{font-size:clamp(34px,5.4vw,58px)}
+.h-2{font-size:clamp(26px,3.6vw,40px)}
+.lead{color:var(--muted);font-size:17px;max-width:680px;margin-top:16px}
+
+/* ---------- 01 hero ---------- */
+.hero{padding-block:72px 56px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+.hero .kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;color:var(--accent);letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;margin-bottom:22px;white-space:nowrap}
+.hero .h-title{font-size:clamp(38px,6vw,62px)}
+.hero .h-title .accent{color:var(--accent)}
+.hero .guard{margin-top:14px;max-width:560px;font-size:15.5px;color:var(--ink-2);border-left:2px solid var(--accent);padding-left:14px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
+.waitlist{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;max-width:560px}
+.waitlist input,.waitlist textarea{border:1px solid var(--line-2);background:#fff;border-radius:var(--radius-sm);padding:11px 16px;font-size:14.5px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s;resize:vertical}
+.waitlist input{border-radius:999px;flex:1 1 240px}
+.waitlist textarea{flex:1 1 100%;min-height:62px;font-size:14px}
+.waitlist input:focus,.waitlist textarea:focus{border-color:var(--accent)}
+.waitlist .submit{flex:0 0 auto}
+.waitlist .ok{flex-basis:100%;font-size:13.5px;color:var(--ok);display:none;align-items:center;gap:8px}
+.waitlist .ok.show{display:flex}
+.waitlist .err{flex-basis:100%;font-size:13px;color:#B04A2E;display:none}
+.waitlist .err.show{display:block}
+.waitlist-note{flex-basis:100%;font-size:12.5px;color:var(--muted)}
+
+/* ---------- 记录流窗口（signature；首帧即终态，不靠 JS 才成型） ---------- */
+.appwin{position:relative;border:1px solid var(--line-2);border-radius:14px;background:#fff;box-shadow:0 1px 0 rgba(31,35,40,.04),0 18px 44px -26px rgba(31,35,40,.28);overflow:hidden}
+.appwin-top{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--paper)}
+.appwin-top .dot{width:10px;height:10px;border-radius:50%;background:var(--line-2)}
+.appwin-top .dot.r{background:#F1B0A0}.appwin-top .dot.y{background:#EDD38C}.appwin-top .dot.g{background:#9FCEA9}
+.appwin-title{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appwin-ctl{margin-left:auto;display:flex;align-items:center;gap:6px}
+.appwin-ctl button{font-family:var(--mono);font-size:10.5px;color:var(--muted);border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;white-space:nowrap}
+.appwin-ctl button:hover{color:var(--ink);border-color:var(--line-2)}
+.appwin-body{display:grid;grid-template-columns:1.22fr .78fr;background:var(--paper)}
+.stream{border-right:1px solid var(--line);padding:18px}
+.stream-head{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;display:flex;justify-content:space-between}
+.stream-rows{display:flex;flex-direction:column;gap:9px}
+.srow{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--ink-2);border-radius:6px;padding:2px 4px}
+.srow .t{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px;flex:none}
+.srow .txt{flex:1;min-width:0}
+.srow .badge{margin-top:0}
+.srow.landing{animation:land .5s ease}
+@keyframes land{from{background:var(--accent-soft)}to{background:transparent}}
+.badge{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;border-radius:5px;padding:2px 7px;flex:none;white-space:nowrap}
+.badge.todo{background:#FDEEE8;color:#B04A2E}
+.badge.comp{background:#E7F2EE;color:#23694C}
+.badge.meet{background:#E7ECFA;color:#334E9C}
+.badge.decide{background:#F4EFE0;color:#8A6D1C}
+.badge.need{background:#EFEAEF;color:#6D4A75}
+/* 语音输入态：必须有可感知的「说话」形态 */
+.voice{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--accent);background:var(--accent-soft);border:1px dashed var(--accent);border-radius:8px;padding:8px 12px;margin-top:4px}
+.voice .rec{width:9px;height:9px;border-radius:50%;background:var(--accent);animation:rec 1.1s ease infinite;flex:none}
+@keyframes rec{0%,100%{opacity:1}50%{opacity:.25}}
+.voice .wave{display:flex;align-items:flex-end;gap:2px;height:14px;flex:none}
+.voice .wave i{width:2px;background:var(--accent);border-radius:1px;animation:wv 1s ease-in-out infinite}
+.voice .wave i:nth-child(1){height:5px;animation-delay:0s}
+.voice .wave i:nth-child(2){height:11px;animation-delay:.12s}
+.voice .wave i:nth-child(3){height:7px;animation-delay:.24s}
+.voice .wave i:nth-child(4){height:13px;animation-delay:.36s}
+.voice .wave i:nth-child(5){height:6px;animation-delay:.48s}
+@keyframes wv{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+.voice .dur{font-family:var(--mono);font-size:11px;color:var(--accent-ink);margin-left:auto;flex:none}
+/* 输入行 */
+.typebar{display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--ink-2);border-top:1px dashed var(--line);margin-top:16px;padding-top:14px}
+.typebar .typing{display:flex;align-items:flex-start;gap:9px}
+.typebar .caret{color:var(--accent);font-family:var(--mono);flex:none;line-height:1.5}
+.typebar .txt{flex:1;min-width:0;min-height:20px}
+.typebar .mic{color:var(--muted);font-family:var(--mono);font-size:11px;text-align:right}
+.typebar .cursor{display:inline-block;width:8px;height:16px;background:var(--accent);vertical-align:-2px;flex:none;margin-top:3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.cardpanel{padding:14px;background:#fff;display:flex;flex-direction:column;gap:12px}
+.card{display:none;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px;background:#fff}
+.card.show{display:flex}
+.card.flip{animation:cardin .45s ease}
+@keyframes cardin{from{opacity:.4;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+.card .ch{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card .ct{font-size:13px;font-weight:700;white-space:nowrap}
+.card .cbody{font-size:13.5px;color:var(--ink-2)}
+.card .fld{display:grid;grid-template-columns:40px 1fr;gap:8px;font-size:12px;border-top:1px solid var(--line);padding-top:8px}
+.card .fld b{font-family:var(--mono);font-weight:500;color:var(--muted);font-size:11px}
+.card .fld span{color:var(--ink-2);text-align:right;overflow-wrap:anywhere}
+.card-hint{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+@media(max-width:640px){
+  /* 移动端退化：静态流 + 卡片，不参与循环 */
+  .appwin-body{grid-template-columns:1fr}
+  .stream{border-right:0;border-bottom:1px solid var(--line)}
+  .appwin-ctl{display:none}
+}
+
+/* ---------- 02 痛点（三格递进，第三格加重） ---------- */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+@media(max-width:880px){.pain-grid{grid-template-columns:1fr}}
+.pain-card{border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;background:#fff;transition:border-color .18s,transform .18s}
+.pain-card:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.pain-card .pi{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.pain-card h3{font-size:19px;margin:10px 0 8px}
+.pain-card p{font-size:14px;color:var(--muted)}
+.pain-card.punch{background:var(--ink);border-color:var(--ink);color:var(--on-dark)}
+.pain-card.punch .pi{color:var(--on-dark-3)}
+.pain-card.punch p{color:var(--on-dark-2)}
+.pain-card.punch .tag{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--on-dark);border:1px solid rgba(245,245,241,.28);border-radius:999px;padding:3px 10px}
+.pain-card.punch:hover{border-color:var(--ink)}
+
+/* ---------- 03 产品定位（L2 + 四行对照表） ---------- */
+.cmp{margin-top:38px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+.cmp-row{display:grid;grid-template-columns:230px 1fr;border-bottom:1px solid var(--line)}
+.cmp-row:last-child{border-bottom:0}
+.cmp-row .k{padding:16px 18px;font-weight:600;font-size:14.5px;border-right:1px solid var(--line);display:flex;align-items:center;gap:9px;background:var(--paper)}
+.cmp-row .v{padding:16px 18px;font-size:14px;color:var(--ink-2)}
+.cmp-row .mk{font-family:var(--mono);font-size:12px;color:var(--muted);flex:none}
+.cmp-row.us{background:var(--accent-soft)}
+.cmp-row.us .k{background:var(--accent-soft);color:var(--accent-ink);border-right-color:#D7DDF6}
+.cmp-row.us .v{color:var(--ink);font-weight:600}
+.cmp-row.us .mk{color:var(--accent)}
+@media(max-width:760px){.cmp-row{grid-template-columns:1fr}.cmp-row .k{border-right:0;border-bottom:1px solid var(--line)}}
+.qualifier{margin-top:18px;font-size:14.5px;color:var(--ink-2);max-width:680px}
+.qualifier b{color:var(--ink)}
+
+/* ---------- 04 工作流 ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;position:relative}
+@media(max-width:880px){.steps{grid-template-columns:1fr;gap:22px}}
+.step{padding:0 18px;position:relative}
+.step:not(:last-child)::after{content:"";position:absolute;top:22px;left:calc(100% - 18px);width:calc(2*18px);height:1px;background:var(--line-2)}
+@media(max-width:880px){.step:not(:last-child)::after{display:none}}
+.step .snum{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2);background:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--accent);margin-bottom:16px}
+.step h3{font-size:16px;margin-bottom:8px}
+.step p{font-size:13.5px;color:var(--muted)}
+.step.current .snum{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ---------- 05 导入与兼容 ---------- */
+.import-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:start;margin-top:40px}
+@media(max-width:880px){.import-grid{grid-template-columns:1fr;gap:28px}}
+.imp-list{display:flex;flex-direction:column;gap:0}
+.imp-item{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:20px 0;border-top:1px solid var(--line)}
+.imp-item:last-child{border-bottom:1px solid var(--line)}
+.imp-item .ik{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.04em;text-transform:uppercase;padding-top:3px}
+.imp-item h3{font-size:16.5px;margin-bottom:6px}
+.imp-item p{font-size:14px;color:var(--muted)}
+@media(max-width:640px){.imp-item{grid-template-columns:1fr;gap:4px}}
+/* 视觉锚点：一处深墨反白块（全站唯一的次级强调之一） */
+.dropzone{border:1px solid var(--ink);background:var(--ink);color:var(--on-dark);border-radius:14px;padding:24px}
+.dropzone .dz-top{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--on-dark-3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px}
+.dropzone .dz-path{font-family:var(--mono);font-size:13px;color:var(--on-dark);margin-bottom:14px}
+.dz-tree{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:12.5px;color:var(--on-dark-2)}
+.dz-tree .n{display:flex;gap:8px;align-items:center}
+.dz-tree .n .b{color:var(--on-dark-3)}
+.dz-tree .n.hit{color:var(--on-dark)}
+.dz-tree .n.hit .b{color:var(--accent)}
+.dz-foot{margin-top:16px;padding-top:14px;border-top:1px solid rgba(245,245,241,.18);font-size:13px;color:var(--on-dark-2)}
+
+/* ---------- 06 特性·产物（此处为 CSS 示意，正式版换成真实产品截图） ---------- */
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px}
+.proof-card{border:1px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden;display:flex;flex-direction:column;transition:border-color .18s,transform .18s}
+.proof-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.proof-card.wide{grid-column:1/-1}
+@media(max-width:760px){.proof-grid{grid-template-columns:1fr}}
+/* 视觉锚点：靛蓝细线图示（次级强调之二） */
+.mock{background:var(--paper);border-bottom:1px solid var(--line);padding:16px;min-height:132px;display:flex;flex-direction:column;gap:7px}
+.mock .ml{height:9px;border-radius:3px;background:var(--line)}
+.mock .ml.s{width:46%}.mock .ml.m{width:72%}.mock .ml.xl{width:90%}
+.mock .ml.acc{background:var(--accent);opacity:.85}
+.mock .mk-badge{display:inline-block;font-family:var(--mono);font-size:10px;border-radius:4px;padding:2px 7px;background:var(--accent-soft);color:var(--accent-ink)}
+.mock .mrow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-2)}
+.mock .box{width:13px;height:13px;border:1px solid var(--line-2);border-radius:3px;background:#fff;flex:none;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ok);font-family:var(--mono)}
+.mock .box.on{background:var(--accent-soft);border-color:var(--accent)}
+.mock .cite{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:15px;border-radius:4px;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--mono);font-size:9.5px;padding:0 3px}
+.mock .q{border:1px solid var(--line-2);border-radius:999px;background:#fff;padding:5px 12px;font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mock .docline{height:7px;border-radius:2px;background:var(--line);width:100%}
+.proof-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:8px}
+.proof-body .pname{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.03em}
+.proof-body h3{font-size:18px}
+.proof-body p{font-size:14px;color:var(--muted)}
+
+/* ---------- 07 数据主权 ---------- */
+.trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px}
+@media(max-width:760px){.trust-grid{grid-template-columns:1fr}}
+.trust-card{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:#fff}
+.trust-card h3{font-size:17px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.trust-card h3 .tick{color:var(--ok);font-family:var(--mono)}
+.trust-card p{font-size:14px;color:var(--muted)}
+.trust-note{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:14px;color:var(--ink-2)}
+.trust-note a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- 08 路线图（只留时间轴） ---------- */
+.road{position:relative;margin-top:44px;display:flex;flex-direction:column}
+.road-row{display:grid;grid-template-columns:180px 1fr;gap:24px;padding-bottom:30px;position:relative}
+@media(max-width:760px){.road-row{grid-template-columns:1fr;gap:6px;padding-left:22px}}
+.road-row::before{content:"";position:absolute;left:-1px;top:6px;bottom:6px;width:2px;background:var(--line-2)}
+.road-rail{position:relative;padding-left:22px}
+.road-rail .pnode{position:absolute;left:-6px;top:4px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--line-2)}
+.road-rail .pnode.filled{background:var(--accent);border-color:var(--accent)}
+.road-row.current .pnode{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.road-phase{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.road-sub{font-size:12.5px;color:var(--muted)}
+.road-body{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:20px 22px}
+.road-row.current .road-body{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.road-body h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.road-tag{font-family:var(--mono);font-size:10.5px;border-radius:5px;padding:2px 8px;font-weight:500;white-space:nowrap}
+.road-tag.now{background:var(--accent-soft);color:var(--accent)}
+.road-tag.planned{background:var(--paper-3);color:var(--muted)}
+.road-body p{font-size:13.5px;color:var(--muted)}
+.road-note{display:inline-flex;gap:8px;align-items:center;margin-top:34px;font-size:13.5px;color:var(--ink-2);border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px}
+.road-note .pulse{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 2s ease infinite;flex:none}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(46,158,107,.35)}50%{box-shadow:0 0 0 6px rgba(46,158,107,0)}}
+
+/* ---------- 09 定价说明 ---------- */
+.price-box{border:1px solid var(--line-2);border-radius:14px;background:#fff;padding:30px;margin-top:40px;display:grid;grid-template-columns:1.2fr .8fr;gap:26px;align-items:center}
+@media(max-width:760px){.price-box{grid-template-columns:1fr}}
+.price-box .pb-body h3{font-size:21px;margin-bottom:12px;line-height:1.35}
+.price-box .pb-body p{color:var(--muted);font-size:14.5px}
+.price-tags{display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.price-tags .tag{flex:1 1 100%;border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--ink-2);background:var(--paper)}
+.price-tags .tag b{display:block;font-size:14px;color:var(--ink);margin-bottom:3px}
+
+/* ---------- 10 常见问题 · 运行要求 · CTA ---------- */
+.faq{margin-top:36px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;display:flex;align-items:flex-start;gap:12px;padding:18px 0;font-size:16px;font-weight:600;cursor:pointer}
+.faq summary > span:not(.qmk):not(.chev){min-width:0;overflow-wrap:anywhere}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .qmk{font-family:var(--mono);font-size:12px;color:var(--accent);padding-top:4px;flex:none}
+.faq summary .chev{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);transition:transform .18s ease;flex:none}
+.faq details[open] summary .chev{transform:rotate(90deg)}
+.faq .ans{padding:0 0 20px 24px;font-size:14.5px;color:var(--muted);max-width:760px}
+.spec{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+.spec .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.spec .chip .mono{font-size:11.5px;color:var(--muted)}
+.cta{padding-block:96px}
+.cta-box{position:relative;overflow:hidden;border:1px solid var(--line-2);border-radius:18px;background:var(--ink);color:var(--on-dark);padding:64px 56px;text-align:center}
+@media(max-width:760px){.cta-box{padding:44px 22px}}
+.cta-box::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 260px at 50% -20%,rgba(76,95,213,.55),transparent 70%)}
+.cta-box h2{position:relative;font-size:clamp(26px,3.8vw,42px);color:#fff;max-width:760px;margin:0 auto}
+.cta-box .lead{position:relative;color:var(--on-dark-2);margin:14px auto 0}
+.cta-box .waitlist{position:relative;margin:26px auto 0}
+.cta-box .waitlist input,.cta-box .waitlist textarea{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#fff}
+.cta-box .waitlist input::placeholder,.cta-box .waitlist textarea::placeholder{color:var(--on-dark-3)}
+.cta-box .waitlist-note{color:var(--on-dark-3)}
+.cta-box .waitlist .ok{color:#7FD9A8}
+.cta-box .btn-primary{background:#fff;color:var(--ink)}
+.cta-box .btn-primary:hover{background:#E9E9E4}
+
+/* ---------- 隐私与数据声明（正式站为 /privacy 与 /zh/privacy，与首页同批上线） ---------- */
+.privacy{background:var(--paper-2);border-top:1px solid var(--line);padding-block:72px}
+.pill-table{margin-top:30px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+.pt-row{display:grid;grid-template-columns:200px 1fr 190px;border-bottom:1px solid var(--line)}
+.pt-row:last-child{border-bottom:0}
+.pt-row.head{background:var(--paper);font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.pt-row .c{padding:14px 18px;font-size:13.5px;color:var(--ink-2);border-right:1px solid var(--line)}
+.pt-row .c:last-child{border-right:0}
+.pt-row .c.k{font-weight:600;color:var(--ink)}
+.pt-row .c.st{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+@media(max-width:880px){.pt-row{grid-template-columns:1fr}.pt-row .c{border-right:0;border-bottom:1px solid var(--line)}.pt-row.head{display:none}}
+.privacy ul{margin:24px 0 0 18px;font-size:14px;color:var(--ink-2)}
+.privacy ul li{margin-bottom:8px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:34px 0 48px;color:var(--muted);font-size:13px}
+.foot-inner{max-width:var(--maxw);margin:0 auto;padding:0 28px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+.foot-links{display:flex;gap:22px;flex-wrap:wrap}
+.foot-links a:hover{color:var(--ink)}
+.foot-brand{font-weight:600;color:var(--ink);white-space:nowrap}
+
+/* ---------- 渐显：初始隐藏类只在 JS 已接管时生效；无 JS / 截图 / 爬虫一律直接可读 ---------- */
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.js .reveal.in{opacity:1;transform:none}
+.js .srow.living{opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .3s ease}
+.js .srow.living.show{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .reveal{opacity:1;transform:none;transition:none}
+  .js .srow.living{opacity:1;transform:none;transition:none}
+  .typebar .cursor,.voice .rec,.voice .wave i,.road-note .pulse{animation:none}
+  .card.flip{animation:none}
+  .srow.landing{animation:none}
+}
+@media(max-width:640px){
+  .hero-actions .btn{width:100%}
+  .wrap{padding:0 20px}
+  .nav-inner{padding:0 16px;gap:10px}
+  .waitlist{max-width:none}
+  .waitlist input,.waitlist button,.waitlist textarea{flex:1 1 100%}
+  .spec{gap:8px}
+  .spec .chip{white-space:normal;flex-wrap:wrap;font-size:12.5px;padding:7px 12px}
+}
+</style>
+</head>
+<body>
+<!-- 左侧微缩目录（章节定位归它，顶部 nav 只放动作） -->
+<nav class="blocknav" aria-label="Sections">
+  <a href="#top" class="active"><span class="mk">◆</span><span class="num">01</span><span data-i18n="bn.hero">开场</span></a>
+  <a href="#pain"><span class="mk">◆</span><span class="num">02</span><span data-i18n="bn.pain">痛点</span></a>
+  <a href="#diff"><span class="mk">◆</span><span class="num">03</span><span data-i18n="bn.diff">定位</span></a>
+  <a href="#how"><span class="mk">◆</span><span class="num">04</span><span data-i18n="bn.how">工作流</span></a>
+  <a href="#import"><span class="mk">◆</span><span class="num">05</span><span data-i18n="bn.import">导入</span></a>
+  <a href="#proofs"><span class="mk">◆</span><span class="num">06</span><span data-i18n="bn.proofs">产物</span></a>
+  <a href="#data"><span class="mk">◆</span><span class="num">07</span><span data-i18n="bn.data">数据</span></a>
+  <a href="#roadmap"><span class="mk">◆</span><span class="num">08</span><span data-i18n="bn.road">路线图</span></a>
+  <a href="#pricing"><span class="mk">◆</span><span class="num">09</span><span data-i18n="bn.price">定价</span></a>
+  <a href="#waitlist"><span class="mk">◆</span><span class="num">10</span><span data-i18n="bn.cta">内测</span></a>
+</nav>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="dot">◆</span>Wrisp</a>
+    <div class="nav-spacer"></div>
+    <span class="lang"><b id="lngZh" class="active" data-lang="zh">中文</b><span class="sep">/</span><b id="lngEn" data-lang="en">EN</b></span>
+    <a class="btn btn-primary btn-sm nowrap" href="#waitlist" data-i18n="nav.cta">加入内测</a>
+  </div>
+</header>
+
+<!-- ≤1180px 的章节导航替代：吸顶横向章节条（必须排在吸顶 header 之后，否则首屏被它盖住） -->
+<div class="chapter" id="chapter" aria-label="Chapter">
+  <button type="button" id="chPrev" aria-label="Previous chapter">‹</button>
+  <span class="cnum" id="chNum">01</span>
+  <span class="cname" id="chName">开场</span>
+  <span class="cbar" aria-hidden="true"><i id="chFill"></i></span>
+  <button type="button" id="chNext" aria-label="Next chapter">›</button>
+</div>
+
+<main id="top">
+<!-- ================= 01 Hero ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="kicker"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block;flex:none"></span><span data-i18n="hero.kicker">本地优先 · 个人创作 AI</span></span>
+        <h1 class="h-title">
+          <span data-i18n="hero.title1">今天，你需要</span><br>
+          <span class="accent" data-i18n="hero.title2">一个创作分身。</span>
+        </h1>
+        <p class="lead" data-i18n="hero.sub">说话代替打字，整理交给 AI，数据永远留在你的机器。</p>
+        <!-- 时态护栏：主标题讲终局，紧跟一行讲当下 -->
+        <p class="guard" data-i18n="hero.guard">现在能用上的是它的记忆底座：说一句话，它替你记好、整理好、在你写东西时找回来。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#waitlist" data-i18n="hero.cta1">加入内测</a>
+          <a class="btn btn-ghost" href="#how" data-i18n="hero.cta2">看它怎么工作</a>
+        </div>
+        <form class="waitlist" id="formTop" novalidate>
+          <input type="email" name="email" placeholder="" data-i18n-ph="hero.formph" required autocomplete="email">
+          <button class="btn btn-primary submit" type="submit" data-i18n="hero.formbtn">加入等待名单</button>
+          <textarea name="question" rows="2" placeholder="" data-i18n-ph="hero.formq"></textarea>
+          <span class="err" role="alert" data-i18n="hero.formerr">请填写一个可用的邮箱地址。</span>
+          <span class="ok"><span aria-hidden="true">✓</span> <span data-i18n="hero.formok">已加入内测等待名单，发布时第一时间通知你。</span></span>
+          <span class="waitlist-note" data-i18n="hero.formnote">仅用于内测通知 · 不用于营销 · 可随时退订</span>
+        </form>
+      </div>
+
+      <div class="appwin">
+        <div class="appwin-top">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="appwin-title" data-i18n="hero.window">Wrisp · 日志流</span>
+          <span class="appwin-ctl">
+            <button type="button" id="streamToggle" aria-pressed="false" data-i18n="hero.pause">暂停演示</button>
+          </span>
+        </div>
+        <div class="appwin-body">
+          <div class="stream">
+            <div class="stream-head"><span data-i18n="hero.stream">今天</span><span class="mono">10-22</span></div>
+            <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
+              <div class="srow"><span class="t">09:41</span><span class="txt">周五前给客户回话：进度与风险</span><span class="badge todo">待办</span></div>
+              <div class="srow"><span class="t">10:02</span><span class="txt">竞品上了语音转写，主打会议</span><span class="badge comp">竞品动态</span></div>
+              <div class="srow"><span class="t">10:26</span><span class="txt">评审定了：周报先按模板出</span><span class="badge meet">会议纪要</span></div>
+            </div>
+            <div class="typebar">
+              <div class="typing"><span class="caret">▸</span><span class="txt" id="typebar">记录：把这一周归拢成周报</span><span class="cursor" id="cursor" aria-hidden="true"></span></div>
+              <span class="mic" data-i18n="hero.mic">🎙 也可以直接说</span>
+            </div>
+          </div>
+          <div class="cardpanel" id="cardPanel">
+            <div class="card show" id="infoCard">
+              <div class="ch"><span class="ct" id="cardType">会议纪要</span><span class="badge meet" id="cardBadge">会议纪要</span></div>
+              <div class="cbody" id="cardBody">评审定了：周报先按模板出</div>
+              <div class="fld"><b data-i18n="hero.fType">类型</b><span id="cardTypeV">会议纪要</span></div>
+              <div class="fld"><b data-i18n="hero.fSource">来源</b><span id="cardSource">10:26 · 今天</span></div>
+              <div class="fld"><b data-i18n="hero.fStatus">状态</b><span id="cardStatus">已整理 · 可撤回</span></div>
+            </div>
+            <span class="card-hint" data-i18n="hero.cardhint">卡片由这条记录直接生成 · 可改写 · 可撤回</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 痛点 ================= -->
+<section class="reveal" id="pain" style="background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="pain.eyebrow">02 · 痛点</div>
+    <h2 class="h-2" data-i18n="pain.title">信息太多，没时间整理，创作时又忘了。</h2>
+    <p class="lead" data-i18n="pain.sub">不是记不住——是散落、沉不下、用的时候调不出来。</p>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="pi">01</div><h3 data-i18n="pain.1t">散落</h3><p data-i18n="pain.1b">随手记在各处：聊天里、备忘录里、邮件里。要用时，翻不到。</p></div>
+      <div class="pain-card"><div class="pi">02</div><h3 data-i18n="pain.2t">沉不下</h3><p data-i18n="pain.2b">收藏过、读过、开过的会，没沉淀成能复用的东西，等于没发生。</p></div>
+      <div class="pain-card punch"><div class="pi">03</div><h3 data-i18n="pain.3t">用不出</h3><p data-i18n="pain.3b">动笔时明明看过，却调不出来，只能重新搜一遍——而这一次往往就放弃了。</p><span class="tag" data-i18n="pain.3tag">Wrisp 接的就是这一环</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 产品定位 ================= -->
+<section class="reveal" id="diff">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="diff.eyebrow">03 · 产品定位</div>
+    <h2 class="h-2" style="max-width:880px"><span data-i18n="diff.title">通用 AI 帮你写作，</span><br><span class="accent" data-i18n="diff.title2">Wrisp 为你创作。</span></h2>
+    <p class="qualifier" data-i18n="diff.qual"><b>分身替你起草，你负责判断。</b>它负责识别、关联、归纳与召回；判断、取舍与记忆始终在你这边。</p>
+    <div class="cmp">
+      <div class="cmp-row"><div class="k"><span class="mk">✗</span><span data-i18n="cmp.1t">大厂 AI 助手</span></div><div class="v" data-i18n="cmp.1b">记忆绑在它的生态里，你的数据喂它的模型。</div></div>
+      <div class="cmp-row"><div class="k"><span class="mk">✗</span><span data-i18n="cmp.2t">云端笔记</span></div><div class="v" data-i18n="cmp.2b">AI 能力强，但内容上传的那一刻就不再由你掌控。</div></div>
+      <div class="cmp-row"><div class="k"><span class="mk">✗</span><span data-i18n="cmp.3t">本地笔记工具</span></div><div class="v" data-i18n="cmp.3b">数据在你手里，分类、打标、链接、召回全靠手。</div></div>
+      <div class="cmp-row us"><div class="k"><span class="mk">◆</span><span>Wrisp</span></div><div class="v" data-i18n="cmp.4b">本地优先 + AI 自动整理 + 数据主权 + BYOK + 对话式输入——这个组合还没人占。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 工作流（只讲一条记录怎么走完） ================= -->
+<section class="reveal" id="how" style="background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="work.eyebrow">04 · 工作流</div>
+    <h2 class="h-2" data-i18n="work.title">碎片，变成你的知识</h2>
+    <p class="lead" data-i18n="work.sub">一条记录从你嘴里到能召回，走这四步。</p>
+    <div class="steps">
+      <div class="step current"><div class="snum">1</div><h3 data-i18n="work.1t">说或写一句</h3><p data-i18n="work.1b">自然语言进来，不用先想该放哪个文件夹。</p></div>
+      <div class="step"><div class="snum">2</div><h3 data-i18n="work.2t">它认类型</h3><p data-i18n="work.2b">认得清就直接往下走；认不清最多追问两轮，也可以跳过。</p></div>
+      <div class="step"><div class="snum">3</div><h3 data-i18n="work.3t">落进今天的记录流</h3><p data-i18n="work.3b">落下来还能改：改文字、换类型都算数。</p></div>
+      <div class="step"><div class="snum">4</div><h3 data-i18n="work.4t">整理成卡片</h3><p data-i18n="work.4b">有把握的直接整理好，拿不准的先问你；之后随时能改写、能撤回。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 导入与兼容（核心人群转化区） ================= -->
+<section class="reveal" id="import">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="imp.eyebrow">05 · 导入与兼容</div>
+    <h2 class="h-2" data-i18n="imp.title">你现在的文件夹，就是 Wrisp 的文件夹</h2>
+    <p class="lead" data-i18n="imp.sub">切过来不需要搬家，也不需要重做一遍整理。</p>
+    <div class="import-grid">
+      <div class="imp-list">
+        <div class="imp-item"><div class="ik">ONE-CLICK IMPORT</div><div><h3 data-i18n="imp.1t">一键导入</h3><p data-i18n="imp.1b">Markdown 就是文件真源。现有目录直接指进来就能用——不转格式、不重打标、不动你的目录结构。</p></div></div>
+        <div class="imp-item"><div class="ik">SYNTAX YOU KEEP</div><div><h3 data-i18n="imp.2t">写法照旧</h3><p data-i18n="imp.2b">双链、标签、任务列表这些你已经在用的写法继续有效，Obsidian / Logseq 习惯不用改。</p></div></div>
+        <div class="imp-item"><div class="ik">PORTABLE MODELS</div><div><h3 data-i18n="imp.3t">模型装在你机器上</h3><p data-i18n="imp.3b">想要更聪明的召回，本机自动下载对应模型；装了哪些、占多大、走哪一档，设置里都看得见。不装也能先用云端 Key。</p></div></div>
+      </div>
+      <div class="dropzone">
+        <div class="dz-top">· Wrisp · <span data-i18n="imp.dzTag">指向现有目录</span></div>
+        <div class="dz-path">~/Notes/&lt;你的目录&gt;</div>
+        <div class="dz-tree">
+          <div class="n"><span class="b">▸</span><span>2026-10-22.md</span></div>
+          <div class="n hit"><span class="b">▸</span><span data-i18n="imp.dz1">会议纪要 · 需求评审</span></div>
+          <div class="n hit"><span class="b">▸</span><span data-i18n="imp.dz2">竞品动态 · 语音转写</span></div>
+          <div class="n"><span class="b">▸</span><span>weekly/2026-W42.md</span></div>
+          <div class="n hit"><span class="b">▸</span><span data-i18n="imp.dz3">双链与标签保持原样</span></div>
+        </div>
+        <div class="dz-foot" data-i18n="imp.dzFoot">文件仍是你原来的文件；Wrisp 只在其上建可删除、可重建的索引。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 特性·产物（只讲产出物长什么样） ================= -->
+<section class="reveal" id="proofs" style="background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="proof.eyebrow">06 · 你会拿到什么</div>
+    <h2 class="h-2" data-i18n="proof.title">整理是过程，产物才是你能用的东西</h2>
+    <div class="proof-grid">
+      <div class="proof-card wide">
+        <div class="mock" data-shot="info-cards">
+          <div class="mrow"><span class="mk-badge" data-i18n="proof.m1t">待办</span><span data-i18n="proof.m1a">周五前给客户回话：进度 / 风险 / 下周计划</span></div>
+          <div class="mrow"><span class="mk-badge" data-i18n="proof.m1b">会议纪要</span><span data-i18n="proof.m1c">评审结论：周报先模板化，智能化留给下个版本</span></div>
+          <div class="mrow"><span class="mk-badge" data-i18n="proof.m1d">竞品动态</span><span data-i18n="proof.m1e">竞品 App 上了语音转写，主打会议场景</span></div>
+        </div>
+        <div class="proof-body"><div class="pname">INFO CARDS</div><h3 data-i18n="proof.1t">信息卡片</h3><p data-i18n="proof.1b">待办、会议纪要、竞品动态、用户需求、数据指标、用户故事、决策——七种常见卡片自动归位，随时可改写、可撤回。</p></div>
+      </div>
+      <div class="proof-card">
+        <div class="mock" data-shot="todo">
+          <div class="mrow"><span class="box on">✓</span><span data-i18n="proof.m2a">给客户回话（周五）</span></div>
+          <div class="mrow"><span class="box"></span><span data-i18n="proof.m2b">整理评审结论进周报</span></div>
+          <div class="mrow"><span class="box"></span><span data-i18n="proof.m2c">试一遍竞品的新功能</span></div>
+        </div>
+        <div class="proof-body"><div class="pname">TO-DO LIST</div><h3 data-i18n="proof.2t">待办清单</h3><p data-i18n="proof.2b">待办从记录里长出来，勾完就沉进历史，不用另开一个清单应用。</p></div>
+      </div>
+      <div class="proof-card">
+        <div class="mock" data-shot="report">
+          <div class="mrow"><span class="mk-badge" data-i18n="proof.m3a">本周 · W42</span></div>
+          <div class="docline" style="width:88%"></div><div class="ml m"></div><div class="ml s"></div>
+          <div class="docline" style="width:64%"></div><div class="ml xl"></div>
+        </div>
+        <div class="proof-body"><div class="pname">WEEKLY REPORT</div><h3 data-i18n="proof.3t">周报</h3><p data-i18n="proof.3b">按你选的模板把这一周组织成稿，直接拿去发。</p></div>
+      </div>
+      <div class="proof-card">
+        <div class="mock" data-shot="qa">
+          <div class="q" data-i18n="proof.m4q">「上次客户提的风险是什么？」</div>
+          <div class="mrow"><span data-i18n="proof.m4a">来自 3 条记录</span><span class="cite">1</span><span class="cite">2</span><span class="cite">3</span></div>
+          <div class="ml xl"></div><div class="ml m"></div>
+        </div>
+        <div class="proof-body"><div class="pname">RETRIEVAL &amp; Q&amp;A</div><h3 data-i18n="proof.4t">检索问答</h3><p data-i18n="proof.4b">从关键词到智能问答，四种找法按需开启；答案带着出处，点得回原文。</p></div>
+      </div>
+      <div class="proof-card">
+        <div class="mock" data-shot="creation">
+          <div class="docline" style="width:40%;background:var(--ink);opacity:.75"></div>
+          <div class="ml xl"></div><div class="ml xl"></div><div class="ml m"></div>
+          <div class="mrow"><span class="mk-badge" data-i18n="proof.m5a">手边素材</span><span data-i18n="proof.m5b">竞品动态 · 评审结论 · 客户回话</span></div>
+        </div>
+        <div class="proof-body"><div class="pname">MAKING WORKS</div><h3 data-i18n="proof.5t">作品创作</h3><p data-i18n="proof.5b">结构化编辑器，写作时随手把你自己的资料摆到手边。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 数据主权 ================= -->
+<section class="reveal" id="data">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="data.eyebrow">07 · 数据主权</div>
+    <h2 class="h-2" data-i18n="data.title">你的记忆，只属于你</h2>
+    <p class="lead" data-i18n="data.sub">这些是你能自己验证的承诺，不是形容词。</p>
+    <div class="trust-grid">
+      <div class="trust-card"><h3><span class="tick">✓</span><span data-i18n="data.1t">文件在你目录里</span></h3><p data-i18n="data.1b">记录与作品以 Markdown 存在你自己的文件夹；数据库与索引删掉也能重建。</p></div>
+      <div class="trust-card"><h3><span class="tick">✓</span><span data-i18n="data.2t">默认本机处理</span></h3><p data-i18n="data.2b">识别、整理、嵌入、问答都能在本机跑完，敏感内容不必出机器。</p></div>
+      <div class="trust-card"><h3><span class="tick">✓</span><span data-i18n="data.3t">BYOK · 不为 AI 付订阅费</span></h3><p data-i18n="data.3b">要用云端模型就接你自己的 Key——模型要么在你本机跑，要么走你自己的 Key。</p></div>
+      <div class="trust-card"><h3><span class="tick">✓</span><span data-i18n="data.4t">随时带走</span></h3><p data-i18n="data.4b">导出仍是 Markdown，不锁格式、不设退出成本。</p></div>
+    </div>
+    <p class="trust-note"><span data-i18n="data.note">会离开本机的路径，页脚「隐私与数据声明」逐条列了什么发出去、默认开还是关。</span> <a href="#privacy" data-i18n="data.link">看这份清单 ↓</a></p>
+  </div>
+</section>
+
+<!-- ================= 08 路线图（只留时间轴：所处位置 + 下一步） ================= -->
+<section class="reveal" id="roadmap" style="background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="road.eyebrow">08 · 路线图</div>
+    <h2 class="h-2" data-i18n="road.title">三个阶段，一步一步走</h2>
+    <div class="road">
+      <div class="road-row current">
+        <div class="road-rail"><span class="pnode filled"></span><div class="road-phase">V1</div><div class="road-sub" data-i18n="road.v1sub">记忆召回</div></div>
+        <div class="road-body"><h3><span data-i18n="road.v1t">先让它记得住、找得回</span><span class="road-tag now" data-i18n="road.now">当前阶段</span></h3><p data-i18n="road.v1b">我们在这里：把你每天说过的、看过的、开过的会变成随叫随到的底座。</p></div>
+      </div>
+      <div class="road-row">
+        <div class="road-rail"><span class="pnode"></span><div class="road-phase">V2</div><div class="road-sub" data-i18n="road.v2sub">知识与洞察</div></div>
+        <div class="road-body"><h3 data-i18n="road.v2t">碎片连成体系</h3><p data-i18n="road.v2b">下一步：整理出概念与关联，创作开始带引用。</p></div>
+      </div>
+      <div class="road-row">
+        <div class="road-rail"><span class="pnode"></span><div class="road-phase">V3</div><div class="road-sub" data-i18n="road.v3sub">创作与代理</div></div>
+        <div class="road-body"><h3 data-i18n="road.v3t">分身替你写</h3><p data-i18n="road.v3b">再往后：按你的风格成稿，可授权、可代理，判断权仍在你在。</p></div>
+      </div>
+    </div>
+    <div class="road-note"><span class="pulse"></span><span data-i18n="road.note">现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱。</span></div>
+  </div>
+</section>
+
+<!-- ================= 09 定价说明（首个正式版前不出现具体价格行） ================= -->
+<section class="reveal" id="pricing">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="price.eyebrow">09 · 定价</div>
+    <h2 class="h-2" data-i18n="price.title">免费 + BYOK，不卖数据、不投广告</h2>
+    <div class="price-box">
+      <div class="pb-body">
+        <h3 data-i18n="price.body">Community 完整可用；AI 用量走你自己的 Key。Pro 从 V2 起提供，卖同步与便利，不解锁基础能力。</h3>
+        <p data-i18n="price.sub">不卖数据、不投广告；数据可迁移，随时带走。</p>
+      </div>
+      <div class="price-tags">
+        <div class="tag"><b data-i18n="price.t1t">不为 AI 付订阅费</b><span data-i18n="price.t1b">本机跑，或走你自己的 Key</span></div>
+        <div class="tag"><b data-i18n="price.t2t">找东西不设付费墙</b><span data-i18n="price.t2b">四种找法都在 Community</span></div>
+        <div class="tag"><b data-i18n="price.t3t">Pro 卖服务</b><span data-i18n="price.t3b">同步 / 便利 / 优先支持</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10 常见问题 · 运行要求 · 内测 CTA ================= -->
+<section class="cta reveal" id="waitlist">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="faq.eyebrow">10 · 常见问题</div>
+    <h2 class="h-2" data-i18n="faq.title">先回答五个最常被问的</h2>
+    <div class="faq">
+      <details open>
+        <summary><span class="qmk">Q1</span><span data-i18n="faq.1q">我的数据会被上传吗？</span><span class="chev">›</span></summary>
+        <div class="ans" data-i18n="faq.1a">默认不会。识别、整理、嵌入与问答都能在本机完成；只有你亲自填入云端 Key 并主动发起那次请求时，内容才会走你自己的账户。页脚「隐私与数据声明」逐条列出了会离开本机的路径。</div>
+      </details>
+      <details>
+        <summary><span class="qmk">Q2</span><span data-i18n="faq.2q">要订阅才能用吗？</span><span class="chev">›</span></summary>
+        <div class="ans" data-i18n="faq.2a">不需要。Community 免费且功能完整，模型费用由你自己的 Key 结算。Pro 从 V2 起提供同步、便利与优先支持，不会把基础能力锁进付费墙，也不卖你的数据。</div>
+      </details>
+      <details>
+        <summary><span class="qmk">Q3</span><span data-i18n="faq.3q">我现有的笔记怎么办？</span><span class="chev">›</span></summary>
+        <div class="ans" data-i18n="faq.3a">不用搬家。Markdown 就是文件真源，现有目录直接指进来就能用——不转格式、不重打标；哪天想走，导出的还是这些 Markdown。</div>
+      </details>
+      <details>
+        <summary><span class="qmk">Q4</span><span data-i18n="faq.4q">需要独立显卡吗？</span><span class="chev">›</span></summary>
+        <div class="ans" data-i18n="faq.4a">不需要。本地推理默认走 CPU；有兼容显卡时可以在设置里开启加速，显存不足会自动退回 CPU。本地模型还是可选的——不下载也能直接用云端 Key。</div>
+      </details>
+      <details>
+        <summary><span class="qmk">Q5</span><span data-i18n="faq.5q">内测什么时候发？</span><span class="chev">›</span></summary>
+        <div class="ans" data-i18n="faq.5a">现在还在内测迭代中，没有对外公布日期。加入名单，首个可下载版本就绪时第一批通知你。</div>
+      </details>
+    </div>
+    <div class="spec">
+      <span class="chip"><span data-i18n="spec.p">三个平台</span><span class="mono" data-i18n="spec.pv">Windows / macOS / Linux</span></span>
+      <span class="chip"><span data-i18n="spec.m">本地模型可选，按需下载</span><span class="mono" data-i18n="spec.mv">体积在设置里可见</span></span>
+      <span class="chip"><span data-i18n="spec.g">无需独立显卡</span><span class="mono" data-i18n="spec.gv">默认走 CPU</span></span>
+      <span class="chip"><span data-i18n="spec.u">自动更新</span><span class="mono" data-i18n="spec.uv">更新通道可选</span></span>
+    </div>
+
+    <div class="cta-box" style="margin-top:44px">
+      <h2 data-i18n="cta.title">先让它记住今天。</h2>
+      <p class="lead" data-i18n="cta.sub">加入内测名单，拿到第一版时第一批通知你。</p>
+      <form class="waitlist" id="formCta" novalidate>
+        <input type="email" name="email" placeholder="" data-i18n-ph="cta.formph" required autocomplete="email">
+        <button class="btn btn-primary submit" type="submit" data-i18n="cta.btn">加入等待名单</button>
+        <textarea name="question" rows="2" placeholder="" data-i18n-ph="cta.formq"></textarea>
+        <span class="err" role="alert" data-i18n="cta.formerr">请填写一个可用的邮箱地址。</span>
+        <span class="ok"><span aria-hidden="true">✓</span> <span data-i18n="cta.formok">已加入内测等待名单，发布时第一时间通知你。</span></span>
+        <span class="waitlist-note" data-i18n="cta.formnote">仅用于内测通知 · 不用于营销 · 可随时退订</span>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= 隐私与数据声明（正式站拆成 /privacy 与 /zh/privacy，与首页同批上线） ================= -->
+<section class="privacy" id="privacy">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="priv.eyebrow">隐私与数据声明</div>
+    <h2 class="h-2" data-i18n="priv.title">会离开本机的，只有下面这几条</h2>
+    <p class="lead" data-i18n="priv.sub">闭源分发要靠可验证的承诺建立信任，所以这里不写形容词，只写路径、内容与默认状态。</p>
+    <div class="pill-table">
+      <div class="pt-row head"><div class="c" data-i18n="priv.hPath">路径</div><div class="c" data-i18n="priv.hSend">发出去的是什么</div><div class="c" data-i18n="priv.hDefault">什么时候发生</div></div>
+      <div class="pt-row"><div class="c k">Local AI</div><div class="c" data-i18n="priv.1b">不出本机——识别、整理、嵌入、问答都在本地完成。</div><div class="c st" data-i18n="priv.1s">默认路径</div></div>
+      <div class="pt-row"><div class="c k">BYOK <span data-i18n="priv.2k">云端</span></div><div class="c" data-i18n="priv.2b">只有那次请求的正文与追问上下文，走你自己填的 Key、你自己的账户。</div><div class="c st" data-i18n="priv.2s">你填入 Key 并主动发起时</div></div>
+      <div class="pt-row"><div class="c k">IP <span data-i18n="priv.3k">属地</span></div><div class="c" data-i18n="priv.3b">优先用本地 IP 数据包离线解析；未命中才联网，且只发 IP，不发任何内容。</div><div class="c st" data-i18n="priv.3s">记录属地识别时</div></div>
+      <div class="pt-row"><div class="c k">Update</div><div class="c" data-i18n="priv.4b">当前版本号与资源清单的哈希，用于比对是否有新发布物；不含你的任何内容。</div><div class="c st" data-i18n="priv.4s">检查更新时</div></div>
+      <div class="pt-row"><div class="c k">Waitlist</div><div class="c" data-i18n="priv.5b">你在表单里填的邮箱，和那句「现在最挡着你的一件事」。</div><div class="c st" data-i18n="priv.5s">你主动提交时</div></div>
+    </div>
+    <ul>
+      <li data-i18n="priv.m1">邮箱只用于内测通知，不用于营销，不共享给第三方；可随时退订或要求删除。</li>
+      <li data-i18n="priv.m2">不卖数据、不投广告、不做行为画像。</li>
+      <li data-i18n="priv.m3">数据库与索引是可删除、可重建的派生数据，用户内容的真源始终是你目录里的 Markdown 文件。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <span class="foot-brand">◆ Wrisp</span>
+    <span data-i18n="foot.copy">© 2026 Wrisp · 你的记忆属于你</span>
+    <div class="foot-links">
+      <a href="#waitlist" data-i18n="foot.beta">加入内测</a>
+      <a href="https://github.com/liqms/wrisp-releases" target="_blank" rel="noopener" data-i18n="foot.releases">发布仓库</a>
+      <a href="#privacy" data-i18n="foot.privacy">隐私与数据声明</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/*
+ * 页面约定（改动前先读）：
+ *   · 十个区块各担一个主题，同一能力最多出现两次，重复的让位给下游区块
+ *   · 字体走系统栈（含 CJK），不加载 webfont
+ *   · 导航三规则：顶部只放动作入口 · 左侧目录定位章节 · 窄屏换成吸顶章节条
+ *   · hero 首帧即终态：静态完整流先渲染，动画只做增量；演示可暂停，新增行走 aria-live 播报
+ *   · 渐显的初始隐藏类只在 JS 接管后生效，无 JS / 爬虫 / 截图一律直接可读
+ *   · 品牌句三层：主口号 + 副句 / 差异句须带「通用」限定 / 终局句必须紧跟一行当下兑现句
+ * 演示卡片类型只取产品已确认的七类：待办 / 会议纪要 / 竞品动态 / 用户需求 / 数据指标 / 用户故事 / 决策。
+ */
+var I18N = {
+  zh: {
+    docTitle: 'Wrisp — 今天，你需要一个创作分身',
+    docDesc: '说话代替打字，整理交给 AI，数据永远留在你的机器。通用 AI 帮你写作，Wrisp 为你创作。',
+    ogImage: 'assets/og-zh.png', ogLocale: 'zh_CN',
+    'bn.hero':'开场','bn.pain':'痛点','bn.diff':'定位','bn.how':'工作流','bn.import':'导入','bn.proofs':'产物','bn.data':'数据','bn.road':'路线图','bn.price':'定价','bn.cta':'内测',
+    'nav.cta':'加入内测',
+    'hero.kicker':'本地优先 · 个人创作 AI',
+    'hero.title1':'今天，你需要','hero.title2':'一个创作分身。',
+    'hero.sub':'说话代替打字，整理交给 AI，数据永远留在你的机器。',
+    'hero.guard':'现在能用上的是它的记忆底座：说一句话，它替你记好、整理好、在你写东西时找回来。',
+    'hero.cta1':'加入内测','hero.cta2':'看它怎么工作',
+    'hero.formph':'留下邮箱，发布时通知你','hero.formq':'现在最挡着你的一件事是什么？（选填）',
+    'hero.formbtn':'加入等待名单','hero.formerr':'请填写一个可用的邮箱地址。',
+    'hero.formok':'已加入内测等待名单，发布时第一时间通知你。','hero.formnote':'仅用于内测通知 · 不用于营销 · 可随时退订',
+    'hero.window':'Wrisp · 日志流','hero.stream':'今天','hero.mic':'🎙 也可以直接说',
+    'hero.micLabel':'口述中','hero.micSource':'口述',
+    'hero.pause':'暂停演示','hero.play':'播放演示',
+    'hero.fType':'类型','hero.fSource':'来源','hero.fStatus':'状态',
+    'hero.cardhint':'卡片由这条记录直接生成 · 可改写 · 可撤回',
+    'pain.eyebrow':'02 · 痛点','pain.title':'信息太多，没时间整理，创作时又忘了。','pain.sub':'不是记不住——是散落、沉不下、用的时候调不出来。',
+    'pain.1t':'散落','pain.1b':'随手记在各处：聊天里、备忘录里、邮件里。要用时，翻不到。',
+    'pain.2t':'沉不下','pain.2b':'收藏过、读过、开过的会，没沉淀成能复用的东西，等于没发生。',
+    'pain.3t':'用不出','pain.3b':'动笔时明明看过，却调不出来，只能重新搜一遍——而这一次往往就放弃了。','pain.3tag':'Wrisp 接的就是这一环',
+    'diff.eyebrow':'03 · 产品定位','diff.title':'通用 AI 帮你写作，','diff.title2':'Wrisp 为你创作。',
+    'diff.qual':'<b>分身替你起草，你负责判断。</b>它负责识别、关联、归纳与召回；判断、取舍与记忆始终在你这边。',
+    'cmp.1t':'大厂 AI 助手','cmp.1b':'记忆绑在它的生态里，你的数据喂它的模型。',
+    'cmp.2t':'云端笔记','cmp.2b':'AI 能力强，但内容上传的那一刻就不再由你掌控。',
+    'cmp.3t':'本地笔记工具','cmp.3b':'数据在你手里，分类、打标、链接、召回全靠手。',
+    'cmp.4b':'本地优先 + AI 自动整理 + 数据主权 + BYOK + 对话式输入——这个组合还没人占。',
+    'work.eyebrow':'04 · 工作流','work.title':'碎片，变成你的知识','work.sub':'一条记录从你嘴里到能召回，走这四步。',
+    'work.1t':'说或写一句','work.1b':'自然语言进来，不用先想该放哪个文件夹。',
+    'work.2t':'它认类型','work.2b':'认得清就直接往下走；认不清最多追问两轮，也可以跳过。',
+    'work.3t':'落进今天的记录流','work.3b':'落下来还能改：改文字、换类型都算数。',
+    'work.4t':'整理成卡片','work.4b':'有把握的直接整理好，拿不准的先问你；之后随时能改写、能撤回。',
+    'imp.eyebrow':'05 · 导入与兼容','imp.title':'你现在的文件夹，就是 Wrisp 的文件夹','imp.sub':'切过来不需要搬家，也不需要重做一遍整理。',
+    'imp.1t':'一键导入','imp.1b':'Markdown 就是文件真源。现有目录直接指进来就能用——不转格式、不重打标、不动你的目录结构。',
+    'imp.2t':'写法照旧','imp.2b':'双链、标签、任务列表这些你已经在用的写法继续有效，Obsidian / Logseq 习惯不用改。',
+    'imp.3t':'模型装在你机器上','imp.3b':'想要更聪明的召回，本机自动下载对应模型；装了哪些、占多大、走哪一档，设置里都看得见。不装也能先用云端 Key。',
+    'imp.dzTag':'指向现有目录','imp.dz1':'会议纪要 · 需求评审','imp.dz2':'竞品动态 · 语音转写','imp.dz3':'双链与标签保持原样',
+    'imp.dzFoot':'文件仍是你原来的文件；Wrisp 只在其上建可删除、可重建的索引。',
+    'proof.eyebrow':'06 · 你会拿到什么','proof.title':'整理是过程，产物才是你能用的东西',
+    'proof.m1t':'待办','proof.m1a':'周五前给客户回话：进度 / 风险 / 下周计划','proof.m1b':'会议纪要','proof.m1c':'评审结论：周报先模板化，智能化留给下个版本','proof.m1d':'竞品动态','proof.m1e':'竞品 App 上了语音转写，主打会议场景',
+    'proof.1t':'信息卡片','proof.1b':'待办、会议纪要、竞品动态、用户需求、数据指标、用户故事、决策——七种常见卡片自动归位，随时可改写、可撤回。',
+    'proof.m2a':'给客户回话（周五）','proof.m2b':'整理评审结论进周报','proof.m2c':'试一遍竞品的新功能',
+    'proof.2t':'待办清单','proof.2b':'待办从记录里长出来，勾完就沉进历史，不用另开一个清单应用。',
+    'proof.m3a':'本周 · W42','proof.3t':'周报','proof.3b':'按你选的模板把这一周组织成稿，直接拿去发。',
+    'proof.m4q':'「上次客户提的风险是什么？」','proof.m4a':'来自 3 条记录','proof.4t':'检索问答','proof.4b':'从关键词到智能问答，四种找法按需开启；答案带着出处，点得回原文。',
+    'proof.m5a':'手边素材','proof.m5b':'竞品动态 · 评审结论 · 客户回话','proof.5t':'作品创作','proof.5b':'结构化编辑器，写作时随手把你自己的资料摆到手边。',
+    'data.eyebrow':'07 · 数据主权','data.title':'你的记忆，只属于你','data.sub':'这些是你能自己验证的承诺，不是形容词。',
+    'data.1t':'文件在你目录里','data.1b':'记录与作品以 Markdown 存在你自己的文件夹；数据库与索引删掉也能重建。',
+    'data.2t':'默认本机处理','data.2b':'识别、整理、嵌入、问答都能在本机跑完，敏感内容不必出机器。',
+    'data.3t':'BYOK · 不为 AI 付订阅费','data.3b':'要用云端模型就接你自己的 Key——模型要么在你本机跑，要么走你自己的 Key。',
+    'data.4t':'随时带走','data.4b':'导出仍是 Markdown，不锁格式、不设退出成本。',
+    'data.note':'会离开本机的路径，页脚「隐私与数据声明」逐条列了什么发出去、默认开还是关。','data.link':'看这份清单 ↓',
+    'road.eyebrow':'08 · 路线图','road.title':'三个阶段，一步一步走','road.now':'当前阶段',
+    'road.v1sub':'记忆召回','road.v1t':'先让它记得住、找得回','road.v1b':'我们在这里：把你每天说过的、看过的、开过的会变成随叫随到的底座。',
+    'road.v2sub':'知识与洞察','road.v2t':'碎片连成体系','road.v2b':'下一步：整理出概念与关联，创作开始带引用。',
+    'road.v3sub':'创作与代理','road.v3t':'分身替你写','road.v3b':'再往后：按你的风格成稿，可授权、可代理，判断权仍在你在。',
+    'road.note':'现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱。',
+    'price.eyebrow':'09 · 定价','price.title':'免费 + BYOK，不卖数据、不投广告',
+    'price.body':'Community 完整可用；AI 用量走你自己的 Key。Pro 从 V2 起提供，卖同步与便利，不解锁基础能力。',
+    'price.sub':'不卖数据、不投广告；数据可迁移，随时带走。',
+    'price.t1t':'不为 AI 付订阅费','price.t1b':'本机跑，或走你自己的 Key','price.t2t':'找东西不设付费墙','price.t2b':'四种找法都在 Community','price.t3t':'Pro 卖服务','price.t3b':'同步 / 便利 / 优先支持',
+    'faq.eyebrow':'10 · 常见问题','faq.title':'先回答五个最常被问的',
+    'faq.1q':'我的数据会被上传吗？','faq.1a':'默认不会。识别、整理、嵌入与问答都能在本机完成；只有你亲自填入云端 Key 并主动发起那次请求时，内容才会走你自己的账户。页脚「隐私与数据声明」逐条列出了会离开本机的路径。',
+    'faq.2q':'要订阅才能用吗？','faq.2a':'不需要。Community 免费且功能完整，模型费用由你自己的 Key 结算。Pro 从 V2 起提供同步、便利与优先支持，不会把基础能力锁进付费墙，也不卖你的数据。',
+    'faq.3q':'我现有的笔记怎么办？','faq.3a':'不用搬家。Markdown 就是文件真源，现有目录直接指进来就能用——不转格式、不重打标；哪天想走，导出的还是这些 Markdown。',
+    'faq.4q':'需要独立显卡吗？','faq.4a':'不需要。本地推理默认走 CPU；有兼容显卡时可以在设置里开启加速，显存不足会自动退回 CPU。本地模型还是可选的——不下载也能直接用云端 Key。',
+    'faq.5q':'内测什么时候发？','faq.5a':'现在还在内测迭代中，没有对外公布日期。加入名单，首个可下载版本就绪时第一批通知你。',
+    'spec.p':'三个平台','spec.pv':'Windows / macOS / Linux','spec.m':'本地模型可选，按需下载','spec.mv':'体积在设置里可见','spec.g':'无需独立显卡','spec.gv':'默认走 CPU','spec.u':'自动更新','spec.uv':'更新通道可选',
+    'cta.title':'先让它记住今天。','cta.sub':'加入内测名单，拿到第一版时第一批通知你。',
+    'cta.formph':'留下邮箱，发布时通知你','cta.formq':'现在最挡着你的一件事是什么？（选填）','cta.btn':'加入等待名单',
+    'cta.formerr':'请填写一个可用的邮箱地址。','cta.formok':'已加入内测等待名单，发布时第一时间通知你。','cta.formnote':'仅用于内测通知 · 不用于营销 · 可随时退订',
+    'priv.eyebrow':'隐私与数据声明','priv.title':'会离开本机的，只有下面这几条','priv.sub':'闭源分发要靠可验证的承诺建立信任，所以这里不写形容词，只写路径、内容与默认状态。',
+    'priv.hPath':'路径','priv.hSend':'发出去的是什么','priv.hDefault':'什么时候发生',
+    'priv.1b':'不出本机——识别、整理、嵌入、问答都在本地完成。','priv.1s':'默认路径',
+    'priv.2k':'云端','priv.2b':'只有那次请求的正文与追问上下文，走你自己填的 Key、你自己的账户。','priv.2s':'你填入 Key 并主动发起时',
+    'priv.3k':'属地','priv.3b':'优先用本地 IP 数据包离线解析；未命中才联网，且只发 IP，不发任何内容。','priv.3s':'记录属地识别时',
+    'priv.4b':'当前版本号与资源清单的哈希，用于比对是否有新发布物；不含你的任何内容。','priv.4s':'检查更新时',
+    'priv.5b':'你在表单里填的邮箱，和那句「现在最挡着你的一件事」。','priv.5s':'你主动提交时',
+    'priv.m1':'邮箱只用于内测通知，不用于营销，不共享给第三方；可随时退订或要求删除。',
+    'priv.m2':'不卖数据、不投广告、不做行为画像。',
+    'priv.m3':'数据库与索引是可删除、可重建的派生数据，用户内容的真源始终是你目录里的 Markdown 文件。',
+    'foot.copy':'© 2026 Wrisp · 你的记忆属于你','foot.beta':'加入内测','foot.releases':'发布仓库','foot.privacy':'隐私与数据声明'
+  },
+  en: {
+    docTitle: 'Wrisp — Today, you need a creation twin',
+    docDesc: 'Talk instead of type. AI does the organizing. Your data stays on your machine. Generic AI helps you write. Wrisp creates for you.',
+    ogImage: 'assets/og-en.png', ogLocale: 'en_US',
+    'bn.hero':'Start','bn.pain':'Problem','bn.diff':'Positioning','bn.how':'Workflow','bn.import':'Import','bn.proofs':'Output','bn.data':'Your data','bn.road':'Roadmap','bn.price':'Pricing','bn.cta':'Beta',
+    'nav.cta':'Join beta',
+    'hero.kicker':'Local-first · Personal creation AI',
+    'hero.title1':'Today, you need','hero.title2':'a creation twin.',
+    'hero.sub':'Talk instead of type. AI does the organizing. Your data stays on your machine.',
+    'hero.guard':'What works today is its memory core: say a line, and it files it, organizes it, and surfaces it when you write.',
+    'hero.cta1':'Join the beta','hero.cta2':'See how it works',
+    'hero.formph':'Leave your email — we\'ll notify you at launch','hero.formq':'What blocks you the most today? (optional)',
+    'hero.formbtn':'Join waitlist','hero.formerr':'Please enter a valid email address.',
+    'hero.formok':'You\'re on the waitlist — we\'ll notify you first at launch.','hero.formnote':'Beta notices only · no marketing · unsubscribe anytime',
+    'hero.window':'Wrisp · Journal stream','hero.stream':'Today','hero.mic':'🎙 or just talk',
+    'hero.micLabel':'Dictating','hero.micSource':'Dictated',
+    'hero.pause':'Pause demo','hero.play':'Play demo',
+    'hero.fType':'Type','hero.fSource':'Source','hero.fStatus':'Status',
+    'hero.cardhint':'Card generated from this entry · editable · revocable',
+    'pain.eyebrow':'02 · The problem','pain.title':'Too much to capture, no time to organize, forgotten when you create.','pain.sub':'It isn\'t memory — it\'s scattered, never settled, and unavailable when you write.',
+    'pain.1t':'Scattered','pain.1b':'Jotted everywhere: chat, notes app, email. When you need it, it\'s gone.',
+    'pain.2t':'Never settles','pain.2b':'Saved, read, sat through — none of it became anything reusable, so it might as well not have happened.',
+    'pain.3t':'Doesn\'t come out','pain.3b':'You know you saw it, but you can\'t pull it up, so you search again — and usually just give up.','pain.3tag':'This is the link Wrisp closes',
+    'diff.eyebrow':'03 · Positioning','diff.title':'Generic AI helps you write,','diff.title2':'Wrisp creates for you.',
+    'diff.qual':'<b>Your twin drafts; you decide.</b> It handles recognition, linking, summarizing and recall. Judgment, selection and memory stay with you.',
+    'cmp.1t':'Big-tech AI assistants','cmp.1b':'Memory locked inside their ecosystem; your data feeds their models.',
+    'cmp.2t':'Cloud note apps','cmp.2b':'Strong AI, but your content is out of your control the moment you upload it.',
+    'cmp.3t':'Local note tools','cmp.3b':'Your data stays put, yet filing, tagging, linking and recall are all manual.',
+    'cmp.4b':'Local-first + AI auto-organization + data sovereignty + BYOK + conversational input — no one holds this combination.',
+    'work.eyebrow':'04 · Workflow','work.title':'Fragments become your knowledge','work.sub':'Four steps from something you said to something you can recall.',
+    'work.1t':'Say it or type it','work.1b':'Plain language in — no deciding which folder it belongs to first.',
+    'work.2t':'It works out the type','work.2b':'Clear enough, it just proceeds; unclear, at most two quick follow-ups you can skip.',
+    'work.3t':'It lands in today\'s stream','work.3b':'Still yours to fix afterwards: change the text, change the type.',
+    'work.4t':'Organized into cards','work.4b':'Confident ones get filed right away, unsure ones ask first — and every one stays editable and revocable.',
+    'imp.eyebrow':'05 · Import & compatibility','imp.title':'Your current folder is already Wrisp\'s folder','imp.sub':'Switching doesn\'t mean moving house, or re-doing your organizing.',
+    'imp.1t':'One-click import','imp.1b':'Markdown is the source of truth. Point Wrisp at your existing folder and start — no format conversion, no re-tagging, no new structure.',
+    'imp.2t':'Your syntax keeps working','imp.2b':'Backlinks, tags and task lists you already write stay valid, so Obsidian / Logseq habits carry over.',
+    'imp.3t':'Models live on your machine','imp.3b':'For sharper recall the matching models download locally; which ones, how big, which tier — all visible in Settings. Skip them and use your own key instead.',
+    'imp.dzTag':'point at an existing folder','imp.dz1':'Meeting notes · requirements review','imp.dz2':'Competitor news · voice transcription','imp.dz3':'Backlinks and tags untouched',
+    'imp.dzFoot':'They\'re still your files. Wrisp only builds an index on top — one you can delete and rebuild.',
+    'proof.eyebrow':'06 · What you get','proof.title':'Organizing is the process; the output is what you use',
+    'proof.m1t':'To-do','proof.m1a':'Reply to the client by Friday: progress / risks / next week','proof.m1b':'Meeting notes','proof.m1c':'Review call: ship the template-based report first, intelligence next release','proof.m1d':'Competitor update','proof.m1e':'A rival app shipped voice transcription for meeting use cases',
+    'proof.1t':'Knowledge cards','proof.1b':'Todo, meeting notes, competitor news, user needs, metrics, user stories, decisions — seven everyday card types filed automatically, always editable and revocable.',
+    'proof.m2a':'Reply to the client (Friday)','proof.m2b':'Fold review conclusions into the report','proof.m2c':'Try the rival\'s new feature',
+    'proof.2t':'Todo list','proof.2b':'Todos grow out of your entries and sink into history once done — no second checklist app.',
+    'proof.m3a':'THIS WEEK · W42','proof.3t':'Weekly report','proof.3b':'Your template assembles the week into a draft you can send as is.',
+    'proof.m4q':'"What risk did the client raise last time?"','proof.m4a':'from 3 entries','proof.4t':'Search & Q&A','proof.4b':'Keyword through smart Q&A — four ways to look, enabled as you need them; answers cite their sources back to the original.',
+    'proof.m5a':'AT HAND','proof.m5b':'competitor news · review call · client reply','proof.5t':'Writing works','proof.5b':'A structured editor that keeps your own material within reach while you write.',
+    'data.eyebrow':'07 · Data sovereignty','data.title':'Your memory belongs only to you','data.sub':'Promises you can verify yourself — not adjectives.',
+    'data.1t':'Files in your folder','data.1b':'Entries and works are Markdown in your own directory; the database and indexes can be deleted and rebuilt.',
+    'data.2t':'Local by default','data.2b':'Recognition, organizing, embedding and Q&A all run on your machine — sensitive content doesn\'t have to leave.',
+    'data.3t':'BYOK · no AI subscription','data.3b':'Want a cloud model? Bring your own key — the model either runs on your machine or bills through your own key.',
+    'data.4t':'Take it with you','data.4b':'Export is Markdown. No format lock-in, no exit cost.',
+    'data.note':'For every path that can leave your machine, the Privacy statement below lists what goes out and when it happens.','data.link':'Read that list ↓',
+    'road.eyebrow':'08 · Roadmap','road.title':'Three stages, one at a time','road.now':'Current stage',
+    'road.v1sub':'Memory recall','road.v1t':'First it remembers, then it finds','road.v1b':'This is where we are: what you say, read and sit through each day becomes a base you can call on.',
+    'road.v2sub':'Knowledge & insight','road.v2t':'Fragments connect','road.v2b':'Next: concepts and connections get organized, and writing starts carrying citations.',
+    'road.v3sub':'Creation & agency','road.v3t':'Your twin writes','road.v3b':'Later: finished pieces in your style, with delegation and authorization — judgment stays yours.',
+    'road.note':'Still iterating in private beta, which is why there is no download button here — leave an email instead.',
+    'price.eyebrow':'09 · Pricing','price.title':'Free + BYOK — no data selling, no ads',
+    'price.body':'Community is fully usable; AI usage goes through your own key. Pro arrives with V2, selling sync and convenience rather than unlocking basics.',
+    'price.sub':'No selling your data, no ads; your data stays portable, take it anytime.',
+    'price.t1t':'No AI subscription','price.t1b':'Runs locally, or on your own key','price.t2t':'No paywall on finding','price.t2b':'All four ways to search, in Community','price.t3t':'Pro sells service','price.t3b':'Sync / convenience / priority support',
+    'faq.eyebrow':'10 · FAQ','faq.title':'Five questions people always ask',
+    'faq.1q':'Does my data get uploaded?','faq.1a':'Not by default. Recognition, organizing, embedding and Q&A all run locally; content only travels through your own account when you enter a cloud key and make that request yourself. The Privacy statement below lists every path that can leave your machine.',
+    'faq.2q':'Do I need a subscription?','faq.2a':'No. Community is free and fully usable, and model costs are billed by your own key. From V2, Pro adds sync, convenience and priority support — it never puts basic capability behind the paywall, and we don\'t sell your data.',
+    'faq.3q':'What about the notes I already have?','faq.3a':'Nothing to move. Markdown is the source of truth: point Wrisp at your current folder and it works — no conversion, no re-tagging. And if you ever leave, the export is still those same Markdown files.',
+    'faq.4q':'Do I need a dedicated GPU?','faq.4a':'No. Local inference runs on CPU by default; with a supported GPU you can turn acceleration on in Settings, and low VRAM falls back to CPU automatically. Local models are optional too — skip them and use your own key.',
+    'faq.5q':'When does the beta ship?','faq.5a':'We\'re still iterating privately and haven\'t published a date. Join the waitlist and you\'re in the first batch when a downloadable build is ready.',
+    'spec.p':'Three platforms','spec.pv':'Windows / macOS / Linux','spec.m':'Local models optional, downloaded on demand','spec.mv':'size visible in Settings','spec.g':'No dedicated GPU needed','spec.gv':'CPU by default','spec.u':'Auto-update','spec.uv':'opt-in channels',
+    'cta.title':'Let it remember today.','cta.sub':'Join the beta and be in the first batch told about the first build.',
+    'cta.formph':'Leave your email — we\'ll notify you at launch','cta.formq':'What blocks you the most today? (optional)','cta.btn':'Join waitlist',
+    'cta.formerr':'Please enter a valid email address.','cta.formok':'You\'re on the waitlist — we\'ll notify you first at launch.','cta.formnote':'Beta notices only · no marketing · unsubscribe anytime',
+    'priv.eyebrow':'Privacy & data statement','priv.title':'Only these few things can leave your machine','priv.sub':'Closed-source distribution earns trust with verifiable promises, so this lists paths, payloads and defaults — not adjectives.',
+    'priv.hPath':'Path','priv.hSend':'What goes out','priv.hDefault':'When it happens',
+    'priv.1b':'Nothing — recognition, organizing, embedding and Q&A run locally.','priv.1s':'default path',
+    'priv.2k':'cloud','priv.2b':'Just that request\'s text and follow-up context, through the key you entered and your own account.','priv.2s':'when you add a key and ask',
+    'priv.3k':'location','priv.3b':'An offline IP pack is tried first; only a miss goes online, and it sends the IP — never your content.','priv.3s':'during location tagging',
+    'priv.4b':'The current version number and resource manifest hashes, used to check for new releases. None of your content.','priv.4s':'when checking for updates',
+    'priv.5b':'The email you submit, plus the one line about what blocks you most.','priv.5s':'only when you submit',
+    'priv.m1':'Emails are used for beta notices only — no marketing, no third-party sharing, unsubscribe or request deletion anytime.',
+    'priv.m2':'No selling data, no ads, no behavioural profiling.',
+    'priv.m3':'The database and indexes are derived data you can delete and rebuild; the source of truth for your content stays the Markdown files in your folder.',
+    'foot.copy':'© 2026 Wrisp · Your memory belongs to you','foot.beta':'Join beta','foot.releases':'Releases','foot.privacy':'Privacy & data'
+  }
+};
+
+/*
+ * 演示场景：每条的「文本 / 徽章 / 卡片类型」三者同源，类型只取产品已确认的七类。
+ * mode: 'type' = 键盘/对话输入；'voice' = 口述（说话代替打字，非语音文件转写）。
+ * rows = 首帧静态完整流；incoming = 循环里落在完整流之上的增量。
+ */
+var SCENES = {
+  zh: {
+    prefix: '记录：',
+    rows: [
+      {time:'09:41', mode:'type', badge:'待办', cls:'todo', text:'周五前给客户回话：进度与风险', type:'待办', status:'已整理 · 可撤回'},
+      {time:'10:02', mode:'type', badge:'竞品动态', cls:'comp', text:'竞品上了语音转写，主打会议', type:'竞品动态', status:'已整理 · 可撤回'},
+      {time:'10:26', mode:'type', badge:'会议纪要', cls:'meet', text:'评审定了：周报先按模板出', type:'会议纪要', status:'已整理 · 可撤回'}
+    ],
+    incoming: [
+      {time:'11:48', mode:'voice', badge:'决策', cls:'decide', text:'定了：先做三个平台，移动端下阶段', type:'决策', status:'已整理 · 可撤回', dur:'0:07'},
+      {time:'12:05', mode:'type', badge:'用户需求', cls:'need', text:'希望导出把图片一起带走', type:'用户需求', status:'已整理 · 可撤回'}
+    ]
+  },
+  en: {
+    prefix: 'Noted: ',
+    rows: [
+      {time:'09:41', mode:'type', badge:'To-do', cls:'todo', text:'Reply to the client by Friday', type:'To-do', status:'Filed · revocable'},
+      {time:'10:02', mode:'type', badge:'Competitor update', cls:'comp', text:'A rival shipped voice notes', type:'Competitor update', status:'Filed · revocable'},
+      {time:'10:26', mode:'type', badge:'Meeting notes', cls:'meet', text:'Settled: template report first', type:'Meeting notes', status:'Filed · revocable'}
+    ],
+    incoming: [
+      {time:'11:48', mode:'voice', badge:'Decision', cls:'decide', text:'Three platforms first, mobile next', type:'Decision', status:'Filed · revocable', dur:'0:07'},
+      {time:'12:05', mode:'type', badge:'Requirement', cls:'need', text:'Exports should carry images', type:'Requirement', status:'Filed · revocable'}
+    ]
+  }
+};
+
+var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var narrow = window.matchMedia && window.matchMedia('(max-width: 640px)');
+var streamToken = 0;
+var paused = false;
+
+/* ---------- 语言：显式选择优先且持久化；无选择时固定中文落地页 ---------- */
+/* 正式版由边缘路由按访问地区选默认语言。当前托管层没有地区路由，所以默认语言钉在 zh，
+   不做浏览器语言嗅探——嗅探会让同一 URL 对不同的人返回不同内容，爬虫与分享链接都不可复现。 */
+function initialLang() {
+  var q = (location.search + location.hash).match(/lang=(en|zh)/);
+  if (q) { try { localStorage.setItem('wrisp-lang', q[1]); } catch (e) {} return q[1]; }
+  try {
+    var saved = localStorage.getItem('wrisp-lang');
+    if (saved === 'en' || saved === 'zh') return saved;
+  } catch (e2) {}
+  return 'zh';
+}
+var currentLang = initialLang();
+
+function t(key) { var v = I18N[currentLang][key]; return v === undefined ? I18N.zh[key] : v; }
+
+/* ---------- 记录流：首帧即终态，循环只做增量 ---------- */
+function rowEl(sc, landingClass) {
+  var node = document.createElement('div');
+  node.className = 'srow' + (landingClass ? ' landing' : '');
+  var t1 = document.createElement('span'); t1.className = 't'; t1.textContent = sc.time;
+  var t2 = document.createElement('span'); t2.className = 'txt'; t2.textContent = sc.text;
+  var b = document.createElement('span'); b.className = 'badge ' + sc.cls; b.textContent = sc.badge;
+  node.appendChild(t1); node.appendChild(t2); node.appendChild(b);
+  return node;
+}
+function renderFrame() {
+  var S = SCENES[currentLang];
+  var wrap = document.getElementById('streamRows');
+  wrap.innerHTML = '';
+  S.rows.forEach(function (sc) { wrap.appendChild(rowEl(sc, false)); });
+  setCard(S.rows[2]);
+}
+function setCard(sc) {
+  var card = document.getElementById('infoCard');
+  document.getElementById('cardType').textContent = sc.type;
+  document.getElementById('cardTypeV').textContent = sc.type;
+  document.getElementById('cardBody').textContent = sc.text;
+  var badge = document.getElementById('cardBadge');
+  badge.className = 'badge ' + sc.cls; badge.textContent = sc.badge;
+  document.getElementById('cardSource').textContent = sc.time + ' · ' + (sc.mode === 'voice' ? t('hero.micSource') : t('hero.stream'));
+  document.getElementById('cardStatus').textContent = sc.status;
+  card.classList.add('show');
+  if (!reduced) { card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); }
+}
+function showVoice(sc) {
+  var wrap = document.getElementById('streamRows');
+  var v = document.createElement('div');
+  v.className = 'voice'; v.setAttribute('data-voice', '1');
+  v.innerHTML = '<span class="rec"></span><span>' + t('hero.micLabel') + '</span>' +
+    '<span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' +
+    '<span class="dur">' + sc.dur + '</span>';
+  wrap.appendChild(v);
+  return v;
+}
+function loopIncoming(n) {
+  var tok = streamToken;
+  var S = SCENES[currentLang];
+  if (paused || reduced || (narrow && narrow.matches)) return;
+  var sc = S.incoming[n % S.incoming.length];
+  var wrap = document.getElementById('streamRows');
+  var voiceNode = null;
+  var delay = 1200;
+  if (sc.mode === 'voice') {
+    voiceNode = showVoice(sc);
+    delay = 2400;
+  } else {
+    typeInto(S.prefix + sc.text, sc.text, tok);
+  }
+  setTimeout(function () {
+    if (tok !== streamToken) return;
+    if (voiceNode && voiceNode.parentNode) voiceNode.parentNode.removeChild(voiceNode);
+    document.getElementById('typebar').textContent = '';
+    var node = rowEl(sc, true);
+    node.classList.add('living');
+    wrap.appendChild(node);
+    requestAnimationFrame(function () { node.classList.add('show'); });
+    setCard(sc);
+    var atEnd = ((n + 1) % S.incoming.length === 0);
+    setTimeout(function () {
+      if (tok !== streamToken) return;
+      if (atEnd) { setTimeout(function () { if (tok !== streamToken) return; renderFrame(); loopIncoming(0); }, 1400); }
+      else { loopIncoming(n + 1); }
+    }, 3000);
+  }, delay);
+}
+function typeInto(full, finalText, tok) {
+  var bar = document.getElementById('typebar');
+  var k = 0;
+  (function step() {
+    if (tok !== streamToken || paused || reduced) { return; }
+    bar.textContent = full.slice(0, k);
+    if (k >= full.length) return;
+    k++;
+    setTimeout(step, 26);
+  })();
+}
+function startStream() {
+  streamToken++;
+  var tok = streamToken;
+  renderFrame();
+  if (paused || reduced || (narrow && narrow.matches)) return;
+  setTimeout(function () { if (tok === streamToken) loopIncoming(0); }, 2200);
+}
+
+/* ---------- 语言应用（含元数据同步：og / description 必须与页面语言一致） ---------- */
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  var els = document.querySelectorAll('[data-i18n]');
+  for (var i = 0; i < els.length; i++) {
+    var k = els[i].getAttribute('data-i18n');
+    var v = I18N[lang][k];
+    if (v === undefined) continue;
+    if (v.indexOf('<b>') >= 0 || v.indexOf('</b>') >= 0) els[i].innerHTML = v;
+    else els[i].textContent = v;
+  }
+  var phs = document.querySelectorAll('[data-i18n-ph]');
+  for (var j = 0; j < phs.length; j++) {
+    var k2 = phs[j].getAttribute('data-i18n-ph');
+    if (I18N[lang][k2] !== undefined) phs[j].setAttribute('placeholder', I18N[lang][k2]);
+  }
+  document.getElementById('lngZh').classList.toggle('active', lang === 'zh');
+  document.getElementById('lngEn').classList.toggle('active', lang === 'en');
+  document.getElementById('lngZh').setAttribute('aria-pressed', String(lang === 'zh'));
+  document.getElementById('lngEn').setAttribute('aria-pressed', String(lang === 'en'));
+  document.title = I18N[lang].docTitle;
+  setMeta('name', 'description', I18N[lang].docDesc);
+  setMeta('property', 'og:title', I18N[lang].docTitle);
+  setMeta('property', 'og:description', I18N[lang].docDesc);
+  setMeta('property', 'og:image', I18N[lang].ogImage);
+  setMeta('property', 'og:locale', I18N[lang].ogLocale);
+  setMeta('property', 'og:image:alt', I18N[lang].docTitle);
+  setMeta('name', 'twitter:title', I18N[lang].docTitle);
+  setMeta('name', 'twitter:description', I18N[lang].docDesc);
+  setMeta('name', 'twitter:image', I18N[lang].ogImage);
+  document.getElementById('chFill').style.width = '10%';
+  updateChapter();
+  startStream();
+}
+function setMeta(attr, key, val) {
+  var el = document.querySelector('meta[' + attr + '="' + key + '"]');
+  if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+  el.setAttribute('content', val);
+}
+
+/* ---------- 章节条 ---------- */
+var SECTIONS = ['top','pain','diff','how','import','proofs','data','roadmap','pricing','waitlist'];
+var chIndex = 0;
+function updateChapter() {
+  var num = document.getElementById('chNum');
+  var name = document.getElementById('chName');
+  num.textContent = ('0' + (chIndex + 1)).slice(-2);
+  var keys = ['bn.hero','bn.pain','bn.diff','bn.how','bn.import','bn.proofs','bn.data','bn.road','bn.price','bn.cta'];
+  name.textContent = t(keys[chIndex]);
+  document.getElementById('chFill').style.width = Math.round(((chIndex + 1) / SECTIONS.length) * 100) + '%';
+}
+function goTo(i) {
+  chIndex = Math.max(0, Math.min(SECTIONS.length - 1, i));
+  var el = document.getElementById(SECTIONS[chIndex]);
+  if (el) el.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block: 'start'});
+  updateChapter();
+}
+
+/* ---------- 表单（字段齐全；入库、去重与发信通道属后端，上线前必须接通） ---------- */
+function wireForms() {
+  var forms = document.querySelectorAll('.waitlist');
+  for (var i = 0; i < forms.length; i++) {
+    forms[i].addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var input = this.querySelector('input[type=email]');
+      var err = this.querySelector('.err');
+      var ok = this.querySelector('.ok');
+      var val = (input.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val)) {
+        if (err) err.classList.add('show');
+        if (ok) ok.classList.remove('show');
+        input.focus();
+        return;
+      }
+      if (err) err.classList.remove('show');
+      if (ok) ok.classList.add('show');
+      this.querySelector('.submit').disabled = true;
+    });
+  }
+}
+
+/* ---------- 渐显（只在 JS 已接管时生效，见 .js .reveal） ---------- */
+if ('IntersectionObserver' in window) {
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) { entries[i].target.classList.add('in'); io.unobserve(entries[i].target); }
+    }
+  }, { threshold: 0.1 });
+  var reveals = document.querySelectorAll('.reveal');
+  for (var r = 0; r < reveals.length; r++) io.observe(reveals[r]);
+
+  var spyIds = SECTIONS;
+  var navLinks = document.querySelectorAll('.blocknav a');
+  var spy = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        var idx = spyIds.indexOf(entries[i].target.id);
+        if (idx >= 0) {
+          chIndex = idx;
+          for (var k = 0; k < navLinks.length; k++) navLinks[k].classList.remove('active');
+          if (navLinks[idx]) navLinks[idx].classList.add('active');
+          updateChapter();
+        }
+      }
+    }
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  for (var s = 0; s < spyIds.length; s++) {
+    var el = document.getElementById(spyIds[s]);
+    if (el) spy.observe(el);
+  }
+}
+
+document.getElementById('lngZh').addEventListener('click', function () { setLang('zh'); });
+document.getElementById('lngEn').addEventListener('click', function () { setLang('en'); });
+function setLang(lang) {
+  currentLang = lang;
+  try { localStorage.setItem('wrisp-lang', lang); } catch (e) {}
+  applyLang(lang);
+}
+document.getElementById('chPrev').addEventListener('click', function () { goTo(chIndex - 1); });
+document.getElementById('chNext').addEventListener('click', function () { goTo(chIndex + 1); });
+
+var toggle = document.getElementById('streamToggle');
+toggle.addEventListener('click', function () {
+  paused = !paused;
+  toggle.setAttribute('aria-pressed', String(paused));
+  toggle.textContent = paused ? t('hero.play') : t('hero.pause');
+  if (!paused) startStream(); else streamToken++;
+});
+if (reduced) { toggle.style.display = 'none'; }
+if (narrow.addEventListener) {
+  narrow.addEventListener('change', function () { startStream(); });
+}
+
+wireForms();
+applyLang(currentLang);
+</script>
+</body>
+</html>
