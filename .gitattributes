@@ -1,0 +1,9 @@
+# 构建于 Linux（GitHub Pages）与 Windows（本地）两侧，固定 LF 以免整文件换行差异污染 diff。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.icns binary
+*.woff binary
+*.woff2 binary
