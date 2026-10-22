@@ -1,0 +1,30 @@
+# 边缘路由层的配置。
+#
+# 【这一层挂在哪里】Worker 只能挡在它自己的域名前面，而 github.io 不是你的域名——
+# 所以只要站点还托管在 https://liqms.github.io/wrisp-site/ ，这个 Worker 就没有地方上线。
+# 它要等最终国际域（Cloudflare DNS + 一条指向 Pages 的记录）定下来之后才谈部署；
+# 原因与届时要改的几处写在 edge/README.md 的「跳转层 router/」一节。
+# 现在能做的只有两件事：代码写完（worker.js）+ 进程内验通（smoke.mjs，27 条）。
+
+name = "wrisp-router"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# 内容层。改了站点托管位置只动这一处。
+ORIGIN = "https://liqms.github.io"
+# Pages 项目站的子路径；换成根域名后改成空串。
+BASE_PATH = "/wrisp-site"
+# 用来在上线前验「CN → /zh/」这条回路；线上不要设，留空才会真读 cf-ipcountry。
+# FORCE_COUNTRY = "CN"
+
+# 域名到手后，二选一：
+#   1) Workers 路由：在 Cloudflare 上给域名加一条记录（Proxied），然后启用下面的 routes；
+#   2) Cloudflare Pages + `_worker.js`：把 worker.js 放到 Pages 项目根，Pages 会自动用它做兜底路由。
+# [[routes]]
+# pattern = "wrisp.io"
+# custom_domain = true
+
+# 上线后要先确认的一件事：cf-ipcountry 在该账号的 Worker 里是否可见。
+# 拿不到就只按 Accept-Language + cookie 判，判定表不变，只是猜的线索少一条——
+# 不要因为少一条线索就改成嗅探响应体（那是铁律 3）。

@@ -1,17 +1,23 @@
-# 等待名单收集端
+# 边缘：两个 Worker
 
-站上的表单在没有配收集端点时是**不可提交**的（页面上会照实说明）。`waitlist/` 就是把
-它接通的那一半：一个 Cloudflare Worker + 一个 Workers KV 命名空间，收到邮箱就去重入库，
-可选地再发一封确认信。
+`edge/` 放站点之外的服务端。两个，各自独立部署，互不依赖：
 
 ```
-edge/waitlist/
-├── worker.js      收集端本体（无依赖，单文件）
-├── wrangler.toml  绑定与变量，KV 命名空间 id 是占位符
-└── smoke.mjs      对着跑起来的 Worker 打十条回路的冒烟验
+edge/
+├── waitlist/          等待名单收集端
+│   ├── worker.js      收集端本体（无依赖，单文件）
+│   ├── wrangler.toml  绑定与变量，KV 命名空间 id 是占位符
+│   └── smoke.mjs      对着跑起来的 Worker 打十条回路的冒烟验
+└── router/            按访问地区选默认语言的跳转层
+    ├── worker.js      只做 302，其余请求原样透传给 Pages
+    ├── wrangler.toml  变量与两种上线形态；当前没有可上线的域名，见该文件第一行注释
+    └── smoke.mjs     进程内 27 条断言（不需要账号，也不连 Pages）
 ```
 
-## 契约
+`waitlist/` 是把表单接通的那一半：一个 Worker + 一个 Workers KV 命名空间，收到邮箱就去重入库，
+可选地再发一封确认信。站上的表单在没有配收集端点时是**不可提交**的（页面上会照实说明）。
+
+## 收集端 · 契约
 
 `POST` JSON `{ email, question, company }`，`company` 是蜜罐（真人那一格永远是空的）。
 
@@ -27,7 +33,7 @@ edge/waitlist/
 改任何一边都要同步改另一边：请求侧在 `src/components/WaitlistForm.astro`，
 开关与字段说明在 `.env.example`。
 
-## 首次部署
+## 收集端 · 首次部署
 
 需要 Cloudflare 账号，`wrangler login` 会开浏览器走 OAuth。
 
@@ -53,7 +59,7 @@ npx wrangler secret put RESEND_API_KEY         # 交互式粘贴，不进仓库�
 域名换了（例如最终用上自己的域）时，只需把新来源加进 `ALLOWED_ORIGINS` 再 `deploy` 一次；
 这个表只管「谁提交的」，不加就等于把响应结果对全网关闭。
 
-## 本地验
+## 收集端 · 本地验
 
 ```bash
 rm -rf D:/tmp/wrisp-edge-dev      # 空目录 = 空表；Windows 下换个没被占用的路径同理
@@ -70,7 +76,7 @@ node edge/waitlist/smoke.mjs
 （已 gitignore，里面存的是提交过的邮箱，绝不入库）。重启不清空表，而限流按小时计，
 上一轮的写入会串进这一轮——所以每次跑前换一个空目录，否则最后两条断言必红。
 
-## 数据怎么看
+## 收集端 · 数据怎么看
 
 ```bash
 npx wrangler kv key list --binding=WAITLIST --remote
@@ -81,7 +87,7 @@ npx wrangler kv key get <email:开头的键> --binding=WAITLIST --remote
 不是数据）。导出全量把 `key list` 的结果逐条 `key get` 即可；记录体里的 `at` 是提交时刻，
 `lang` 取自来源页路径。要清掉某人的记录，`kv key delete`。
 
-## 配额为什么是这么设的
+## 收集端 · 配额为什么是这么设的
 
 Workers KV 免费档每天 1000 次写。没有门槛的话，一个脚本就能把当天额度刷光，
 表单从此整天报错，而且收上来的是垃圾。所以三件事放在服务端做而不是指望浏览器：
@@ -89,3 +95,54 @@ Workers KV 免费档每天 1000 次写。没有门槛的话，一个脚本就能
 
 端点地址本身是公开的（它就印在页面上），所以这里不放任何密钥，也不接受任何
 「管理」类请求——这个 Worker 只会往自己的 KV 里写一条邮箱记录。
+
+---
+
+## 跳转层 router/
+
+**它只做一件事**：访客落到站点根（`/` 或 `/zh/`）时，决定要不要把他送到另一版，其余一概不碰。
+
+判定顺序（三条铁律的出处在方案文档，这里只写行为）：
+
+| 线索 | 强度 | 说明 |
+|------|------|------|
+| `wrisp_lang` cookie | 最高，有它就不猜 | 语言开关写下的显式选择，一年期。压过国家码——中文用户点了 EN 之后不该再被跳回去 |
+| `cf-ipcountry`（或 `FORCE_COUNTRY`） | 次之 | **只认 CN**。其他国家不猜：英文站面向全球，把东京或柏林的访客按语言猜错的代价比不猜大 |
+| `Accept-Language` 首项 | 兜底 | 只看第一项：`en-US,en;q=0.9,zh-CN;q=0.8` 的访客要的是英文；第三种语言（de / fr…）不乱猜 |
+
+三条不可谈判的行为，`smoke.mjs` 逐条盯着：
+
+- **只发 302，绝不 301**——永久重定向会让搜索引擎只收录一种语言。
+- **跳转响应 `cache-control: no-store`**——它取决于 cookie 和请求头，被 CDN 缓存下来就是把别人的语言发给下一位。查询串原样带上，推广链接的 `?utm_*` 不能在这一跳里丢。
+- **不改写响应体**——非根路径（`/privacy/`、`/zh/privacy/`、`/_astro/*`、`sitemap.xml`）与 `POST` 全部透传给 Pages；透传时按白名单转发头，**访客的 cookie 不会跟着送到 GitHub 那里去**。
+
+### 现在还不能部署
+
+Worker 只能挡在它自己的域名前面，而 `liqms.github.io` 不是这个站的域名——**只要站点还在
+Pages 项目站的子路径上，这一层就没有可挂的地方**。它等的是最终国际域（Cloudflare DNS +
+一条指向 Pages 的 Proxied 记录）。届时改动集中在这几处，站点侧一行不用动：
+
+```bash
+# 1) 域名加进 wrangler.toml 的 [[routes]]（文件里有模板），必要时改 BASE_PATH 为空串
+npx wrangler deploy --config edge/router/wrangler.toml
+# 2) 收集端补上新来源：edge/waitlist/wrangler.toml 的 ALLOWED_ORIGINS
+```
+
+### 本地验
+
+```bash
+node edge/router/smoke.mjs        # 27 条，进程内跑，不连 Pages、不需要账号
+```
+
+覆盖：判定表每一行（含 cookie 里混着别的键、cookie 值不认识、`Accept-Language` 多语种排序）、
+只在两个根上动作、302 的 `location` 与 `no-store` 与 `Vary`、透传的目标与头白名单、`POST`
+不被降级成 GET、`BASE_PATH` 为空时仍成对。三条变异（302 改 301、去掉 cookie 优先级、透传
+转发全部头）各被抓到一次，用例不是空跑。
+
+### 上线后手动确认四件事
+
+1. `curl -sI https://<域>/` 在无 cookie、CN 出口下应回 `302` + `location: /zh/` + `cache-control: no-store`；
+2. 同一 URL 带 `Cookie: wrisp_lang=en` 应**不跳**；
+3. `curl -sL` 拿到的两种语言页面内容与直接访问 `/`、`/zh/` **逐字节一致**（证明没改写响应体）；
+4. `cf-ipcountry` 在该账号下是否可见——拿不到就只是少一条猜测线索，判定表其余部分不变，
+   **不要因此改成按 UA 猜**（那是铁律 3）。
