@@ -1,0 +1,24 @@
+---
+import '../styles/tokens.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** 内容未定稿前挡住索引；M1b-4 双语页就绪后由页面显式关掉。 */
+  noindex?: boolean;
+}
+
+const { title, description, noindex = true } = Astro.props;
+---
+<html lang={Astro.currentLocale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,14 +1,6 @@
 ---
-// 占位页：M1b 骨架检查点。正式内容由 M2 区块组件替换。
+import Page from '../../layouts/Page.astro';
 ---
-<html lang={Astro.currentLocale}>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Wrisp</title>
-    <meta name="robots" content="noindex" />
-  </head>
-  <body>
-    <p>Astro 骨架 —— locale={Astro.currentLocale} path={Astro.url.pathname}</p>
-  </body>
-</html>
+<Page title="Wrisp" description="Wrisp 官网——中文骨架页。">
+  <p>Astro 骨架 —— locale={Astro.currentLocale} path={Astro.url.pathname}</p>
+</Page>
