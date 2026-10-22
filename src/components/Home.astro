@@ -5,7 +5,14 @@ import { leafKey, loadCopy } from '@/lib/copy';
 const key = leafKey(Astro.currentLocale);
 const copy = await loadCopy(key);
 ---
-<Page title={copy.meta.docTitle} description={copy.meta.docDesc}>
-  <p>{copy.hero.title1} {copy.hero.title2}</p>
+<Page
+  title={copy.meta.docTitle}
+  description={copy.meta.docDesc}
+  ogLocale={copy.meta.ogLocale}
+  jsonldDesc={copy.meta.jsonldDesc}
+  jsonldOfferDesc={copy.meta.jsonldOfferDesc}
+>
+  <p>{copy.hero.title1}{copy.hero.title2}</p>
   <p>{copy.diff.title}{copy.diff.title2}</p>
+  <p>{copy.diff.qualLead}{copy.diff.qualRest}</p>
 </Page>

@@ -1,22 +1,68 @@
 ---
 import '../styles/tokens.css';
+import '../styles/global.css';
+import { leafKey } from '@/lib/copy';
 
 interface Props {
   title: string;
   description: string;
+  ogLocale: string;
+  jsonldDesc: string;
+  jsonldOfferDesc: string;
   /** 内容未定稿前挡住索引；M1b-4 双语页就绪后由页面显式关掉。 */
   noindex?: boolean;
 }
 
-const { title, description, noindex = true } = Astro.props;
+const { title, description, ogLocale, jsonldDesc, jsonldOfferDesc, noindex = true } = Astro.props;
+const key = leafKey(Astro.currentLocale);
+// public 目录的资源不会被 Astro 自动加 base，这里显式拼，文件名也保持可读、可核对
+const asset = (name: string) => new URL(`${import.meta.env.BASE_URL}assets/${name}`, Astro.url.origin).href;
+const ogImage = asset(key === 'zh' ? 'og-zh.png' : 'og-en.png');
+const canonical = Astro.url.href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Wrisp',
+  applicationCategory: 'ProductivityApplication',
+  operatingSystem: 'Windows, macOS, Linux',
+  url: canonical,
+  description: jsonldDesc,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    description: jsonldOfferDesc,
+  },
+};
 ---
 <html lang={Astro.currentLocale}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#FAFAF7" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Wrisp" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" type="image/svg+xml" href={asset("logo.svg")} />
+    <link rel="icon" type="image/png" sizes="512x512" href={asset("logo.png")} />
+    <link rel="apple-touch-icon" href={asset("logo.png")} />
     {noindex && <meta name="robots" content="noindex" />}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
     <slot />

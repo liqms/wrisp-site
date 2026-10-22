@@ -7,12 +7,16 @@
     "zh": "说话代替打字，整理交给 AI，数据永远留在你的机器。通用 AI 帮你写作，Wrisp 为你创作。",
     "en": "Talk instead of type. AI does the organizing. Your data stays on your machine. Generic AI helps you write. Wrisp creates for you."
   },
-  "ogImage": {
-    "zh": "assets/og-zh.png",
-    "en": "assets/og-en.png"
-  },
   "ogLocale": {
     "zh": "zh_CN",
     "en": "en_US"
+  },
+  "jsonldDesc": {
+    "zh": "本地优先的个人创作 AI：对话式输入、日志流、信息卡片、检索问答与作品创作。通用 AI 帮你写作，Wrisp 为你创作。",
+    "en": "A local-first AI for personal creation: conversational capture, a journal stream, info cards, retrieval-based answers and piece creation. Generic AI helps you write. Wrisp creates for you."
+  },
+  "jsonldOfferDesc": {
+    "zh": "Community 免费，AI 用量走用户自带 Key（BYOK），不代扣模型费用。",
+    "en": "Community is free. AI usage runs on your own API key (BYOK); we never bill model costs on your behalf."
   }
 }

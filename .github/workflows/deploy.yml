@@ -20,29 +20,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
       - name: Sanity checks
         run: |
           set -euo pipefail
-          # 站内不得有占位死链
-          if grep -n 'href="#"\|href=""' index.html; then
-            echo "::error::dead placeholder link found"; exit 1; fi
-          # 资产必须自包含，不得上跳仓库目录
-          if grep -nE '(src|href|content)="[^"]*\.\./' index.html; then
-            echo "::error::asset path escapes the site root"; exit 1; fi
-          # 语言可寻址形态必须在位
-          grep -q 'hreflang="en"' index.html
-          grep -q 'hreflang="zh"' index.html
-
-      - name: Stage site
-        run: |
-          set -euo pipefail
-          mkdir -p _site
-          cp index.html _site/
-          cp -r assets _site/
+          shopt -s nullglob
+          pages=(dist/*.html dist/*/*.html)
+          (( ${#pages[@]} > 0 )) || { echo "::error::no pages emitted"; exit 1; }
+          for f in "${pages[@]}"; do
+            # 站内不得有占位死链
+            if grep -n 'href="#"\|href=""' "$f"; then
+              echo "::error::$f has a dead placeholder link"; exit 1; fi
+            # 资产路径不得上跳站点根
+            if grep -nE '(src|href|content)="[^"]*\.\./' "$f"; then
+              echo "::error::$f escapes the site root"; exit 1; fi
+            # base 前缀只能出现一次（手工拼 URL 的回归风险）
+            if grep -n '/wrisp-site/wrisp-site/' "$f"; then
+              echo "::error::$f has a doubled base path"; exit 1; fi
+            # 中英两页各自落地，lang 必须与目录一致
+            case "$f" in
+              dist/zh/*) grep -q 'html lang="zh-CN"' "$f" || { echo "::error::$f lang mismatch"; exit 1; } ;;
+            esac
+          done
+          # 字体必须是系统栈，不允许引入 webfont 负载
+          if grep -rn '@font-face' dist --include='*.css' --include='*.html'; then
+            echo "::error::webfont payload detected"; exit 1; fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
 
   deploy:
     needs: build
