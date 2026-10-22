@@ -1,0 +1,55 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanity checks
+        run: |
+          set -euo pipefail
+          # 站内不得有占位死链
+          if grep -n 'href="#"\|href=""' index.html; then
+            echo "::error::dead placeholder link found"; exit 1; fi
+          # 资产必须自包含，不得上跳仓库目录
+          if grep -nE '(src|href|content)="[^"]*\.\./' index.html; then
+            echo "::error::asset path escapes the site root"; exit 1; fi
+          # 语言可寻址形态必须在位
+          grep -q 'hreflang="en"' index.html
+          grep -q 'hreflang="zh"' index.html
+
+      - name: Stage site
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp index.html _site/
+          cp -r assets _site/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

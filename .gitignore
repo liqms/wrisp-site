@@ -147,3 +147,11 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# OS 与编辑器杂项
+.DS_Store
+Thumbs.db
+*.swp
+
+# 本地验证产物（截图 / 探针输出不入库）
+output/
