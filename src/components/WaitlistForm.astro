@@ -1,0 +1,53 @@
+---
+/**
+ * 等待名单表单：hero 与 CTA 两处共用，字段齐全。
+ * 提交只做前端校验并给出反馈——入库、去重与发信通道属后端，接通前这里不发送任何请求。
+ */
+interface Props {
+  labels: {
+    ph: string;
+    q: string;
+    btn: string;
+    err: string;
+    ok: string;
+    note: string;
+  };
+  /** 深色反白块内使用，样式走 global.css 的 .waitlist.on-dark。 */
+  onDark?: boolean;
+}
+const { labels, onDark = false } = Astro.props;
+---
+<form class:list={['waitlist', onDark && 'on-dark']} novalidate>
+  <input type="email" name="email" placeholder={labels.ph} required autocomplete="email" />
+  <button class="btn btn-primary submit" type="submit">{labels.btn}</button>
+  <textarea name="question" rows="2" placeholder={labels.q}></textarea>
+  <span class="err" role="alert">{labels.err}</span>
+  <span class="ok">
+    <span aria-hidden="true">✓</span>
+    <span>{labels.ok}</span>
+  </span>
+  <span class="waitlist-note">{labels.note}</span>
+</form>
+
+<script>
+  const isUsableEmail = (value: string) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('form.waitlist')) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = form.querySelector<HTMLInputElement>('input[type=email]')!;
+      const err = form.querySelector<HTMLElement>('.err');
+      const ok = form.querySelector<HTMLElement>('.ok');
+      if (!isUsableEmail((input.value || '').trim())) {
+        err?.classList.add('show');
+        ok?.classList.remove('show');
+        input.focus();
+        return;
+      }
+      err?.classList.remove('show');
+      ok?.classList.add('show');
+      const submit = form.querySelector<HTMLButtonElement>('.submit');
+      if (submit) submit.disabled = true;
+    });
+  }
+</script>

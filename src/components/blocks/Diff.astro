@@ -1,0 +1,112 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const diff = copy.diff;
+const cmp = copy.cmp;
+---
+
+<section class="reveal" id="diff">
+  <div class="wrap">
+    <div class="eyebrow">{diff.eyebrow}</div>
+    <h2 class="h-2"><span>{diff.title}</span><br><span class="accent">{diff.title2}</span></h2>
+    <p class="qualifier"><b>{diff.qualLead}</b>{diff.qualRest}</p>
+    <div class="cmp">
+      <div class="cmp-row">
+        <div class="k"><span class="mk">✗</span><span>{cmp['1t']}</span></div>
+        <div class="v">{cmp['1b']}</div>
+      </div>
+      <div class="cmp-row">
+        <div class="k"><span class="mk">✗</span><span>{cmp['2t']}</span></div>
+        <div class="v">{cmp['2b']}</div>
+      </div>
+      <div class="cmp-row">
+        <div class="k"><span class="mk">✗</span><span>{cmp['3t']}</span></div>
+        <div class="v">{cmp['3b']}</div>
+      </div>
+      <div class="cmp-row us">
+        <div class="k"><span class="mk">◆</span><span>Wrisp</span></div>
+        <div class="v">{cmp['4b']}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 原型里 h2 的 max-width 是行内样式，端口一律收成 scoped 规则 */
+  .h-2 {
+    max-width: 880px;
+  }
+  .cmp {
+    margin-top: 38px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+  }
+  .cmp-row {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    border-bottom: 1px solid var(--line);
+  }
+  .cmp-row:last-child {
+    border-bottom: 0;
+  }
+  .cmp-row .k {
+    padding: 16px 18px;
+    font-weight: 600;
+    font-size: 14.5px;
+    border-right: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--paper);
+  }
+  .cmp-row .v {
+    padding: 16px 18px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .cmp-row .mk {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    flex: none;
+  }
+  .cmp-row.us {
+    background: var(--accent-soft);
+  }
+  .cmp-row.us .k {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-right-color: #D7DDF6;
+  }
+  .cmp-row.us .v {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .cmp-row.us .mk {
+    color: var(--accent);
+  }
+  .qualifier {
+    margin-top: 18px;
+    font-size: 14.5px;
+    color: var(--ink-2);
+    max-width: 680px;
+  }
+  .qualifier b {
+    color: var(--ink);
+  }
+  @media (max-width: 760px) {
+    .cmp-row {
+      grid-template-columns: 1fr;
+    }
+    .cmp-row .k {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>

@@ -28,11 +28,14 @@ export function resolveNode(node: Tree, key: LeafKey): unknown {
 }
 
 /** 一次取回全站文案，按区块 id 分组，值已压到指定语言。 */
-export async function loadCopy(key: LeafKey): Promise<Record<string, Record<string, any>>> {
+export async function loadCopy(key: LeafKey): Promise<Copy> {
   const entries = await getCollection('copy');
-  const grouped: Record<string, Record<string, any>> = {};
+  const grouped: Copy = {};
   for (const entry of entries) {
     grouped[entry.id] = resolveNode(entry.data, key) as Record<string, any>;
   }
   return grouped;
 }
+
+/** 压平后的整站文案：区块 id → 该区块的纯文本树。组件按此接 props。 */
+export type Copy = Record<string, Record<string, any>>;

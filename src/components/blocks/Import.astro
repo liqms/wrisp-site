@@ -1,0 +1,160 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const imp = copy.imp;
+---
+
+<section class="reveal" id="import">
+  <div class="wrap">
+    <div class="eyebrow">{imp.eyebrow}</div>
+    <h2 class="h-2">{imp.title}</h2>
+    <p class="lead">{imp.sub}</p>
+    <div class="import-grid">
+      <div class="imp-list">
+        <div class="imp-item">
+          <div class="ik">ONE-CLICK IMPORT</div>
+          <div>
+            <h3>{imp['1t']}</h3>
+            <p>{imp['1b']}</p>
+          </div>
+        </div>
+        <div class="imp-item">
+          <div class="ik">SYNTAX YOU KEEP</div>
+          <div>
+            <h3>{imp['2t']}</h3>
+            <p>{imp['2b']}</p>
+          </div>
+        </div>
+        <div class="imp-item">
+          <div class="ik">PORTABLE MODELS</div>
+          <div>
+            <h3>{imp['3t']}</h3>
+            <p>{imp['3b']}</p>
+          </div>
+        </div>
+      </div>
+      <div class="dropzone">
+        <div class="dz-top">· Wrisp · <span>{imp.dzTag}</span></div>
+        <div class="dz-path">{imp.dzPath}</div>
+        <div class="dz-tree">
+          <div class="n"><span class="b">▸</span><span>2026-10-22.md</span></div>
+          <div class="n hit"><span class="b">▸</span><span>{imp.dz1}</span></div>
+          <div class="n hit"><span class="b">▸</span><span>{imp.dz2}</span></div>
+          <div class="n"><span class="b">▸</span><span>weekly/2026-W42.md</span></div>
+          <div class="n hit"><span class="b">▸</span><span>{imp.dz3}</span></div>
+        </div>
+        <div class="dz-foot">{imp.dzFoot}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .import-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  .imp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .imp-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 18px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+  .imp-item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .imp-item .ik {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding-top: 3px;
+  }
+  .imp-item h3 {
+    font-size: 16.5px;
+    margin-bottom: 6px;
+  }
+  .imp-item p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .dropzone {
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--on-dark);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .dropzone .dz-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--on-dark-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .dropzone .dz-path {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--on-dark);
+    margin-bottom: 14px;
+  }
+  .dz-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--on-dark-2);
+  }
+  .dz-tree .n {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .dz-tree .n .b {
+    color: var(--on-dark-3);
+  }
+  .dz-tree .n.hit {
+    color: var(--on-dark);
+  }
+  .dz-tree .n.hit .b {
+    color: var(--accent);
+  }
+  .dz-foot {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(245, 245, 241, 0.18);
+    font-size: 13px;
+    color: var(--on-dark-2);
+  }
+  @media (max-width: 880px) {
+    .import-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+  @media (max-width: 640px) {
+    .imp-item {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const pain = copy.pain;
+---
+
+<section class="band reveal" id="pain">
+  <div class="wrap">
+    <div class="eyebrow">{pain.eyebrow}</div>
+    <h2 class="h-2">{pain.title}</h2>
+    <p class="lead">{pain.sub}</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pi">01</div>
+        <h3>{pain['1t']}</h3>
+        <p>{pain['1b']}</p>
+      </div>
+      <div class="pain-card">
+        <div class="pi">02</div>
+        <h3>{pain['2t']}</h3>
+        <p>{pain['2b']}</p>
+      </div>
+      <div class="pain-card punch">
+        <div class="pi">03</div>
+        <h3>{pain['3t']}</h3>
+        <p>{pain['3b']}</p>
+        <span class="tag">{pain['3tag']}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .pain-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    background: #fff;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .pain-card:hover {
+    border-color: var(--line-2);
+    transform: translateY(-2px);
+  }
+  .pain-card .pi {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .pain-card h3 {
+    font-size: 19px;
+    margin: 10px 0 8px;
+  }
+  .pain-card p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .pain-card.punch {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--on-dark);
+  }
+  .pain-card.punch .pi {
+    color: var(--on-dark-3);
+  }
+  .pain-card.punch p {
+    color: var(--on-dark-2);
+  }
+  .pain-card.punch .tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--on-dark);
+    border: 1px solid rgba(245, 245, 241, 0.28);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+  .pain-card.punch:hover {
+    border-color: var(--ink);
+  }
+  @media (max-width: 880px) {
+    .pain-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

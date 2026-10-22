@@ -1,0 +1,70 @@
+---
+import WaitlistForm from '@/components/WaitlistForm.astro';
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const cta = copy.cta;
+---
+
+<section class="cta">
+  <div class="wrap">
+    <div class="cta-box">
+      <h2>{cta.title}</h2>
+      <p class="lead">{cta.sub}</p>
+      <WaitlistForm
+        labels={{
+          ph: cta.formph,
+          q: cta.formq,
+          btn: cta.btn,
+          err: cta.formerr,
+          ok: cta.formok,
+          note: cta.formnote,
+        }}
+        onDark
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 原型用内联 margin-top:44px 把 CTA 块压在 FAQ 之后，拆成独立区块后改由本区块上缘留白承担 */
+  .cta {
+    padding-block: 44px 96px;
+  }
+  .cta-box {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-2);
+    border-radius: 18px;
+    background: var(--ink);
+    color: var(--on-dark);
+    padding: 64px 56px;
+    text-align: center;
+  }
+  .cta-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(640px 260px at 50% -20%, rgba(76, 95, 213, 0.55), transparent 70%);
+  }
+  .cta-box h2 {
+    position: relative;
+    font-size: clamp(26px, 3.8vw, 42px);
+    color: #fff;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .cta-box .lead {
+    position: relative;
+    color: var(--on-dark-2);
+    margin: 14px auto 0;
+  }
+  @media (max-width: 760px) {
+    .cta-box {
+      padding: 44px 22px;
+    }
+  }
+</style>

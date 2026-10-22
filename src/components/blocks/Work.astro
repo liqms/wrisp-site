@@ -1,0 +1,98 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const work = copy.work;
+---
+
+<section class="band reveal" id="how">
+  <div class="wrap">
+    <div class="eyebrow">{work.eyebrow}</div>
+    <h2 class="h-2">{work.title}</h2>
+    <p class="lead">{work.sub}</p>
+    <div class="steps">
+      <div class="step current">
+        <div class="snum">1</div>
+        <h3>{work['1t']}</h3>
+        <p>{work['1b']}</p>
+      </div>
+      <div class="step">
+        <div class="snum">2</div>
+        <h3>{work['2t']}</h3>
+        <p>{work['2b']}</p>
+      </div>
+      <div class="step">
+        <div class="snum">3</div>
+        <h3>{work['3t']}</h3>
+        <p>{work['3b']}</p>
+      </div>
+      <div class="step">
+        <div class="snum">4</div>
+        <h3>{work['4t']}</h3>
+        <p>{work['4b']}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 44px;
+    position: relative;
+  }
+  .step {
+    padding: 0 18px;
+    position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: calc(100% - 18px);
+    width: calc(2 * 18px);
+    height: 1px;
+    background: var(--line-2);
+  }
+  .step .snum {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line-2);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .step h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .step.current .snum {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  @media (max-width: 880px) {
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .step:not(:last-child)::after {
+      display: none;
+    }
+  }
+</style>

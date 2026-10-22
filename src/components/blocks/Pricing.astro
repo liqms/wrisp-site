@@ -1,0 +1,76 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const price = copy.price;
+---
+
+<section class="reveal" id="pricing">
+  <div class="wrap">
+    <div class="eyebrow">{price.eyebrow}</div>
+    <h2 class="h-2">{price.title}</h2>
+    <div class="price-box">
+      <div class="pb-body">
+        <h3>{price.body}</h3>
+        <p>{price.sub}</p>
+      </div>
+      <div class="price-tags">
+        <div class="tag"><b>{price.t1t}</b><span>{price.t1b}</span></div>
+        <div class="tag"><b>{price.t2t}</b><span>{price.t2b}</span></div>
+        <div class="tag"><b>{price.t3t}</b><span>{price.t3b}</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .price-box {
+    border: 1px solid var(--line-2);
+    border-radius: 14px;
+    background: #fff;
+    padding: 30px;
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 26px;
+    align-items: center;
+  }
+  .price-box .pb-body h3 {
+    font-size: 21px;
+    margin-bottom: 12px;
+    line-height: 1.35;
+  }
+  .price-box .pb-body p {
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .price-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+  }
+  .price-tags .tag {
+    flex: 1 1 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--ink-2);
+    background: var(--paper);
+  }
+  .price-tags .tag b {
+    display: block;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  @media (max-width: 760px) {
+    .price-box {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

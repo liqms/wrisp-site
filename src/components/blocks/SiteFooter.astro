@@ -1,0 +1,54 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const foot = copy.foot;
+---
+
+<footer>
+  <div class="foot-inner">
+    <span class="foot-brand">◆ Wrisp</span>
+    <span>{foot.copy}</span>
+    <div class="foot-links">
+      <a href="#waitlist">{foot.beta}</a>
+      <a href="https://github.com/liqms/wrisp-releases" target="_blank" rel="noopener">{foot.releases}</a>
+      <a href="#privacy">{foot.privacy}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 34px 0 48px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  /* 刻意不套 .wrap：页脚左右留白恒为 28px，不跟随 .wrap 在 640px 收窄到 20px */
+  .foot-inner {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .foot-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+  .foot-links a:hover {
+    color: var(--ink);
+  }
+  .foot-brand {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+</style>

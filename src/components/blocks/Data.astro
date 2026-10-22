@@ -1,0 +1,85 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const data = copy.data;
+---
+
+<section class="reveal" id="data">
+  <div class="wrap">
+    <div class="eyebrow">{data.eyebrow}</div>
+    <h2 class="h-2">{data.title}</h2>
+    <p class="lead">{data.sub}</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <h3><span class="tick">✓</span><span>{data['1t']}</span></h3>
+        <p>{data['1b']}</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="tick">✓</span><span>{data['2t']}</span></h3>
+        <p>{data['2b']}</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="tick">✓</span><span>{data['3t']}</span></h3>
+        <p>{data['3b']}</p>
+      </div>
+      <div class="trust-card">
+        <h3><span class="tick">✓</span><span>{data['4t']}</span></h3>
+        <p>{data['4b']}</p>
+      </div>
+    </div>
+    <p class="trust-note"><span>{data.note}</span> <a href="#privacy">{data.link}</a></p>
+  </div>
+</section>
+
+<style>
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 44px;
+  }
+  .trust-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    background: #fff;
+  }
+  .trust-card h3 {
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .trust-card h3 .tick {
+    color: var(--ok);
+    font-family: var(--mono);
+  }
+  .trust-card p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .trust-note {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .trust-note a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  @media (max-width: 760px) {
+    .trust-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

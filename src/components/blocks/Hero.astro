@@ -1,0 +1,727 @@
+---
+import type { Copy } from '@/lib/copy';
+import WaitlistForm from '@/components/WaitlistForm.astro';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const hero = copy.hero;
+const stream = copy.stream;
+const lastFiled = stream.rows[stream.rows.length - 1];
+
+// 循环动画要的数据：语言已压平，随元素带下去，省掉一份平行字典。
+const demo = {
+  prefix: stream.prefix,
+  today: hero.stream,
+  dictated: hero.micSource,
+  dictating: hero.micLabel,
+  play: hero.play,
+  pause: hero.pause,
+  rows: stream.rows,
+  incoming: stream.incoming,
+};
+---
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="kicker"><span class="kicker-dot" aria-hidden="true"></span>{hero.kicker}</span>
+        <h1 class="h-title">
+          <span>{hero.title1}</span><br />
+          <span class="accent">{hero.title2}</span>
+        </h1>
+        <p class="lead">{hero.sub}</p>
+        <!-- 时态护栏：主标题讲终局，紧跟一行讲当下 -->
+        <p class="guard">{hero.guard}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#waitlist">{hero.cta1}</a>
+          <a class="btn btn-ghost" href="#how">{hero.cta2}</a>
+        </div>
+        <WaitlistForm
+          labels={{
+            ph: hero.formph,
+            q: hero.formq,
+            btn: hero.formbtn,
+            err: hero.formerr,
+            ok: hero.formok,
+            note: hero.formnote,
+          }}
+        />
+      </div>
+
+      <div class="appwin" data-demo={JSON.stringify(demo)}>
+        <div class="appwin-top">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="appwin-title">{hero.window}</span>
+          <span class="appwin-ctl">
+            <button type="button" id="streamToggle" aria-pressed="false">{hero.pause}</button>
+          </span>
+        </div>
+        <div class="appwin-body">
+          <div class="stream">
+            <div class="stream-head"><span>{hero.stream}</span><span class="mono">{stream.date}</span></div>
+            <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
+              {
+                stream.rows.map((row: any) => (
+                  <div class="srow">
+                    <span class="t">{row.time}</span>
+                    <span class="txt">{row.text}</span>
+                    <span class:list={['badge', row.cls]}>{row.badge}</span>
+                  </div>
+                ))
+              }
+            </div>
+            <div class="typebar">
+              <div class="typing">
+                <span class="caret">▸</span>
+                <span class="txt" id="typebar">{stream.prefix}{stream.idle}</span>
+                <span class="cursor" id="cursor" aria-hidden="true"></span>
+              </div>
+              <span class="mic">{hero.mic}</span>
+            </div>
+          </div>
+          <div class="cardpanel" id="cardPanel">
+            <div class="card show" id="infoCard">
+              <div class="ch">
+                <span class="ct" id="cardType">{lastFiled.type}</span>
+                <span class:list={['badge', lastFiled.cls]} id="cardBadge">{lastFiled.badge}</span>
+              </div>
+              <div class="cbody" id="cardBody">{lastFiled.text}</div>
+              <div class="fld">
+                <b>{hero.fType}</b>
+                <span id="cardTypeV">{lastFiled.type}</span>
+              </div>
+              <div class="fld">
+                <b>{hero.fSource}</b>
+                <span id="cardSource">{lastFiled.time} · {hero.stream}</span>
+              </div>
+              <div class="fld">
+                <b>{hero.fStatus}</b>
+                <span id="cardStatus">{lastFiled.status}</span>
+              </div>
+            </div>
+            <span class="card-hint">{hero.cardhint}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /*
+   * 这里用 is:global 而不是 scoped：循环里新增的记录行与语音条是 JS 造的节点，
+   * 拿不到 scoped 样式的作用域标记，scoped 写法会静默地选不中它们。
+   * 选择器一律挂在 .hero / .appwin 下，不外溢。
+   */
+  .hero {
+    padding-block: 72px 56px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .hero .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 999px;
+    padding: 6px 14px;
+    margin-bottom: 22px;
+    white-space: nowrap;
+  }
+  .hero .kicker .kicker-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    display: inline-block;
+    flex: none;
+  }
+  .hero .h-title {
+    font-size: clamp(38px, 6vw, 62px);
+  }
+  .hero .h-title .accent {
+    color: var(--accent);
+  }
+  .hero .guard {
+    margin-top: 14px;
+    max-width: 560px;
+    font-size: 15.5px;
+    color: var(--ink-2);
+    border-left: 2px solid var(--accent);
+    padding-left: 14px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+    align-items: center;
+  }
+
+  /* ---------- 记录流窗口：首帧即终态，不靠 JS 才成型 ---------- */
+  .appwin {
+    position: relative;
+    border: 1px solid var(--line-2);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(31, 35, 40, 0.04), 0 18px 44px -26px rgba(31, 35, 40, 0.28);
+    overflow: hidden;
+  }
+  .appwin-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .appwin-top .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--line-2);
+  }
+  .appwin-top .dot.r {
+    background: #f1b0a0;
+  }
+  .appwin-top .dot.y {
+    background: #edd38c;
+  }
+  .appwin-top .dot.g {
+    background: #9fcea9;
+  }
+  .appwin-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .appwin-ctl {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .appwin-ctl button {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 999px;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+  .appwin-ctl button:hover {
+    color: var(--ink);
+    border-color: var(--line-2);
+  }
+  .appwin-body {
+    display: grid;
+    grid-template-columns: 1.22fr 0.78fr;
+    background: var(--paper);
+  }
+  .appwin .stream {
+    border-right: 1px solid var(--line);
+    padding: 18px;
+  }
+  .appwin .stream-head {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .appwin .stream-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .appwin .srow {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    border-radius: 6px;
+    padding: 2px 4px;
+  }
+  .appwin .srow .t {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+    flex: none;
+  }
+  .appwin .srow .txt {
+    flex: 1;
+    min-width: 0;
+  }
+  .appwin .srow .badge {
+    margin-top: 0;
+  }
+  .appwin .srow.landing {
+    animation: land 0.5s ease;
+  }
+  @keyframes land {
+    from {
+      background: var(--accent-soft);
+    }
+    to {
+      background: transparent;
+    }
+  }
+  .appwin .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+    border-radius: 5px;
+    padding: 2px 7px;
+    flex: none;
+    white-space: nowrap;
+  }
+  .appwin .badge.todo {
+    background: #fdeee8;
+    color: #b04a2e;
+  }
+  .appwin .badge.comp {
+    background: #e7f2ee;
+    color: #23694c;
+  }
+  .appwin .badge.meet {
+    background: #e7ecfa;
+    color: #334e9c;
+  }
+  .appwin .badge.decide {
+    background: #f4efe0;
+    color: #8a6d1c;
+  }
+  .appwin .badge.need {
+    background: #efeaef;
+    color: #6d4a75;
+  }
+  /* 语音输入态：必须有可感知的「说话」形态 */
+  .appwin .voice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 4px;
+  }
+  .appwin .voice .rec {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: rec 1.1s ease infinite;
+    flex: none;
+  }
+  @keyframes rec {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.25;
+    }
+  }
+  .appwin .voice .wave {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+    flex: none;
+  }
+  .appwin .voice .wave i {
+    width: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+    animation: wv 1s ease-in-out infinite;
+  }
+  .appwin .voice .wave i:nth-child(1) {
+    height: 5px;
+    animation-delay: 0s;
+  }
+  .appwin .voice .wave i:nth-child(2) {
+    height: 11px;
+    animation-delay: 0.12s;
+  }
+  .appwin .voice .wave i:nth-child(3) {
+    height: 7px;
+    animation-delay: 0.24s;
+  }
+  .appwin .voice .wave i:nth-child(4) {
+    height: 13px;
+    animation-delay: 0.36s;
+  }
+  .appwin .voice .wave i:nth-child(5) {
+    height: 6px;
+    animation-delay: 0.48s;
+  }
+  @keyframes wv {
+    0%,
+    100% {
+      transform: scaleY(0.5);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+  .appwin .voice .dur {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-ink);
+    margin-left: auto;
+    flex: none;
+  }
+  .appwin .typebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-2);
+    border-top: 1px dashed var(--line);
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+  .appwin .typebar .typing {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  }
+  .appwin .typebar .caret {
+    color: var(--accent);
+    font-family: var(--mono);
+    flex: none;
+    line-height: 1.5;
+  }
+  .appwin .typebar .txt {
+    flex: 1;
+    min-width: 0;
+    min-height: 20px;
+  }
+  .appwin .typebar .mic {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    text-align: right;
+  }
+  .appwin .typebar .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background: var(--accent);
+    vertical-align: -2px;
+    flex: none;
+    margin-top: 3px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .appwin .cardpanel {
+    padding: 14px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .appwin .card {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 13px;
+    background: #fff;
+  }
+  .appwin .card.show {
+    display: flex;
+  }
+  .appwin .card.flip {
+    animation: cardin 0.45s ease;
+  }
+  @keyframes cardin {
+    from {
+      opacity: 0.4;
+      transform: translateY(8px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .appwin .card .ch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .appwin .card .ct {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .appwin .card .cbody {
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+  .appwin .card .fld {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 8px;
+    font-size: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+  .appwin .card .fld b {
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .appwin .card .fld span {
+    color: var(--ink-2);
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .appwin .card-hint {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  .js .appwin .srow.living {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .js .appwin .srow.living.show {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* 动画不可用时，静态终态就是全部内容，连暂停键一起撤掉 */
+    .appwin-ctl {
+      display: none;
+    }
+  }
+  @media (max-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+  @media (max-width: 640px) {
+    /* 移动端退化：静态流 + 卡片，不参与循环 */
+    .appwin-body {
+      grid-template-columns: 1fr;
+    }
+    .appwin .stream {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .appwin-ctl {
+      display: none;
+    }
+    .hero-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.appwin');
+  const payload = root?.dataset.demo;
+  if (root && payload) {
+    type Scene = {
+      time: string;
+      mode: string;
+      badge: string;
+      cls: string;
+      text: string;
+      type: string;
+      status: string;
+      dur?: string;
+    };
+    const demo = JSON.parse(payload) as {
+      prefix: string;
+      today: string;
+      dictated: string;
+      dictating: string;
+      play: string;
+      pause: string;
+      pause: string;
+      rows: Scene[];
+      incoming: Scene[];
+    };
+
+    const rowsBox = document.getElementById('streamRows')!;
+    const typebar = document.getElementById('typebar')!;
+    const card = document.getElementById('infoCard')!;
+    const cardType = document.getElementById('cardType')!;
+    const cardTypeV = document.getElementById('cardTypeV')!;
+    const cardBody = document.getElementById('cardBody')!;
+    const cardBadge = document.getElementById('cardBadge')!;
+    const cardSource = document.getElementById('cardSource')!;
+    const cardStatus = document.getElementById('cardStatus')!;
+    const toggle = document.getElementById('streamToggle')!;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const narrow = window.matchMedia('(max-width: 640px)');
+    let paused = false;
+    // 每次重启换一个令牌，上一轮残留的定时器发现自己过期就直接退出。
+    let token = 0;
+
+    const rowEl = (scene: Scene, landing: boolean) => {
+      const node = document.createElement('div');
+      node.className = landing ? 'srow landing' : 'srow';
+      const time = document.createElement('span');
+      time.className = 't';
+      time.textContent = scene.time;
+      const text = document.createElement('span');
+      text.className = 'txt';
+      text.textContent = scene.text;
+      const badge = document.createElement('span');
+      badge.className = `badge ${scene.cls}`;
+      badge.textContent = scene.badge;
+      node.append(time, text, badge);
+      return node;
+    };
+
+    const setCard = (scene: Scene) => {
+      cardType.textContent = scene.type;
+      cardTypeV.textContent = scene.type;
+      cardBody.textContent = scene.text;
+      cardBadge.className = `badge ${scene.cls}`;
+      cardBadge.textContent = scene.badge;
+      cardSource.textContent = `${scene.time} · ${scene.mode === 'voice' ? demo.dictated : demo.today}`;
+      cardStatus.textContent = scene.status;
+      card.classList.add('show');
+      if (!reduced) {
+        card.classList.remove('flip');
+        void card.offsetWidth;
+        card.classList.add('flip');
+      }
+    };
+
+    const renderFrame = () => {
+      rowsBox.textContent = '';
+      for (const scene of demo.rows) rowsBox.appendChild(rowEl(scene, false));
+      setCard(demo.rows[demo.rows.length - 1]);
+    };
+
+    const showVoice = (scene: Scene) => {
+      const node = document.createElement('div');
+      node.className = 'voice';
+      const rec = document.createElement('span');
+      rec.className = 'rec';
+      const label = document.createElement('span');
+      label.textContent = demo.dictating;
+      const wave = document.createElement('span');
+      wave.className = 'wave';
+      wave.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < 5; i++) wave.appendChild(document.createElement('i'));
+      const dur = document.createElement('span');
+      dur.className = 'dur';
+      dur.textContent = scene.dur ?? '';
+      node.append(rec, label, wave, dur);
+      rowsBox.appendChild(node);
+      return node;
+    };
+
+    const typeInto = (full: string, currentToken: number) => {
+      let k = 0;
+      const step = () => {
+        if (token !== currentToken || paused || reduced) return;
+        typebar.textContent = full.slice(0, k);
+        if (k >= full.length) return;
+        k += 1;
+        setTimeout(step, 26);
+      };
+      step();
+    };
+
+    const loopIncoming = (n: number) => {
+      if (paused || reduced || narrow.matches) return;
+      const currentToken = token;
+      const scene = demo.incoming[n % demo.incoming.length];
+      let voiceNode: HTMLElement | null = null;
+      let delay = 1200;
+      if (scene.mode === 'voice') {
+        voiceNode = showVoice(scene);
+        delay = 2400;
+      } else {
+        typeInto(demo.prefix + scene.text, currentToken);
+      }
+      setTimeout(() => {
+        if (token !== currentToken) return;
+        voiceNode?.remove();
+        typebar.textContent = '';
+        const node = rowEl(scene, true);
+        node.classList.add('living');
+        rowsBox.appendChild(node);
+        requestAnimationFrame(() => node.classList.add('show'));
+        setCard(scene);
+        setTimeout(() => {
+          if (token !== currentToken) return;
+          if ((n + 1) % demo.incoming.length === 0) {
+            setTimeout(() => {
+              if (token !== currentToken) return;
+              renderFrame();
+              loopIncoming(0);
+            }, 1400);
+          } else {
+            loopIncoming(n + 1);
+          }
+        }, 3000);
+      }, delay);
+    };
+
+    const startStream = () => {
+      const currentToken = ++token;
+      renderFrame();
+      if (paused || reduced || narrow.matches) return;
+      setTimeout(() => {
+        if (token === currentToken) loopIncoming(0);
+      }, 2200);
+    };
+
+    toggle.addEventListener('click', () => {
+      paused = !paused;
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.textContent = paused ? demo.play : demo.pause;
+      if (!paused) startStream();
+    });
+    narrow.addEventListener('change', startStream);
+    startStream();
+  }
+</script>

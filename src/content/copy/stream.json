@@ -3,6 +3,11 @@
     "zh": "记录：",
     "en": "Noted: "
   },
+  "idle": {
+    "zh": "把这一周归拢成周报",
+    "en": "Turn this week into a report"
+  },
+  "date": "10-22",
   "rows": [
     {
       "time": "09:41",

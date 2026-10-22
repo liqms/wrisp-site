@@ -59,6 +59,13 @@ h3 {
   margin-top: 16px;
 }
 
+/* 交替底色带：四个区块用同一套「纸面 2 + 上下细线」，写成一个类而不是各自一段内联样式 */
+.band {
+  background: var(--paper-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
 /* ---------- 顶部导航：只放动作类入口，章节定位归左侧目录 ---------- */
 .nav {
   position: sticky;
@@ -323,6 +330,10 @@ h3 {
 }
 
 /* ---------- 深色底上的表单（CTA 反白块内） ---------- */
+.waitlist.on-dark {
+  position: relative;
+  margin: 26px auto 0;
+}
 .waitlist.on-dark input,
 .waitlist.on-dark textarea {
   background: rgba(255, 255, 255, 0.08);
@@ -338,6 +349,13 @@ h3 {
 }
 .waitlist.on-dark .ok {
   color: #7fd9a8;
+}
+.waitlist.on-dark .btn-primary {
+  background: #fff;
+  color: var(--ink);
+}
+.waitlist.on-dark .btn-primary:hover {
+  background: var(--paper-3);
 }
 
 /* ---------- 渐显：初始隐藏只在 JS 已接管时生效；无 JS / 截图 / 爬虫一律直接可读 ---------- */

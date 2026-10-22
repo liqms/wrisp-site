@@ -1,0 +1,184 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const road = copy.road;
+---
+
+<section class="band reveal" id="roadmap">
+  <div class="wrap">
+    <div class="eyebrow">{road.eyebrow}</div>
+    <h2 class="h-2">{road.title}</h2>
+    <div class="road">
+      <div class="road-row current">
+        <div class="road-rail">
+          <span class="pnode filled"></span>
+          <div class="road-phase">V1</div>
+          <div class="road-sub">{road.v1sub}</div>
+        </div>
+        <div class="road-body">
+          <h3><span>{road.v1t}</span><span class="road-tag now">{road.now}</span></h3>
+          <p>{road.v1b}</p>
+        </div>
+      </div>
+      <div class="road-row">
+        <div class="road-rail">
+          <span class="pnode"></span>
+          <div class="road-phase">V2</div>
+          <div class="road-sub">{road.v2sub}</div>
+        </div>
+        <div class="road-body">
+          <h3>{road.v2t}</h3>
+          <p>{road.v2b}</p>
+        </div>
+      </div>
+      <div class="road-row">
+        <div class="road-rail">
+          <span class="pnode"></span>
+          <div class="road-phase">V3</div>
+          <div class="road-sub">{road.v3sub}</div>
+        </div>
+        <div class="road-body">
+          <h3>{road.v3t}</h3>
+          <p>{road.v3b}</p>
+        </div>
+      </div>
+    </div>
+    <div class="road-note">
+      <span class="pulse"></span>
+      <span>{road.note}</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .road {
+    position: relative;
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+  }
+  .road-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding-bottom: 30px;
+    position: relative;
+  }
+  .road-row::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--line-2);
+  }
+  .road-rail {
+    position: relative;
+    padding-left: 22px;
+  }
+  .road-rail .pnode {
+    position: absolute;
+    left: -6px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--line-2);
+  }
+  .road-rail .pnode.filled {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .road-row.current .pnode {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-soft);
+  }
+  .road-phase {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .road-sub {
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .road-body {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    padding: 20px 22px;
+  }
+  .road-row.current .road-body {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .road-body h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .road-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .road-tag.now {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .road-body p {
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .road-note {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 34px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 999px;
+    padding: 8px 16px;
+  }
+  .road-note .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ok);
+    animation: pulse 2s ease infinite;
+    flex: none;
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(46, 158, 107, 0.35);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(46, 158, 107, 0);
+    }
+  }
+  @media (max-width: 760px) {
+    .road-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding-left: 22px;
+    }
+  }
+</style>

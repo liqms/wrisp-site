@@ -1,18 +1,64 @@
 ---
 import Page from '@/layouts/Page.astro';
+import SiteNav from '@/components/SiteNav.astro';
+import Hero from '@/components/blocks/Hero.astro';
+import Pain from '@/components/blocks/Pain.astro';
+import Diff from '@/components/blocks/Diff.astro';
+import Work from '@/components/blocks/Work.astro';
+import Import from '@/components/blocks/Import.astro';
+import Proofs from '@/components/blocks/Proofs.astro';
+import Data from '@/components/blocks/Data.astro';
+import Roadmap from '@/components/blocks/Roadmap.astro';
+import Pricing from '@/components/blocks/Pricing.astro';
+import Faq from '@/components/blocks/Faq.astro';
+import Cta from '@/components/blocks/Cta.astro';
+import PrivacyPanel from '@/components/blocks/PrivacyPanel.astro';
+import SiteFooter from '@/components/blocks/SiteFooter.astro';
 import { leafKey, loadCopy } from '@/lib/copy';
 
 const key = leafKey(Astro.currentLocale);
 const copy = await loadCopy(key);
+const meta = copy.meta;
 ---
+
 <Page
-  title={copy.meta.docTitle}
-  description={copy.meta.docDesc}
-  ogLocale={copy.meta.ogLocale}
-  jsonldDesc={copy.meta.jsonldDesc}
-  jsonldOfferDesc={copy.meta.jsonldOfferDesc}
+  title={meta.docTitle}
+  description={meta.docDesc}
+  ogLocale={meta.ogLocale}
+  jsonldDesc={meta.jsonldDesc}
+  jsonldOfferDesc={meta.jsonldOfferDesc}
 >
-  <p>{copy.hero.title1}{copy.hero.title2}</p>
-  <p>{copy.diff.title}{copy.diff.title2}</p>
-  <p>{copy.diff.qualLead}{copy.diff.qualRest}</p>
+  <SiteNav copy={copy} />
+  <main id="top">
+    <Hero copy={copy} />
+    <Pain copy={copy} />
+    <Diff copy={copy} />
+    <Work copy={copy} />
+    <Import copy={copy} />
+    <Proofs copy={copy} />
+    <Data copy={copy} />
+    <Roadmap copy={copy} />
+    <Pricing copy={copy} />
+    <Faq copy={copy} />
+    <Cta copy={copy} />
+  </main>
+  <PrivacyPanel copy={copy} />
+  <SiteFooter copy={copy} />
 </Page>
+
+<script>
+  // 渐显是增强，不是内容：没有 JS 时 .reveal 保持可见（见 global.css 的 .js 前缀）。
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 },
+    );
+    for (const el of document.querySelectorAll('.reveal')) io.observe(el);
+  }
+</script>

@@ -1,0 +1,112 @@
+---
+import type { Copy } from '@/lib/copy';
+import { leafKey } from '@/lib/copy';
+import { localeRoot } from '@/lib/locales';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const nav = copy.nav;
+const bn = copy.bn;
+
+// 章节清单是「左侧目录 / 吸顶章节条 / 滚动定位」三者的唯一来源，改这里就改了三处。
+const chapters = [
+  { id: 'top', num: '01', label: bn.hero },
+  { id: 'pain', num: '02', label: bn.pain },
+  { id: 'diff', num: '03', label: bn.diff },
+  { id: 'how', num: '04', label: bn.how },
+  { id: 'import', num: '05', label: bn.import },
+  { id: 'proofs', num: '06', label: bn.proofs },
+  { id: 'data', num: '07', label: bn.data },
+  { id: 'roadmap', num: '08', label: bn.road },
+  { id: 'pricing', num: '09', label: bn.price },
+  { id: 'waitlist', num: '10', label: bn.cta },
+];
+
+const here = leafKey(Astro.currentLocale);
+---
+
+<nav class="blocknav" aria-label={nav.toc}>
+  {
+    chapters.map((chapter) => (
+      <a href={`#${chapter.id}`} class={chapter.id === 'top' ? 'active' : undefined}>
+        <span class="mk">◆</span>
+        <span class="num">{chapter.num}</span>
+        <span class="txt">{chapter.label}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="dot">◆</span>Wrisp</a>
+    <div class="nav-spacer"></div>
+    <span class="lang">
+      <a href={localeRoot.zh} lang="zh-Hans" aria-current={here === 'zh' ? 'true' : undefined}>中文</a>
+      <span class="sep">/</span>
+      <a href={localeRoot.en} lang="en" aria-current={here === 'en' ? 'true' : undefined}>EN</a>
+    </span>
+    <a class="btn btn-primary btn-sm nowrap" href="#waitlist">{nav.cta}</a>
+  </div>
+</header>
+
+<!-- 必须排在吸顶 header 之后，否则首屏被它盖住 -->
+<div class="chapter" id="chapter" aria-label={nav.chapter}>
+  <button class="prev" type="button" aria-label={nav.prev}>‹</button>
+  <span class="cnum">{chapters[0].num}</span>
+  <span class="cname">{chapters[0].label}</span>
+  <span class="cbar" aria-hidden="true"><i></i></span>
+  <button class="next" type="button" aria-label={nav.next}>›</button>
+</div>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.blocknav a'));
+  const chapter = document.querySelector<HTMLElement>('#chapter');
+  if (!chapter || links.length === 0) {
+    // 章节条与目录是渐进增强：没有它们页面照样可读，只是少了定位反馈。
+  } else {
+    const num = chapter.querySelector<HTMLElement>('.cnum')!;
+    const name = chapter.querySelector<HTMLElement>('.cname')!;
+    const fill = chapter.querySelector<HTMLElement>('.cbar i')!;
+    let current = 0;
+
+    const show = (index: number) => {
+      current = Math.max(0, Math.min(links.length - 1, index));
+      const link = links[current];
+      links.forEach((other) => other.classList.toggle('active', other === link));
+      num.textContent = link.querySelector('.num')!.textContent!;
+      name.textContent = link.querySelector('.txt')!.textContent!;
+      fill.style.width = `${Math.round(((current + 1) / links.length) * 100)}%`;
+    };
+    const jump = (index: number) => {
+      const target = document.getElementById(links[index].getAttribute('href')!.slice(1));
+      show(index);
+      // behavior 交给 CSS 的 scroll-behavior，reduced-motion 下自动变instant。
+      target?.scrollIntoView({ block: 'start' });
+    };
+
+    chapter.querySelector('.prev')!.addEventListener('click', () => jump(current - 1));
+    chapter.querySelector('.next')!.addEventListener('click', () => jump(current + 1));
+
+    if ('IntersectionObserver' in window) {
+      const spy = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const index = links.findIndex(
+              (link) => link.getAttribute('href') === `#${entry.target.id}`,
+            );
+            if (index >= 0) show(index);
+          }
+        },
+        { rootMargin: '-45% 0px -50% 0px', threshold: 0 },
+      );
+      for (const link of links) {
+        const section = document.getElementById(link.getAttribute('href')!.slice(1));
+        if (section) spy.observe(section);
+      }
+    }
+  }
+</script>
