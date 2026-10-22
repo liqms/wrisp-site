@@ -53,6 +53,13 @@ jobs:
             case "$f" in
               dist/zh/*) grep -q 'html lang="zh-CN"' "$f" || { echo "::error::$f lang mismatch"; exit 1; } ;;
             esac
+            # 双语互指必须成对：缺任一侧，另一侧的 hreflang 会被搜索引擎整组丢弃
+            for lang in en zh-CN x-default; do
+              grep -q "hreflang=\"$lang\"" "$f" || { echo "::error::$f missing hreflang $lang"; exit 1; }
+            done
+            # 内容已定稿的页面不得残留挡索引标记
+            if grep -q 'name="robots" content="noindex' "$f"; then
+              echo "::error::$f is still noindex"; exit 1; fi
           done
           # 字体必须是系统栈，不允许引入 webfont 负载
           if grep -rn '@font-face' dist --include='*.css' --include='*.html'; then
