@@ -65,6 +65,9 @@ jobs:
           if grep -rn '@font-face' dist --include='*.css' --include='*.html'; then
             echo "::error::webfont payload detected"; exit 1; fi
 
+      - name: Copy coverage
+        run: pnpm check
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
