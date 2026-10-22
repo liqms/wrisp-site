@@ -107,7 +107,8 @@ const collecting = endpoint !== '';
         res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'content-type': 'application/json', accept: 'application/json' },
-          body: JSON.stringify({ email, question: (question.value || '').trim() }),
+          // company 恒送出真人恒为空：跳过它就直接 POST 到收集端，服务端那道蜜罐判定才拦得住
+        body: JSON.stringify({ email, question: (question.value || '').trim(), company: honeypot.value }),
         });
       } catch {
         button.textContent = label;
