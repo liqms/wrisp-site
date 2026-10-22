@@ -44,11 +44,11 @@
     "en": "Export is Markdown. No format lock-in, no exit cost."
   },
   "note": {
-    "zh": "会离开本机的路径，页脚「隐私与数据声明」逐条列了什么发出去、默认开还是关。",
-    "en": "For every path that can leave your machine, the Privacy statement below lists what goes out and when it happens."
+    "zh": "会离开本机的路径，「隐私与数据声明」页逐条列了发出去的是什么、什么时候发生。",
+    "en": "For every path that can leave your machine, the privacy page lists what goes out and when it happens."
   },
   "link": {
-    "zh": "看这份清单 ↓",
-    "en": "Read that list ↓"
+    "zh": "看这份清单 →",
+    "en": "Read that list →"
   }
 }

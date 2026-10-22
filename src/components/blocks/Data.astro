@@ -1,11 +1,15 @@
 ---
 import type { Copy } from '@/lib/copy';
+import { leafKey } from '@/lib/copy';
+import { localePath } from '@/lib/locales';
 
 interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
 const data = copy.data;
+// 声明从首页区块独立成页，这里的链接因此必须带语言前缀，不能写死 /privacy/
+const privacyHref = localePath(leafKey(Astro.currentLocale), 'privacy/');
 ---
 
 <section class="reveal" id="data">
@@ -31,7 +35,7 @@ const data = copy.data;
         <p>{data['4b']}</p>
       </div>
     </div>
-    <p class="trust-note"><span>{data.note}</span> <a href="#privacy">{data.link}</a></p>
+    <p class="trust-note"><span>{data.note}</span> <a href={privacyHref}>{data.link}</a></p>
   </div>
 </section>
 

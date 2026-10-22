@@ -2,17 +2,17 @@
 import '../styles/tokens.css';
 import '../styles/global.css';
 import { leafKey } from '@/lib/copy';
-import { localeRoot } from '@/lib/locales';
+import { localeRoot, localeSegment } from '@/lib/locales';
 
 interface Props {
   title: string;
   description: string;
   ogLocale: string;
-  jsonldDesc: string;
-  jsonldOfferDesc: string;
+  /** 结构化数据由页面自己给：首页是 SoftwareApplication，辅助页没有可声明的产品实体。 */
+  jsonld?: Record<string, unknown>;
 }
 
-const { title, description, ogLocale, jsonldDesc, jsonldOfferDesc } = Astro.props;
+const { title, description, ogLocale, jsonld } = Astro.props;
 const key = leafKey(Astro.currentLocale);
 // public 目录的资源不会被 Astro 自动加 base，这里显式拼，文件名也保持可读、可核对
 const asset = (name: string) => new URL(`${import.meta.env.BASE_URL}assets/${name}`, Astro.url.origin).href;
@@ -20,29 +20,16 @@ const ogImage = asset(key === 'zh' ? 'og-zh.png' : 'og-en.png');
 const canonical = Astro.url.href;
 /*
  * hreflang 只认绝对地址：相对值在分享卡片与爬虫里都无法解析。
- * 两页各自把三种声明写全（含自己），互指成对才成立；x-default 落在无前缀的英文根。
+ * 每页把自己这一族的两种语言写全（含自己），互指成对才成立；x-default 落在无前缀的英文侧。
+ * 段路径从当前地址剥掉语言前缀得到，所以 /privacy/ 与 /zh/privacy/ 自动互认，不必每加一页改一次。
  */
 const root = (path: string) => new URL(path, Astro.url.origin).href;
+const seg = localeSegment(Astro.url.pathname);
 const alternates: { lang: string; href: string }[] = [
-  { lang: 'en', href: root(localeRoot.en) },
-  { lang: 'zh-CN', href: root(localeRoot.zh) },
-  { lang: 'x-default', href: root(localeRoot.en) },
+  { lang: 'en', href: root(localeRoot.en + seg) },
+  { lang: 'zh-CN', href: root(localeRoot.zh + seg) },
+  { lang: 'x-default', href: root(localeRoot.en + seg) },
 ];
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Wrisp',
-  applicationCategory: 'ProductivityApplication',
-  operatingSystem: 'Windows, macOS, Linux',
-  url: canonical,
-  description: jsonldDesc,
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    description: jsonldOfferDesc,
-  },
-};
 ---
 <html lang={Astro.currentLocale}>
   <head>
@@ -70,7 +57,7 @@ const jsonLd = {
     <link rel="icon" type="image/svg+xml" href={asset("logo.svg")} />
     <link rel="icon" type="image/png" sizes="512x512" href={asset("logo.png")} />
     <link rel="apple-touch-icon" href={asset("logo.png")} />
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>

@@ -1,0 +1,16 @@
+---
+import { leafKey } from '@/lib/copy';
+import { localeRoot } from '@/lib/locales';
+
+interface Props {
+  /** 同一页在另一语言下的段路径；首页传空，辅助页传 'privacy/'。 */
+  seg?: string;
+}
+const { seg = '' } = Astro.props;
+const here = leafKey(Astro.currentLocale);
+---
+<span class="lang">
+  <a href={`${localeRoot.zh}${seg}`} lang="zh-Hans" aria-current={here === 'zh' ? 'true' : undefined}>中文</a>
+  <span class="sep">/</span>
+  <a href={`${localeRoot.en}${seg}`} lang="en" aria-current={here === 'en' ? 'true' : undefined}>EN</a>
+</span>

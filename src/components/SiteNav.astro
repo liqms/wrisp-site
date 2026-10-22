@@ -1,7 +1,6 @@
 ---
 import type { Copy } from '@/lib/copy';
-import { leafKey } from '@/lib/copy';
-import { localeRoot } from '@/lib/locales';
+import LangSwitch from '@/components/LangSwitch.astro';
 
 interface Props {
   copy: Copy;
@@ -24,7 +23,6 @@ const chapters = [
   { id: 'waitlist', num: '10', label: bn.cta },
 ];
 
-const here = leafKey(Astro.currentLocale);
 ---
 
 <nav class="blocknav" aria-label={nav.toc}>
@@ -43,11 +41,7 @@ const here = leafKey(Astro.currentLocale);
   <div class="nav-inner">
     <a class="brand" href="#top"><span class="dot">◆</span>Wrisp</a>
     <div class="nav-spacer"></div>
-    <span class="lang">
-      <a href={localeRoot.zh} lang="zh-Hans" aria-current={here === 'zh' ? 'true' : undefined}>中文</a>
-      <span class="sep">/</span>
-      <a href={localeRoot.en} lang="en" aria-current={here === 'en' ? 'true' : undefined}>EN</a>
-    </span>
+    <LangSwitch />
     <a class="btn btn-primary btn-sm nowrap" href="#waitlist">{nav.cta}</a>
   </div>
 </header>

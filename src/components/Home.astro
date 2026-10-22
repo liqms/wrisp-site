@@ -12,22 +12,31 @@ import Roadmap from '@/components/blocks/Roadmap.astro';
 import Pricing from '@/components/blocks/Pricing.astro';
 import Faq from '@/components/blocks/Faq.astro';
 import Cta from '@/components/blocks/Cta.astro';
-import PrivacyPanel from '@/components/blocks/PrivacyPanel.astro';
 import SiteFooter from '@/components/blocks/SiteFooter.astro';
 import { leafKey, loadCopy } from '@/lib/copy';
 
 const key = leafKey(Astro.currentLocale);
 const copy = await loadCopy(key);
 const meta = copy.meta;
+// 产品实体只在首页声明：辅助页描述的是口径，不是一个可下载的东西。
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Wrisp',
+  applicationCategory: 'ProductivityApplication',
+  operatingSystem: 'Windows, macOS, Linux',
+  url: Astro.url.href,
+  description: meta.jsonldDesc,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    description: meta.jsonldOfferDesc,
+  },
+};
 ---
 
-<Page
-  title={meta.docTitle}
-  description={meta.docDesc}
-  ogLocale={meta.ogLocale}
-  jsonldDesc={meta.jsonldDesc}
-  jsonldOfferDesc={meta.jsonldOfferDesc}
->
+<Page title={meta.docTitle} description={meta.docDesc} ogLocale={meta.ogLocale} jsonld={jsonld}>
   <SiteNav copy={copy} />
   <main id="top">
     <Hero copy={copy} />
@@ -42,7 +51,6 @@ const meta = copy.meta;
     <Faq copy={copy} />
     <Cta copy={copy} />
   </main>
-  <PrivacyPanel copy={copy} />
   <SiteFooter copy={copy} />
 </Page>
 

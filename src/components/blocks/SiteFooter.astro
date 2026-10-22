@@ -1,11 +1,16 @@
 ---
 import type { Copy } from '@/lib/copy';
+import { leafKey } from '@/lib/copy';
+import { localePath } from '@/lib/locales';
 
 interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
 const foot = copy.foot;
+// 辅助页（如隐私声明）也渲染这份页脚，所以锚点必须带语言根，不能写 #waitlist 指本页
+const here = leafKey(Astro.currentLocale);
+const home = localePath(here);
 ---
 
 <footer>
@@ -13,9 +18,9 @@ const foot = copy.foot;
     <span class="foot-brand">◆ Wrisp</span>
     <span>{foot.copy}</span>
     <div class="foot-links">
-      <a href="#waitlist">{foot.beta}</a>
+      <a href={`${home}#waitlist`}>{foot.beta}</a>
       <a href="https://github.com/liqms/wrisp-releases" target="_blank" rel="noopener">{foot.releases}</a>
-      <a href="#privacy">{foot.privacy}</a>
+      <a href={localePath(here, 'privacy/')}>{foot.privacy}</a>
     </div>
   </div>
 </footer>

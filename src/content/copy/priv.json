@@ -1,4 +1,12 @@
 {
+  "docTitle": {
+    "zh": "隐私与数据声明 — Wrisp",
+    "en": "Privacy & data statement — Wrisp"
+  },
+  "docDesc": {
+    "zh": "逐条列出会离开本机的路径：本地 AI 不出机器，模型下载只发一次公开文件请求，云端走你自己的 Key，属地优先离线解析，更新检查只发版本号与清单哈希，表单邮箱只在你主动提交时。",
+    "en": "Every path that can leave your machine, row by row: local AI stays put, a model download asks only for a public file, cloud runs on your own key, location resolution is offline first, the update check sends version numbers and manifest hashes, and the form sends email only when you submit."
+  },
   "eyebrow": {
     "zh": "隐私与数据声明",
     "en": "Privacy & data statement"
@@ -71,6 +79,18 @@
     "zh": "你主动提交时",
     "en": "only when you submit"
   },
+  "6k": {
+    "zh": "下载",
+    "en": "download"
+  },
+  "6b": {
+    "zh": "只有一条对公开模型文件的请求，来源是 Hugging Face 或它的国内镜像；请求里不含你的任何内容。",
+    "en": "A request for one public model file, from Hugging Face or its China mirror — it carries none of your content."
+  },
+  "6s": {
+    "zh": "你下载模型时，或功能首次用到缺失的模型",
+    "en": "when you download a model, or a feature first needs one that's missing"
+  },
   "m1": {
     "zh": "邮箱只用于内测通知，不用于营销，不共享给第三方；可随时退订或要求删除。",
     "en": "Emails are used for beta notices only — no marketing, no third-party sharing, unsubscribe or request deletion anytime."
@@ -82,5 +102,53 @@
   "m3": {
     "zh": "数据库与索引是可删除、可重建的派生数据，用户内容的真源始终是你目录里的 Markdown 文件。",
     "en": "The database and indexes are derived data you can delete and rebuild; the source of truth for your content stays the Markdown files in your folder."
+  },
+  "hBack": {
+    "zh": "← 回到首页",
+    "en": "← Back to the site"
+  },
+  "t2": {
+    "zh": "这份清单之外的三件事",
+    "en": "Three things this list does not include"
+  },
+  "n1": {
+    "zh": "这个站点是纯静态页面：不加载第三方脚本、不种 cookie、没有分析与广告，字体用系统字体栈，因此打开它不会向任何内容网络发请求。",
+    "en": "This site is plain static HTML: no third-party scripts, no cookies, no analytics or ads, and system fonts — opening it sends no request to any content network."
+  },
+  "n2": {
+    "zh": "应用没有行为追踪：不采集使用统计，也不上传崩溃日志。会主动联网的就是上面那张表里的几条，没有别的路径。",
+    "en": "The app does no usage tracking: no analytics events, no crash uploads. What reaches out is the rows in the table above — there is no other path."
+  },
+  "n3": {
+    "zh": "表单这一版还没有接通收件服务：你现在填的邮箱不会离开浏览器。等收件通道上线，本页会同步改口，不会悄悄开始收集。",
+    "en": "The form has no receiving service wired up yet: the email you type stays in your browser. When collection goes live, this page gets updated first — it will not start quietly."
+  },
+  "t3": {
+    "zh": "要退订或要求删除",
+    "en": "Unsubscribing and deletion"
+  },
+  "d1": {
+    "zh": "内测通知邮件都带退订入口；也可以直接来信要求删除，说明里给出邮箱即可，我们不核对身份之外的任何信息。",
+    "en": "Every beta notice carries an unsubscribe link. You can also write to us asking for deletion — the address alone is enough, we don't ask for anything beyond it."
+  },
+  "d2": {
+    "zh": "收件通道上线前，上面这条针对的是「将来会存到的数据」；现在提交不会产生任何记录。",
+    "en": "Until collection goes live, the sentence above describes data that would be stored; submitting today creates no record at all."
+  },
+  "t4": {
+    "zh": "本页的口径从哪来",
+    "en": "Where these claims come from"
+  },
+  "v1": {
+    "zh": "每条路径都对应一次可复现的验证：断开网络启动应用，还能出网的只剩这张表里列到的那几条。",
+    "en": "Each row maps to something you can reproduce: start the app offline, and the only things that still reach the network are the rows listed here."
+  },
+  "v2": {
+    "zh": "写得不对就是缺陷。发现与本页不符的行为，请在发布仓库提出来。",
+    "en": "A wrong claim here is a defect. If you find behaviour that contradicts this page, please report it in the releases repository."
+  },
+  "stamp": {
+    "zh": "本页与站点同批构建发布，所述行为以最新发布版本为准。",
+    "en": "This page is built and published with the site; the behaviour it describes is that of the latest release."
   }
 }

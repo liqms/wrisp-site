@@ -36,8 +36,7 @@ jobs:
       - name: Sanity checks
         run: |
           set -euo pipefail
-          shopt -s nullglob
-          pages=(dist/*.html dist/*/*.html)
+          mapfile -t pages < <(find dist -name '*.html')
           (( ${#pages[@]} > 0 )) || { echo "::error::no pages emitted"; exit 1; }
           for f in "${pages[@]}"; do
             # 站内不得有占位死链
@@ -60,6 +59,16 @@ jobs:
             # 内容已定稿的页面不得残留挡索引标记
             if grep -q 'name="robots" content="noindex' "$f"; then
               echo "::error::$f is still noindex"; exit 1; fi
+          done
+          # 多页之后写错一段路径就是死链：站内每个绝对 href 都要落在 dist 里的真实对象上
+          for page in "${pages[@]}"; do
+            while IFS= read -r target; do
+              [[ -z "$target" ]] && continue
+              base="${target%/}"
+              if [[ -e "dist/${base}" || -e "dist/${base}/index.html" ]]; then continue; fi
+              echo "::error::${page} links to /${target}, which is not in dist"
+              exit 1
+            done < <(grep -o 'href="/wrisp-site/[^"#]*' "$page" | sed 's|href="/wrisp-site/||' | sort -u)
           done
           # 字体必须是系统栈，不允许引入 webfont 负载
           if grep -rn '@font-face' dist --include='*.css' --include='*.html'; then

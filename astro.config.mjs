@@ -9,7 +9,7 @@ export default defineConfig({
   site: SITE,
   base: BASE,
   output: 'static',
-  // `/` 走英文，`/zh/` 走中文；默认语言不加前缀
+  // `/` 走英文，`/zh/` 走中文；默认语言不加前缀，英文侧因此也是 x-default 的落点。
   i18n: {
     defaultLocale: 'en',
     locales: ['en', { codes: ['zh-CN', 'zh-Hans'], path: 'zh' }],
