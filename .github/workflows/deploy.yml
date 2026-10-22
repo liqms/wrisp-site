@@ -48,6 +48,10 @@ jobs:
             # base 前缀只能出现一次（手工拼 URL 的回归风险）
             if grep -n '/wrisp-site/wrisp-site/' "$f"; then
               echo "::error::$f has a doubled base path"; exit 1; fi
+            # 写在模板里的说明注释会随 HTML 一起发给访问者（也顺带说明实现细节）：产物不留注释
+            # 页面是单行压缩 HTML，用 -o 只摘注释片段，别把整页打进 CI 日志
+            if hits=$(grep -o '<!--[^>]\{0,60\}' "$f"); then
+              echo "::error::$f ships a HTML comment: $hits"; exit 1; fi
             # 中英两页各自落地，lang 必须与目录一致
             case "$f" in
               dist/zh/*) grep -q 'html lang="zh-CN"' "$f" || { echo "::error::$f lang mismatch"; exit 1; } ;;

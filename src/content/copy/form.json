@@ -1,0 +1,22 @@
+{
+  "sending": {
+    "zh": "正在提交…",
+    "en": "Submitting…"
+  },
+  "dup": {
+    "zh": "这个邮箱已经在名单里了，发布时同样会通知你。",
+    "en": "That email is already on the list — you'll be told at launch too."
+  },
+  "fail": {
+    "zh": "提交没有成功，请稍后再试；也可以到页面底部的意见反馈直接告诉我们。",
+    "en": "That didn't go through. Please try again shortly, or reach us through the feedback link at the bottom of the page."
+  },
+  "closed": {
+    "zh": "收集通道尚未开通，这里还不能提交。想先聊聊，请用页面底部的意见反馈。",
+    "en": "The sign-up channel isn't open yet, so this form can't take submissions. To talk to us now, use the feedback link at the bottom of the page."
+  },
+  "phClosed": {
+    "zh": "暂不可提交",
+    "en": "Not accepting sign-ups yet"
+  }
+}

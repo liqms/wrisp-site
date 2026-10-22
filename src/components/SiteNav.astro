@@ -10,6 +10,7 @@ const nav = copy.nav;
 const bn = copy.bn;
 
 // 章节清单是「左侧目录 / 吸顶章节条 / 滚动定位」三者的唯一来源，改这里就改了三处。
+// 模板里的 DOM 顺序有约束：吸顶 header 必须排在 .chapter 之前，否则首屏被章节条盖住（注释留在源码，不随 HTML 发给访问者）。
 const chapters = [
   { id: 'top', num: '01', label: bn.hero },
   { id: 'pain', num: '02', label: bn.pain },
@@ -46,7 +47,6 @@ const chapters = [
   </div>
 </header>
 
-<!-- 必须排在吸顶 header 之后，否则首屏被它盖住 -->
 <div class="chapter" id="chapter" aria-label={nav.chapter}>
   <button class="prev" type="button" aria-label={nav.prev}>‹</button>
   <span class="cnum">{chapters[0].num}</span>

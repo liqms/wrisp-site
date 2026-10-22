@@ -6,6 +6,7 @@ interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
+// hero.guard 是时态护栏：主标题讲终局，紧跟一行讲当下能用上的部分。
 const hero = copy.hero;
 const stream = copy.stream;
 const lastFiled = stream.rows[stream.rows.length - 1];
@@ -33,7 +34,6 @@ const demo = {
           <span class="accent">{hero.title2}</span>
         </h1>
         <p class="lead">{hero.sub}</p>
-        <!-- 时态护栏：主标题讲终局，紧跟一行讲当下 -->
         <p class="guard">{hero.guard}</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#waitlist">{hero.cta1}</a>
@@ -47,6 +47,7 @@ const demo = {
             err: hero.formerr,
             ok: hero.formok,
             note: hero.formnote,
+            ...copy.form,
           }}
         />
       </div>

@@ -1,53 +1,132 @@
 ---
 /**
  * 等待名单表单：hero 与 CTA 两处共用，字段齐全。
- * 提交只做前端校验并给出反馈——入库、去重与发信通道属后端，接通前这里不发送任何请求。
+ *
+ * 收集与否只由构建期环境变量 PUBLIC_WAITLIST_ENDPOINT 决定：没配端点就一条网络请求都不发，
+ * 也不谎称「已加入」——把表单标成不可提交并说明原因，比给一个假的成功诚实得多。
+ * 配上端点后同一份代码即可提交：字段走 JSON，响应按 2xx / 409 / 其他 映射成成功、已在名单、失败。
+ *
+ * `input[name=company]` 是蜜罐：CSS 让它对真人不可见、tabindex=-1 让它不可聚焦，机器人照填不误；
+ * 填了就直接回成功而不发请求——模板里不要留注释，注释会随 HTML 一起发给访问者。
  */
 interface Props {
   labels: {
     ph: string;
+    phClosed: string;
     q: string;
     btn: string;
     err: string;
     ok: string;
     note: string;
+    sending: string;
+    dup: string;
+    fail: string;
+    closed: string;
   };
   /** 深色反白块内使用，样式走 global.css 的 .waitlist.on-dark。 */
   onDark?: boolean;
 }
 const { labels, onDark = false } = Astro.props;
+const endpoint = (import.meta.env.PUBLIC_WAITLIST_ENDPOINT as string | undefined) ?? '';
+const collecting = endpoint !== '';
 ---
-<form class:list={['waitlist', onDark && 'on-dark']} novalidate>
-  <input type="email" name="email" placeholder={labels.ph} required autocomplete="email" />
-  <button class="btn btn-primary submit" type="submit">{labels.btn}</button>
-  <textarea name="question" rows="2" placeholder={labels.q}></textarea>
+<form
+  class:list={['waitlist', onDark && 'on-dark']}
+  data-waitlist
+  data-collecting={collecting}
+  data-endpoint={endpoint}
+  data-msg={JSON.stringify(labels)}
+  novalidate
+>
+  <input
+    type="email"
+    name="email"
+    placeholder={collecting ? labels.ph : labels.phClosed}
+    required
+    autocomplete="email"
+    disabled={!collecting}
+  />
+  <button class="btn btn-primary submit" type="submit" disabled={!collecting}>{labels.btn}</button>
+  <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <textarea name="question" rows="2" placeholder={labels.q} disabled={!collecting}></textarea>
   <span class="err" role="alert">{labels.err}</span>
-  <span class="ok">
+  <span class="ok" role="status">
     <span aria-hidden="true">✓</span>
-    <span>{labels.ok}</span>
+    <span data-ok>{labels.ok}</span>
   </span>
-  <span class="waitlist-note">{labels.note}</span>
+  <span class="waitlist-note">{collecting ? labels.note : labels.closed}</span>
 </form>
 
 <script>
   const isUsableEmail = (value: string) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
 
-  for (const form of document.querySelectorAll<HTMLFormElement>('form.waitlist')) {
-    form.addEventListener('submit', (event) => {
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-waitlist]')) {
+    const collecting = form.dataset.collecting === 'true';
+    const endpoint = form.dataset.endpoint || '';
+    const msg = JSON.parse(form.dataset.msg || '{}') as Record<string, string>;
+    const input = form.querySelector<HTMLInputElement>('input[type=email]')!;
+    const honeypot = form.querySelector<HTMLInputElement>('input[name=company]')!;
+    const question = form.querySelector<HTMLTextAreaElement>('textarea')!;
+    const button = form.querySelector<HTMLButtonElement>('.submit')!;
+    const err = form.querySelector<HTMLElement>('.err')!;
+    const ok = form.querySelector<HTMLElement>('.ok')!;
+    const okText = form.querySelector<HTMLElement>('[data-ok]')!;
+
+    const showOk = (text: string) => {
+      okText.textContent = text;
+      ok.classList.add('show');
+      err.classList.remove('show');
+    };
+    const showErr = (text: string, retryable: boolean) => {
+      err.textContent = text;
+      err.classList.add('show');
+      ok.classList.remove('show');
+      button.disabled = !retryable;
+    };
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const input = form.querySelector<HTMLInputElement>('input[type=email]')!;
-      const err = form.querySelector<HTMLElement>('.err');
-      const ok = form.querySelector<HTMLElement>('.ok');
-      if (!isUsableEmail((input.value || '').trim())) {
-        err?.classList.add('show');
-        ok?.classList.remove('show');
+      if (!collecting) return;
+      // 蜜罐命中：不入库也不解释，免得告诉脚本哪一格是坑
+      if (honeypot.value) {
+        showOk(msg.ok);
+        button.disabled = true;
+        return;
+      }
+      const email = (input.value || '').trim();
+      if (!isUsableEmail(email)) {
+        showErr(msg.err, false);
         input.focus();
         return;
       }
-      err?.classList.remove('show');
-      ok?.classList.add('show');
-      const submit = form.querySelector<HTMLButtonElement>('.submit');
-      if (submit) submit.disabled = true;
+      button.disabled = true;
+      const label = button.textContent || '';
+      button.textContent = msg.sending;
+      let res: Response;
+      try {
+        res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify({ email, question: (question.value || '').trim() }),
+        });
+      } catch {
+        button.textContent = label;
+        showErr(msg.fail, true);
+        return;
+      }
+      // 409 与 {"duplicate":true} 两种形状都认：去重规则在收集端，这里只负责如实说
+      let duplicated = res.status === 409;
+      if (!duplicated && res.ok) {
+        duplicated = ((await res.json().catch(() => ({}))) as { duplicate?: unknown }).duplicate === true;
+      }
+      button.textContent = label;
+      if (res.ok || duplicated) {
+        showOk(duplicated ? msg.dup : msg.ok);
+        input.value = '';
+        question.value = '';
+      } else {
+        showErr(msg.fail, true);
+      }
     });
   }
 </script>
