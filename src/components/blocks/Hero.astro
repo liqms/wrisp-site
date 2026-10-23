@@ -30,7 +30,7 @@ const demo = {
       <div class="hero-copy">
         <span class="kicker"><span class="kicker-dot" aria-hidden="true"></span>{hero.kicker}</span>
         <h1 class="h-title">
-          <span>{hero.title1}</span><br />
+          <span class="h-lead">{hero.title1}</span><br />
           <span class="accent">{hero.title2}</span>
         </h1>
         <p class="lead">{hero.sub}</p>
@@ -152,6 +152,15 @@ const demo = {
   }
   .hero .h-title {
     font-size: clamp(38px, 6vw, 62px);
+  }
+  /*
+   * 主标题的两句是一拍让、一拍重：前半句退到次级墨并轻一档字重，重音整个交给后半句。
+   * 淡在这里走实色令牌而不是 opacity——叠透明度会把对比度压到 WCAG AA 以下。
+   * 整句读法仍是那句主口号，字没动，动的只有主次。
+   */
+  .hero .h-title .h-lead {
+    color: var(--ink-2);
+    font-weight: 600;
   }
   .hero .h-title .accent {
     color: var(--accent);

@@ -32,8 +32,8 @@
     "en": "BYOK · no AI subscription"
   },
   "3b": {
-    "zh": "要用云端模型就接你自己的 Key——模型要么在你本机跑，要么走你自己的 Key。",
-    "en": "Want a cloud model? Bring your own key — the model either runs on your machine or bills through your own key."
+    "zh": "要用云端模型就接你自己的 Key：请求从你的机器直接发给服务商，用量记在你自己的账户上。",
+    "en": "Cloud models run on your own key: the request goes straight from your machine to the provider, and the usage lands on your account."
   },
   "4t": {
     "zh": "随时带走",
