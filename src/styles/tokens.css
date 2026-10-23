@@ -23,14 +23,15 @@
 
   /*
    * 字体只「复用字形」，不「复用文件」：中文整包字体一旦走 @font-face，未写 unicode-range
-   * 时任何汉字都会触发全量下载。这里用系统字体栈，首屏零字体请求。
-   * 若日后需要跨平台字形一致，改用 woff2 子集 + unicode-range 分片，中文总负载控制在 300 KB 以内。
+   * 时任何汉字都会触发全量下载。这里中文继续走系统栈，只有标题的拉丁字母走一份自托管子集
+   * （Newsreader 700，latin unicode-range，23.8 KB；@font-face 在 Page.astro 里发，
+   * 因为 URL 要带 Pages 的 base 前缀）。@font-face 的 URL 与这份令牌必须同改其一。
    */
   --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Text', 'Segoe UI', Inter,
     'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
-  --display: 'Segoe UI Variable Display', 'Segoe UI', Inter, 'PingFang SC', 'Hiragino Sans GB',
-    'Microsoft YaHei', sans-serif;
+  --display: 'Newsreader', 'Segoe UI Variable Display', 'Segoe UI', Inter, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 
   --radius: 11px;
   --radius-sm: 7px;

@@ -17,6 +17,20 @@ const key = leafKey(Astro.currentLocale);
 // public 目录的资源不会被 Astro 自动加 base，这里显式拼，文件名也保持可读、可核对
 const asset = (name: string) => new URL(`${import.meta.env.BASE_URL}assets/${name}`, Astro.url.origin).href;
 const ogImage = asset(key === 'zh' ? 'og-zh.png' : 'og-en.png');
+/*
+ * 标题字体只子集到拉丁：unicode-range 里没有汉字，中文一律不触发下载，
+ * 仍然走系统栈（§4.2 的硬约束）。这份文件是本仓自托管的静态资产，不发向任何内容网络，
+ * 所以 /privacy 里「不向任何内容网络发请求」照旧成立——但「字体全用系统栈」那句不再成立，已同步改口径。
+ * preload 是为了压掉换字闪烁：23.8 KB 且只有 700 一字重，先到先得比 swap 后再换更稳。
+ * 地址用根相对而不是绝对：字体是同站资源，跟着当前 origin 走才对——绝对地址在本地验证台上永远加载不到，
+ * 换域名时也要重生成；og:image 那类才必须绝对（分享卡片要能被外部抓取）。
+ */
+const displayFont = new URL(asset('newsreader-700-latin.woff2')).pathname;
+/*
+ * 这段 @font-face 只能在这里发，不能放进 tokens.css：
+ * Astro 的 <style is:inline> 原样输出不插值，所以字符串在此处拼好后用 set:html 注进去。
+ */
+const fontFace = `@font-face{font-family:'Newsreader';font-style:normal;font-weight:700;font-display:swap;src:url('${displayFont}') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}`;
 const canonical = Astro.url.href;
 /*
  * hreflang 只认绝对地址：相对值在分享卡片与爬虫里都无法解析。
@@ -57,6 +71,8 @@ const alternates: { lang: string; href: string }[] = [
     <link rel="icon" type="image/svg+xml" href={asset("logo.svg")} />
     <link rel="icon" type="image/png" sizes="512x512" href={asset("logo.png")} />
     <link rel="apple-touch-icon" href={asset("logo.png")} />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={fontFace}></style>
     {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
