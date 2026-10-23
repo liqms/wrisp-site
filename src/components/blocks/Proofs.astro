@@ -40,11 +40,9 @@ const proof = copy.proof;
       <div class="proof-card">
         <div class="mock" data-shot="report">
           <div class="mrow"><span class="mk-badge">{proof.m3a}</span></div>
-          <div class="docline" style="width:88%"></div>
-          <div class="ml m"></div>
-          <div class="ml s"></div>
-          <div class="docline" style="width:64%"></div>
-          <div class="ml xl"></div>
+          <div class="doc-l"><b>{proof.m3s1}</b><span>{proof.m3p1}</span></div>
+          <div class="doc-l"><b>{proof.m3s2}</b><span>{proof.m3p2}</span></div>
+          <div class="doc-l"><b>{proof.m3s3}</b><span>{proof.m3p3}</span></div>
         </div>
         <div class="proof-body">
           <div class="pname">WEEKLY REPORT</div>
@@ -55,9 +53,8 @@ const proof = copy.proof;
       <div class="proof-card">
         <div class="mock" data-shot="qa">
           <div class="q">{proof.m4q}</div>
+          <div class="doc-p">{proof.m4b}</div>
           <div class="mrow"><span>{proof.m4a}</span><span class="cite">1</span><span class="cite">2</span><span class="cite">3</span></div>
-          <div class="ml xl"></div>
-          <div class="ml m"></div>
         </div>
         <div class="proof-body">
           <div class="pname">RETRIEVAL &amp; Q&amp;A</div>
@@ -67,10 +64,8 @@ const proof = copy.proof;
       </div>
       <div class="proof-card">
         <div class="mock" data-shot="creation">
-          <div class="docline" style="width:40%;background:var(--ink);opacity:.75"></div>
-          <div class="ml xl"></div>
-          <div class="ml xl"></div>
-          <div class="ml m"></div>
+          <div class="doc-h">{proof.m5h}</div>
+          <div class="doc-p">{proof.m5p}</div>
           <div class="mrow"><span class="mk-badge">{proof.m5a}</span><span>{proof.m5b}</span></div>
         </div>
         <div class="proof-body">
@@ -116,19 +111,28 @@ const proof = copy.proof;
     flex-direction: column;
     gap: 7px;
   }
-  .mock .ml {
-    height: 9px;
-    border-radius: 3px;
-    background: var(--line);
+  /* 文档类 mock 的三种行：作品标题 / 带内联节标的成稿行 / 一条回答。
+     灰骨架条只表示「这里将来有字」，读者拿不到任何信息；换成真实文字后，五张卡
+     讲的其实是同一批记录长成了五种产物——这条线索只有真文字才递得出去。 */
+  .mock .doc-h {
+    font-family: var(--display);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
   }
-  .mock .ml.s {
-    width: 46%;
+  .mock .doc-l,
+  .mock .doc-p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-2);
   }
-  .mock .ml.m {
-    width: 72%;
+  .mock .doc-l b {
+    font-weight: 600;
+    color: var(--muted);
   }
-  .mock .ml.xl {
-    width: 90%;
+  .mock .doc-l b::after {
+    content: " · ";
+    color: var(--line-2);
   }
   .mock .mk-badge {
     display: inline-block;
@@ -187,12 +191,6 @@ const proof = copy.proof;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .mock .docline {
-    height: 7px;
-    border-radius: 2px;
-    background: var(--line);
-    width: 100%;
   }
   .proof-body {
     padding: 20px 22px 22px;

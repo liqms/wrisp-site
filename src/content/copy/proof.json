@@ -63,6 +63,30 @@
     "zh": "本周 · W42",
     "en": "THIS WEEK · W42"
   },
+  "m3s1": {
+    "zh": "进展",
+    "en": "Progress"
+  },
+  "m3p1": {
+    "zh": "评审通过：周报先做模板化",
+    "en": "review passed: template-based report first"
+  },
+  "m3s2": {
+    "zh": "风险",
+    "en": "Risks"
+  },
+  "m3p2": {
+    "zh": "客户周五前要回话，排期偏紧",
+    "en": "client reply due Friday, schedule is tight"
+  },
+  "m3s3": {
+    "zh": "下周",
+    "en": "Next week"
+  },
+  "m3p3": {
+    "zh": "试一遍竞品的新功能",
+    "en": "try the rival's new feature"
+  },
   "3t": {
     "zh": "周报",
     "en": "Weekly report"
@@ -79,6 +103,10 @@
     "zh": "来自 3 条记录",
     "en": "from 3 entries"
   },
+  "m4b": {
+    "zh": "客户提过一次排期风险，要求周五前给回话。",
+    "en": "The client raised a scheduling risk and wants a reply by Friday."
+  },
   "4t": {
     "zh": "检索问答",
     "en": "Search & Q&A"
@@ -90,6 +118,14 @@
   "m5a": {
     "zh": "手边素材",
     "en": "AT HAND"
+  },
+  "m5h": {
+    "zh": "我们的语音转写慢在哪",
+    "en": "Where our transcription lags"
+  },
+  "m5p": {
+    "zh": "差异不在识别率，而在会议场景里的默认动线。",
+    "en": "The gap is not accuracy — it is the default flow in a meeting."
   },
   "m5b": {
     "zh": "竞品动态 · 评审结论 · 客户回话",
