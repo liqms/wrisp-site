@@ -15,6 +15,10 @@
     "zh": "工作流",
     "en": "Workflow"
   },
+  "persona": {
+    "zh": "你是谁",
+    "en": "Who you are"
+  },
   "import": {
     "zh": "导入",
     "en": "Import"

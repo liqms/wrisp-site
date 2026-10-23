@@ -1,7 +1,7 @@
 {
   "eyebrow": {
-    "zh": "05 · 导入与兼容",
-    "en": "05 · Import & compatibility"
+    "zh": "06 · 导入与兼容",
+    "en": "06 · Import & compatibility"
   },
   "title": {
     "zh": "你现在的文件夹，就是 Wrisp 的文件夹",
@@ -28,8 +28,8 @@
     "en": "Your syntax keeps working"
   },
   "2b": {
-    "zh": "双链、标签、任务列表这些你已经在用的写法继续有效，Obsidian / Logseq 习惯不用改。",
-    "en": "Backlinks, tags and task lists you already write stay valid, so Obsidian / Logseq habits carry over."
+    "zh": "双链、标签、任务列表这些你已经在用的写法继续有效，你在本地笔记里养成的习惯不用改。",
+    "en": "Backlinks, tags and task lists you already write stay valid, so your local-notes habits carry over."
   },
   "3t": {
     "zh": "模型装在你机器上",

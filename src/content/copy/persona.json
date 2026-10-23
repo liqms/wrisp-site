@@ -1,0 +1,120 @@
+{
+  "eyebrow": {
+    "zh": "05 · 你是谁",
+    "en": "05 · Who this is for"
+  },
+  "title": {
+    "zh": "哪一种是现在的你？",
+    "en": "Which one is you right now?"
+  },
+  "lead": {
+    "zh": "挑一个最像你的，直接跳到回答它的那一块。",
+    "en": "Pick the one that sounds like you, then jump to the part that answers it."
+  },
+  "group": {
+    "zh": "选择你的处境",
+    "en": "Choose your situation"
+  },
+  "order": ["notes", "write", "manage", "twin"],
+  "opts": {
+    "notes": {
+      "zh": "我有一堆本地笔记",
+      "en": "I have a pile of local notes"
+    },
+    "write": {
+      "zh": "我是写东西的人",
+      "en": "I write things"
+    },
+    "manage": {
+      "zh": "我管项目、做研究",
+      "en": "I run projects or research"
+    },
+    "twin": {
+      "zh": "我想要那个分身",
+      "en": "I want the creation twin"
+    }
+  },
+  "panels": {
+    "notes": {
+      "sit": {
+        "zh": "笔记越攒越多，双链是自己加的，整理全靠手动。你要的是现在的文件夹拿过来就能用，不是再搬一次家。",
+        "en": "The folder keeps growing, backlinks are hand-maintained, and tidying falls on you. You want the folder you already have to work here — not another move."
+      },
+      "links": [
+        {
+          "href": "#import",
+          "label": {
+            "zh": "看怎么把文件夹接进来",
+            "en": "See how a folder gets imported"
+          }
+        },
+        {
+          "href": "#data",
+          "label": {
+            "zh": "看数据到底归谁",
+            "en": "See who your data belongs to"
+          }
+        }
+      ]
+    },
+    "write": {
+      "sit": {
+        "zh": "素材散在聊天记录、书签和会议转写里，动笔时想不起自己看过哪一篇，只能从头再搜一遍。",
+        "en": "Material sits in chats, bookmarks and meeting transcripts. When you start writing you can't recall what you read, so you search again from scratch."
+      },
+      "links": [
+        {
+          "href": "#how",
+          "label": {
+            "zh": "看一条记录怎么走完",
+            "en": "See how one entry gets processed"
+          }
+        },
+        {
+          "href": "#proofs",
+          "label": {
+            "zh": "看你会拿到什么",
+            "en": "See what you end up with"
+          }
+        }
+      ]
+    },
+    "manage": {
+      "sit": {
+        "zh": "会议、需求、指标一周几十条，每一条都得当场落成能追、能复盘的东西，而不是记完就散。",
+        "en": "Meetings, requests and metrics arrive by the dozen each week, and each one has to land as something you can track and review — not just notes that scatter."
+      },
+      "links": [
+        {
+          "href": "#proofs",
+          "label": {
+            "zh": "看会产出什么",
+            "en": "See what comes out of it"
+          }
+        },
+        {
+          "href": "#data",
+          "label": {
+            "zh": "看这些材料留在哪儿",
+            "en": "See where this material stays"
+          }
+        }
+      ]
+    },
+    "twin": {
+      "sit": {
+        "zh": "你说的是那个懂你的材料、按你的风格替你起草的分身。现在还不会——今天能用上的是它的记忆底座：替你记、替你整理、在你写的时候把它找回来。它得先学会你。",
+        "en": "You mean the twin that knows your material and drafts in your voice. That one isn't here yet. What works today is its memory core: it files, organizes, and brings things back while you write. First it has to learn you."
+      },
+      "links": [
+        {
+          "href": "#roadmap",
+          "label": {
+            "zh": "看它排在路线图的哪一格",
+            "en": "See where it sits on the roadmap"
+          }
+        }
+      ]
+    }
+  }
+}
