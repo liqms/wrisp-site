@@ -1,6 +1,5 @@
 ---
 import type { Copy } from '@/lib/copy';
-import WaitlistForm from '@/components/WaitlistForm.astro';
 
 interface Props {
   copy: Copy;
@@ -39,17 +38,6 @@ const demo = {
           <a class="btn btn-primary" href="#waitlist">{hero.cta1}</a>
           <a class="btn btn-ghost" href="#how">{hero.cta2}</a>
         </div>
-        <WaitlistForm
-          labels={{
-            ph: hero.formph,
-            q: hero.formq,
-            btn: hero.formbtn,
-            err: hero.formerr,
-            ok: hero.formok,
-            note: hero.formnote,
-            ...copy.form,
-          }}
-        />
       </div>
 
       <div class="appwin" data-demo={JSON.stringify(demo)}>
