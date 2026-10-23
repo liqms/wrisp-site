@@ -123,6 +123,11 @@ const order: string[] = persona.order;
       display: none;
       padding: 22px 24px;
     }
+    /* 选项卡模式下选中的档名就在面板正上方，卡内那行小标题就成了逐字复读；
+       基态（无 :has()）四张平铺卡没有别处可标身份，所以只在增强态里收掉。 */
+    #persona .who {
+      display: none;
+    }
     #persona .persona:has(#p-notes:checked) .panel[data-id="notes"],
     #persona .persona:has(#p-write:checked) .panel[data-id="write"],
     #persona .persona:has(#p-manage:checked) .panel[data-id="manage"],
