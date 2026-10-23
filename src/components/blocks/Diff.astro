@@ -40,6 +40,15 @@ const cmp = copy.cmp;
   .h-2 {
     max-width: 880px;
   }
+  /*
+   * 这个 span 一直带着 class="accent" 却没有对应规则，等于半句钩子写在标记里、
+   * 视觉上从没发生过。补上的依据与 01 区 hero 同一条：拆两半的标题，后半句是重音所在，
+   * 用强调色；强调色经裁决统一为靛蓝（§4.1）。用 --accent 而非 --accent-ink，
+   * 与 01 区同一处装置保持同一个值，不在此处另开一档深浅。
+   */
+  .h-2 .accent {
+    color: var(--accent);
+  }
   .cmp {
     margin-top: 38px;
     border: 1px solid var(--line);
@@ -99,6 +108,14 @@ const cmp = copy.cmp;
   }
   .qualifier b {
     color: var(--ink);
+  }
+  /*
+   * 加粗的引导句和后半句之间必须有间隔：拉丁文没有它就是 decide.It 这种粘连，
+   * 而中文句号后面本来不留空。所以这个空格只能挂在语言上——写进模板会把中文一起撑开，
+   * 写进文案叶则是看不见、一改就丢的东西。
+   */
+  :lang(en) .qualifier b::after {
+    content: ' ';
   }
   @media (max-width: 760px) {
     .cmp-row {
