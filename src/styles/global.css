@@ -38,13 +38,38 @@ section {
   background: var(--line-2);
   flex: none;
 }
+/*
+ * 展示衬线只给「区块的声音」：h1 / h2 与导航里的字标。
+ * h3 一律回正文无衬线——本站的 h3 常常是一整句话（10 区面板那句、FAQ 的问题），
+ * 20px 的粗衬线排长句既难读也把力气用错了地方；衬线出现得少，才每次都有分量。
+ */
 h1,
-h2,
-h3 {
+h2 {
   font-family: var(--display);
   letter-spacing: -0.022em;
   line-height: 1.1;
   font-weight: 700;
+  text-wrap: balance;
+}
+h3 {
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  font-weight: 700;
+  text-wrap: balance;
+}
+/*
+ * 同一套字距数值不可能同时服侍拉丁与中文：-0.022em 收的是衬线大标题的字母间距，
+ * 收在方块字上是把字与字咬住；行高 1.65 对拉丁够用，中文笔画密、需要更多行间隙。
+ * 因此中文侧按语言覆写：标题回零字距、正文行高放宽，层次改由字号与字重拉开
+ * （中文不追 display/body 配对——可用的整包宋体既拉不来，Windows 上还没有真粗体）。
+ */
+:root:lang(zh) body {
+  line-height: 1.75;
+}
+:lang(zh) h1,
+:lang(zh) h2,
+:lang(zh) h3 {
+  letter-spacing: 0;
 }
 .h-title {
   font-size: clamp(34px, 5.4vw, 58px);
