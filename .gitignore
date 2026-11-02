@@ -158,3 +158,6 @@ output/
 
 # wrangler dev --local 的运行时状态（本地 KV 里存的是冒烟验提交过的邮箱，绝不入库）
 .wrangler/
+
+# 隔离工作区（superpowers worktree 落点，内容绝不入库）
+.worktrees/
