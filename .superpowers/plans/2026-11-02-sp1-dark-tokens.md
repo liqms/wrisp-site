@@ -1166,13 +1166,17 @@ git commit -m "feat(blocks): 其余组件跟到暗色，字面色 baseline 清�
 
 整段替换成「只允许那一份」：
 
+> **2026-11-02 执行期更正两处**（撰写计划时没跑过真实 `dist`，两处都会到 CI 才暴露）：① 初稿这里写的是 `... expected exactly 4"; exit 1; }`——用 `}` 收了 `if`，是 bash 语法错，整步连跑都跑不起来，改成 `fi`。② 这一步跑在 `set -euo pipefail` 里（`deploy.yml:37`），而 `faces=` / `n=` 两条命令替换里的 `grep` **无匹配时退出 1**，管道就带着整步静默中止——没有 `::error::` 行，日志里只有一个 exit 1。实测：`bash -c 'set -euo pipefail; x=$(grep -rho NOMATCH dist --include=*.html | sort -u); echo reached'` 直接 exit 1，`reached` 不打印。今天 `dist` 里四处都有 `@font-face`（`dist/index.html`、`dist/privacy/index.html`、`dist/zh/index.html`、`dist/zh/privacy/index.html`），所以不会触发；但 SP-2/SP-3 一旦撤掉内联字体，这条就会变成「无理由红灯」。因此两个赋值都补 `|| true`，让断言本身去报错。核对过的事实：产物里的写法是压缩后的 `@font-face{...}`（无空格），`font-family:'Newsreader'` / `font-weight:700` / `newsreader-700-latin.woff2` 三个子串都在；`*.css` 里零 `@font-face`；`find dist -name '*.woff' -o -name '*.woff2'` 不加括号在这里是安全的（GNU find 在没有动作时把 `-print` 加到整个表达式上，实测两种写法同结果）。
+
 ```yaml
           # 自托管子集只许 Newsreader 700 这一份，且必须四个页面各发一次。
           # 出现别的 @font-face、或引用到未登记的字体文件，就是新增了字体负载。
-          faces=$(grep -rho '@font-face{[^}]*}' dist --include='*.html' | sort -u)
-          n=$(grep -rl '@font-face' dist --include='*.html' | wc -l)
+          # 两个 grep 在无匹配时退出 1；这一步开着 pipefail，所以显式 || true，
+          # 让下面的条数断言去报错，而不是整步静默中止。
+          faces=$(grep -rho '@font-face{[^}]*}' dist --include='*.html' | sort -u || true)
+          n=$(grep -rl '@font-face' dist --include='*.html' | wc -l || true)
           if [[ "$n" -ne 4 ]]; then
-            echo "::error::@font-face found in $n html pages, expected exactly 4"; exit 1; }
+            echo "::error::@font-face found in $n html pages, expected exactly 4"; exit 1; fi
           if [[ "$faces" != *"font-family:'Newsreader'"* || "$faces" != *"font-weight:700"* || "$faces" != *"newsreader-700-latin.woff2"* ]]; then
             echo "::error::@font-face is not the sanctioned Newsreader 700 subset: $faces"; exit 1; fi
           if grep -rq '@font-face' dist --include='*.css'; then
@@ -1181,6 +1185,7 @@ git commit -m "feat(blocks): 其余组件跟到暗色，字面色 baseline 清�
           if [[ "$fonts" != "newsreader-700-latin.woff2" ]]; then
             echo "::error::unexpected font payloads: $fonts"; exit 1; fi
 ```
+
 
 - [ ] **Step 3: 把令牌校验挂成独立步骤**
 
