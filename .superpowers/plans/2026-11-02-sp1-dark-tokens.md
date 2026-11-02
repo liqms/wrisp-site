@@ -246,6 +246,8 @@ node scripts/check-tokens.mjs --selftest
 
 先**删掉 Step 1 末尾那两行 `checkMatrix` / `checkLiterals` 桩**（连同它们上面的注释），再把下面的声明与实现插在 `const results = []` 之前；`run()` 与文件其余部分不动。
 
+> **2026-11-02 执行期更正（Task 2 实测）**：上面这句照字面做会让脚本 100% 起不来——本步代码块的**末尾两行**是 `if (process.argv.includes('--emit-baseline')) emitBaseline(); else run();`，整块插到 `const results = []` 之前，等于在 `check` / `run` 初始化前调用它们（TDZ `ReferenceError`），而且 `--selftest` 会先跑一遍真实仓库校验。实际落法：把**除那两行以外**的内容插在 `const results = []` 之前，派发两行留在文件最末。文本内容零改动，只有位置。已由实施者 `5fbcefd` 验证，控制器采纳（台账 Ruling T2-1）。
+
 ```js
 /* ---- 契约表：改这里等于改设计裁决，须同步 spec §5 ---- */
 const TEXT_ON_BG = [
