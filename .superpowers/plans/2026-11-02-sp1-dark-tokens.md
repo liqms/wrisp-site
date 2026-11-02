@@ -61,6 +61,10 @@
 | `--radius-sm` | `--r-sm` | |
 | `--radius-panel` | `--r-panel` | |
 
+> **两条判法优先级，2026-11-02 执行期补（Task 4 实测，台账 Ruling T4-3 / T4-4）：**
+> 1. **表里的发丝族只给描边**。`--hair-1/2/3` 是 `rgba(255,255,255,.07/.12/.2)`，落到 `color:` 上承载字符会近乎不可见。判法看声明落在哪个属性上：`border-*-color:` / 装饰线的 `background:` → 发丝族；真的显示字符的 `color:` → 文字族（一般 `--text-3`）。Task 4 据此把 `.lang .sep`、`.blocknav a .mk` 从机械映射给出的 `--hair-2` 改回 `--text-3`。
+> 2. **spec 的逐元素用途表胜过本表通则**。spec §5.2 把 eyebrow 归 `--text-3`，§5.3 把 `--accent-300` 限定为「正文内链接、focus ring」——所以本表「`--accent` 当文字色 → `--accent-300`」不适用于 eyebrow。冲突时按 spec 走并在报告里点名。
+
 实测的字面色共 **58 处 / 57 行**（`Hero.astro:178` 一行两处，只占 1 条），分布在 14 个文件（口径 = Task 2 校验器的 `scanLiteralLines`：`LITERAL` 正则命中、跳过注释行、`ALLOW_FILES` 免扫；`tokens.css` 自己另有 16 行、`Page.astro` 1 行，都不计入）。落点映射：
 
 | 字面值 | 行 / 处 | 落点 | 新令牌 |
@@ -891,6 +895,8 @@ node scripts/check-tokens.mjs --emit-baseline > scripts/color-baseline.json && \
 
 预期：baseline 从 57 缩到 42（`tokens=N baseline=42` 那行看得到）；第二、三项通过；第一项的失败清单里**不再出现 `global.css`**，只剩 `src/components/**` 的旧令牌名。随后 `pnpm build` 成功。
 
+> **2026-11-02 执行期更正（Task 4 实测，台账 Ruling T4-1）**：上面那条 `&&` 链按本计划自己的中间态是走不通的——第一项 ref 校验必须一直红到 Task 6，`node scripts/check-tokens.mjs` 以退出码 1 结束，`&&` 之后的 `pnpm build` 永远不会执行，与本步「随后 `pnpm build` 成功」自相矛盾。落法是拆成三条独立命令跑：`--emit-baseline` 重生成、`check-tokens`（预期红 1 项）、`pnpm build`（预期退出 0）。同理，Task 7 把 `check-tokens` 并进 `pnpm check` 时必须排在 Task 6 全清零之后。
+
 - [ ] **Step 7: 提交**
 
 ```bash
@@ -1291,8 +1297,10 @@ git commit -m "feat(theme): 全站令牌层翻成蓝调暗色（SP-1）
 
 - [ ] **Step 6: 向维护者报告**
 
-报告须含：基线 SHA（Task 1 Step 3）、`pnpm build && pnpm check` 的实际输出行、Task 8 各步结果、Step 4 视觉验收做了还是没做，以及**三件需要维护者回话的事**：
+报告须含：基线 SHA（Task 1 Step 3）、`pnpm build && pnpm check` 的实际输出行、Task 8 各步结果、Step 4 视觉验收做了还是没做，以及**五件需要维护者回话的事**：
 
 1. **spec 回写项**（本计划开头那一节：`--nav-bg`、`--chapter-bg`、`--glow-strong`、`--ok-weak` 四个半透明令牌）——它们已按 Task 3 落地，须写回 spec §5.1/§5.4 才算过裁决，请维护者确认后由维护者或经其授权的下一轮改写。原列的 `--glow-soft` 已在执行期撤销（`src/` 里没有它的用法，见该节第 2 条）。（§10.2 的字面色口径数在 2026-11-02 执行期又更正了一次：粗扫得到的 93 行实为 57 行，spec 已同步。）
 2. **两处推定**：`Page.astro` 的 `theme-color` 翻成 `#0b0d12`（按 D-1 推定，spec 没逐条写）、`Hero.astro:183` 的卡投影整条删除（按 §5.1「不引入投影」推定，是 SP-1 唯一的非令牌级视觉改动）。
 3. 一句明确提醒——**SP-2（叙事重排、撤表单、删 `edge/waitlist/`、文案撤回注）尚未开始**，spec §12 登记的 8 处口径此刻仍是旧文案，而首屏还没有下载入口（SP-3）；`SiteNav` 的目录项仍指向 `#waitlist`，`chapters` 仍是 11 条，与新令牌层并存但不自洽，这属于路线 A 的预期中间态。
+4. **主按钮 hover 的过渡解**（Task 4 执行期裁出，台账 Ruling T4-2）：spec §5 明写 `--accent-ink` 随亮色体系作废，但暗色家族里**没有比 `--accent-fill` 更深的填充档**，也没有任何深色文字令牌——旧 hover「变深 + 浅色字」这条路在令牌表里不存在。现落法是 `.btn-primary:hover { background: var(--accent-400); color: var(--bg) }`（实测 5.70 过 AA；`--text-1` 压 `--accent-400` 只有 3.07，而 `.btn` 是 15px/600 不算 WCAG 大字），基元层两处 hover 同形。代价是把底色令牌当文字色用了两次，属语义分类的越界。备选是给 `--accent-*` 家族补一档深填充（例如把退役的 `#3b4bba` 以 `--accent-fill-hover` 复活、文字保持 `--text-1`），但那要同时动 `tokens.css`、矩阵契约表与自检夹具，属品牌层 + 口径变更，执行期不替维护者做。
+5. **幽灵按钮的描边强度**（台账 Ruling T4-5）：`.btn-ghost` 现为 `--surface-2` 底 + `--hair-2` 边（alpha 0.12），spec §5.4 自认发丝线不足非文字 3:1，给的处置是「线索不足时抬一层 `--surface-3` 而不是加粗描边」。现状按映射表机械执行、未自创；若维护者觉得按钮“虚”，改 `--hair-3` 是一处两行。
