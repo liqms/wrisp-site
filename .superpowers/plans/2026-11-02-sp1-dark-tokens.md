@@ -1169,22 +1169,39 @@ git commit -m "feat(blocks): 其余组件跟到暗色，字面色 baseline 清�
 > **2026-11-02 执行期更正两处**（撰写计划时没跑过真实 `dist`，两处都会到 CI 才暴露）：① 初稿这里写的是 `... expected exactly 4"; exit 1; }`——用 `}` 收了 `if`，是 bash 语法错，整步连跑都跑不起来，改成 `fi`。② 这一步跑在 `set -euo pipefail` 里（`deploy.yml:37`），而 `faces=` / `n=` 两条命令替换里的 `grep` **无匹配时退出 1**，管道就带着整步静默中止——没有 `::error::` 行，日志里只有一个 exit 1。实测：`bash -c 'set -euo pipefail; x=$(grep -rho NOMATCH dist --include=*.html | sort -u); echo reached'` 直接 exit 1，`reached` 不打印。今天 `dist` 里四处都有 `@font-face`（`dist/index.html`、`dist/privacy/index.html`、`dist/zh/index.html`、`dist/zh/privacy/index.html`），所以不会触发；但 SP-2/SP-3 一旦撤掉内联字体，这条就会变成「无理由红灯」。因此两个赋值都补 `|| true`，让断言本身去报错。核对过的事实：产物里的写法是压缩后的 `@font-face{...}`（无空格），`font-family:'Newsreader'` / `font-weight:700` / `newsreader-700-latin.woff2` 三个子串都在；`*.css` 里零 `@font-face`；`find dist -name '*.woff' -o -name '*.woff2'` 不加括号在这里是安全的（GNU find 在没有动作时把 `-print` 加到整个表达式上，实测两种写法同结果）。
 
 ```yaml
-          # 自托管子集只许 Newsreader 700 这一份，且必须四个页面各发一次。
-          # 出现别的 @font-face、或引用到未登记的字体文件，就是新增了字体负载。
+          # 自托管子集只许 Newsreader 700 这一份：四个页面各发一次、规则只许一条、来源必须是站内 /assets。
           # 两个 grep 在无匹配时退出 1；这一步开着 pipefail，所以显式 || true，
           # 让下面的条数断言去报错，而不是整步静默中止。
-          faces=$(grep -rho '@font-face{[^}]*}' dist --include='*.html' | sort -u || true)
+          faces=$(grep -rho '@font-face[[:space:]]*{[^}]*}' dist --include='*.html' | sort -u || true)
           n=$(grep -rl '@font-face' dist --include='*.html' | wc -l || true)
           if [[ "$n" -ne 4 ]]; then
-            echo "::error::@font-face found in $n html pages, expected exactly 4"; exit 1; fi
-          if [[ "$faces" != *"font-family:'Newsreader'"* || "$faces" != *"font-weight:700"* || "$faces" != *"newsreader-700-latin.woff2"* ]]; then
-            echo "::error::@font-face is not the sanctioned Newsreader 700 subset: $faces"; exit 1; fi
+            echo "::error::@font-face found in $n html pages, expected exactly 4: $(grep -rl '@font-face' dist --include='*.html' | tr '\n' ' ' || true)"; exit 1; fi
+          if [[ -z "$faces" ]]; then
+            echo "::error::html carries @font-face but the rule shape matched nothing - output format changed, update this guard"; exit 1; fi
+          if [[ $(printf '%s\n' "$faces" | wc -l) -ne 1 ]]; then
+            echo "::error::expected exactly one @font-face rule, found $(printf '%s\n' "$faces" | wc -l): ${faces//$'\n'/, }"; exit 1; fi
+          if [[ "$faces" != *"font-family:'Newsreader'"* || "$faces" != *"font-weight:700"* || "$faces" != *"src:url('/wrisp-site/assets/newsreader-700-latin.woff2')"* ]]; then
+            echo "::error::@font-face is not the sanctioned Newsreader 700 subset: ${faces//$'\n'/, }"; exit 1; fi
           if grep -rq '@font-face' dist --include='*.css'; then
             echo "::error::@font-face leaked into a css bundle; it must stay inline in html"; exit 1; fi
-          fonts=$(find dist -name '*.woff' -o -name '*.woff2' | sed 's|.*/||' | sort)
+          remote=$(grep -rhoE "https?://[^\"')[:space:]]*\.(woff2|woff|ttf|otf)" dist --include='*.html' --include='*.css' | sort -u || true)
+          if [[ -n "$remote" ]]; then
+            echo "::error::remote font payload referenced: ${remote//$'\n'/, }"; exit 1; fi
+          fonts=$(find dist \( -name '*.woff' -o -name '*.woff2' -o -name '*.ttf' -o -name '*.otf' \) -printf '%f\n' | sort || true)
           if [[ "$fonts" != "newsreader-700-latin.woff2" ]]; then
-            echo "::error::unexpected font payloads: $fonts"; exit 1; fi
+            echo "::error::unexpected font payloads: ${fonts//$'\n'/, }"; exit 1; fi
 ```
+
+> **2026-11-02 二次更正（Task 7 复核的变异实验打出来的两处漏检）**：① 原来只做三个子串包含判断，且 `n` 数的是**文件**不是**规则**——在 `dist/index.html` 里再插一条干净的 `@font-face{font-family:"Fraunces";font-weight:400;src:url(https://fonts.gstatic.com/...)}`，`sort -u` 得到 2 条、`n` 仍是 4、三个子串仍在，守卫 **exit 0**；这正好是 D-9 要挡的那件事，所以补「规则只许一条」与「不许远程 url」两条断言。② `@font-face{` 写死了无空格形状：把 4 页中的 2 页改成 `@font-face {`，形状无关的 `grep -rl` 仍数到 4、子串仍从剩下 2 页取得，守卫 **exit 0 且静默少检 2 页**——比整体变形（会 exit 1，但报的是「不是那份子集」这种误导消息）更坏。所以形状放宽成 `[[:space:]]*`，并加「有 `@font-face` 却一条都没匹配上」这条独立报错，把「格式化变了」和「混进别的字体」分开报。另顺手修三处：失败消息里的换行在 GitHub annotation 里会截断（`${faces//$'\n'/, }`）、负载枚举补 `.ttf/.otf`、条数不符时把命中的文件名一起打出来。**不在 CI 里断言字体字节数**（23,796 B 会随 SP-3 重新子集化而合法变动，写死就是把守卫变成定时炸弹）；大小仍归 Task 8 的人工核对清单。
+
+> **2026-11-02 三次更正（二次更正自己又被变异实验打穿，最终文本已按 9 例实测）**：二次更正落地后我把同一段脚本跑了一遍变异矩阵（真实 `dist` 副本 + Python 变异器，绕开 `perl -0pi` 的引号坑），结果：
+> ① `grep -q 'url(http'` **挡不住带引号的远程 src**。把规则里的 `/wrisp-site/assets/...woff2` 整体换成 `https://cdn.example.com/assets/...woff2`（文件仍叫合法名、`font-family`/`font-weight` 不动），守卫 **exit 0**——`url(http` 这个串在 `url('https` 里根本不出现。教训：不要用「子串像不像」表达「协议是不是远程」。
+> ② 于是把 `src` 那一条从模糊子串升级为**完整同源字面量** `src:url('/wrisp-site/assets/newsreader-700-latin.woff2')`（产物实测就是这个形状），远程 src 直接在「不是那份子集」这条上失败；同时**删掉** ①那条独立的 `url(` 检查——它已被更严的字面量断言完全覆盖，留着就是冗余分支。
+> ③ 但 ② 只覆盖规则内部，覆盖不到 `<link rel="preload">`：把四个页面的 preload 指向 CDN 而规则保持合法，守卫仍 **exit 0**，页面照样去远端取一份字体负载。所以补一条与规则无关的全站扫描：`*.html`/`*.css` 里任何带协议的 `.woff2|woff|ttf|otf` URL 直接失败。实测这一条同时抓得住 ① 和 ③ 两种形状。
+> ④ 报错文案里的破折号统一成 ASCII `-`，与我实际跑过的那份文本逐字节一致——计划里写的就是实现者要粘进 `deploy.yml` 的原文，不能有我没能验证的字符。
+> 最终 9 例（对真实 `dist` 副本）：无变异 exit 0；A 加第二条远程 face / B 两页改空格形状 / C 四页全变形 / D 多塞一个 `.ttf` / E preload 指向 CDN / E2 规则 src 指向 CDN / E3 preload+src 都指 CDN / F `@font-face` 漏进 css，全部 exit 1，且 C 与 A/B 报不同消息。另在 worktree 里 `pnpm build` 后原地跑同一段：exit 0；`pnpm check`、`node scripts/check-tokens.mjs` 全绿，`font-face pages=4`，`newsreader-700-latin.woff2 23796 bytes`。
+> **已知残余（不在本守卫范围内，交给维护者）**：`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?...">` 这类远程 *样式表* 不带字体扩展名，③ 的全站扫描抓不到。要挡它得断言「产物里不许任何外部 `<link>`」，那已经超出「不加 webfont」的职责，会把将来合法的远程资源一起打红。
+
 
 
 - [ ] **Step 3: 把令牌校验挂成独立步骤**
