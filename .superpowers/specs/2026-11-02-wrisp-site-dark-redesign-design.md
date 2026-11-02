@@ -174,7 +174,7 @@ og-zh / og-en（1200×630）由维护者侧私有脚本重导，本仓不手工�
 新增两条挂进 `pnpm check`：
 
 1. **令牌对比度矩阵**：纯 node 函数读 `tokens.css`，遍历文字族 × 底色族，正文断言 ≥4.5、大字与微标签 ≥3，无需浏览器。
-2. **组件禁字面色**：扫 `src/components/**` 出现 `#hex` 或 `rgb(` 字面量即失败，白名单只留 `tokens.css` 与 `Page.astro` 的 `@font-face`。现状 62 处（`#fff` 33 处，Hero 18 处、Persona 19 处最密）在 SP-1 内清零。
+2. **组件禁字面色**：扫 `src/**`（`components` + `styles` + `layouts` + `pages`）出现 `#hex` 或 `rgb(`/`rgba(` 字面量即失败，白名单只留 `tokens.css` 与 `Page.astro`。现状经实施计划复扫为 **93 行 / 94 处匹配**（本文初稿写的「62 处（`#fff` 33 处）」只数了十六进制、漏了 `rgba()`，`#fff` 实为 41 处；2026-11-02 计划阶段以脚本实测更正），其中 `src/styles/global.css` 占 15 行，最密的三份是 Hero 21 行、Persona 19 行、Cta 9 行——本计划把 `global.css` 一并纳入扫描，否则基元层可以继续私写颜色。这 93 行在 SP-1 内清零，白名单交空数组；`--emit-baseline` 负责生成清单，避免手抄行号随编辑漂移。
 
 3. **CI webfont 守卫重定范围**（不是删除）：现规则「见到 `@font-face` 即失败」与 888490a 有意发布的那一份子集相冲（见 §3）。按 D-9「保持现有子集、不加新 webfont」改写成**只允许那一份**：断言 `@font-face` 出现次数为 4（四个 HTML 页各一次）且每次都指向 `newsreader-700-latin.woff2`；出现任何其他 `font-family` 或新的 woff 引用即失败。这样守卫回到它本意——挡新增字体负载。
 
