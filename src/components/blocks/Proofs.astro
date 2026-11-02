@@ -87,24 +87,24 @@ const proof = copy.proof;
     margin-top: 44px;
   }
   .proof-card {
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: #fff;
+    border: 1px solid var(--hair-1);
+    border-radius: var(--r-card);
+    background: var(--surface-2);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: border-color 0.18s, transform 0.18s;
   }
   .proof-card:hover {
-    border-color: var(--accent);
+    border-color: var(--accent-fill);
     transform: translateY(-2px);
   }
   .proof-card.wide {
     grid-column: 1 / -1;
   }
   .mock {
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--hair-1);
     padding: 16px;
     min-height: 132px;
     display: flex;
@@ -117,55 +117,58 @@ const proof = copy.proof;
   .mock .doc-h {
     font-size: 13.5px;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--text-1);
   }
   .mock .doc-l,
   .mock .doc-p {
     font-size: 12px;
     line-height: 1.5;
-    color: var(--ink-2);
+    color: var(--text-2);
   }
   .mock .doc-l b {
     font-weight: 600;
-    color: var(--muted);
+    color: var(--text-3);
   }
   .mock .doc-l b::after {
     content: " · ";
-    color: var(--line-2);
+    /* 「·」是渲染出来的字符，按 Ruling T4-3 走文字族而非发丝线 */
+    color: var(--text-3);
   }
   .mock .mk-badge {
     display: inline-block;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--fs-micro);
     border-radius: 4px;
     padding: 2px 7px;
-    background: var(--accent-soft);
-    color: var(--accent-ink);
+    background: var(--badge-meet-bg);
+    color: var(--badge-meet);
   }
   .mock .mrow {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: var(--ink-2);
+    color: var(--text-2);
   }
   .mock .box {
     width: 13px;
     height: 13px;
-    border: 1px solid var(--line-2);
+    border: 1px solid var(--hair-2);
     border-radius: 3px;
-    background: #fff;
+    background: var(--surface-3);
     flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 9px;
+    font-size: var(--fs-micro);
     color: var(--ok);
     font-family: var(--mono);
   }
   .mock .box.on {
-    background: var(--accent-soft);
-    border-color: var(--accent);
+    background: var(--badge-meet-bg);
+    /* Task 5 复核留下的携带项（通则 3）：状态描边不能用 --accent-fill（压 --badge-meet-bg
+       只 3.02、余量 0.02），改 --accent-400（4.76）；除这条注释外不动 Proofs.astro 别处。 */
+    border-color: var(--accent-400);
   }
   .mock .cite {
     display: inline-flex;
@@ -174,19 +177,19 @@ const proof = copy.proof;
     min-width: 16px;
     height: 15px;
     border-radius: 4px;
-    background: var(--accent-soft);
-    color: var(--accent-ink);
+    background: var(--badge-meet-bg);
+    color: var(--badge-meet);
     font-family: var(--mono);
-    font-size: 9.5px;
+    font-size: var(--fs-micro);
     padding: 0 3px;
   }
   .mock .q {
-    border: 1px solid var(--line-2);
+    border: 1px solid var(--hair-2);
     border-radius: 999px;
-    background: #fff;
+    background: var(--surface-3);
     padding: 5px 12px;
     font-size: 12px;
-    color: var(--ink-2);
+    color: var(--text-2);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -200,7 +203,7 @@ const proof = copy.proof;
   .proof-body .pname {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--accent);
+    color: var(--accent-400);
     letter-spacing: 0.03em;
   }
   .proof-body h3 {
@@ -208,7 +211,9 @@ const proof = copy.proof;
   }
   .proof-body p {
     font-size: 14px;
-    color: var(--muted);
+    /* 卡下的这句是「说明」不是「注」：按 spec §5.2 用途表走 --text-2
+       （Ruling T4-4：用途表胜过 --muted→--text-3 的映射通则） */
+    color: var(--text-2);
   }
   @media (max-width: 760px) {
     .proof-grid {

@@ -75,7 +75,8 @@ const road = copy.road;
     top: 6px;
     bottom: 6px;
     width: 2px;
-    background: var(--line-2);
+    /* 时间线主轴是装饰线，走发丝族 */
+    background: var(--hair-2);
   }
   .road-rail {
     position: relative;
@@ -88,38 +89,42 @@ const road = copy.road;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid var(--line-2);
+    /* 未到的节点是凸起小圆点（判面规则：--surface-3 凸） */
+    background: var(--surface-3);
+    border: 2px solid var(--hair-2);
   }
   .road-rail .pnode.filled {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--accent-fill);
+    /* 节点边框在此表达「当前阶段」，是状态描边不是填充：走 --accent-400（台账通则 3）。
+       此「当前阶段」的前提是现模板里 .filled 只落在 .current 节点上（:16-18）；SP-2 若加入「已完成但非当前」节点，这条前提失效、注释要重判。 */
+    border-color: var(--accent-400);
   }
   .road-row.current .pnode {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 0 0 5px var(--accent-soft);
+    background: var(--accent-fill);
+    border-color: var(--accent-400);
+    /* 呼吸圈是装饰：旧值 --accent-soft #edf0fb 本就近乎不可见，--glow-strong rgba(76,95,213,.55) 的硬边 5px 圈会把装饰抬成前景，且计划限定它只服务 CTA 径向辉光（唯一消费者）；当前阶段信息已由上方 --accent-400 状态描边承担（通则 3），发丝族仅作装饰（spec §5.4），故此处走 --hair-2 */
+    box-shadow: 0 0 0 5px var(--hair-2);
   }
   .road-phase {
     font-family: var(--mono);
     font-size: 15px;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--text-1);
     margin-bottom: 2px;
   }
   .road-sub {
     font-size: 12.5px;
-    color: var(--muted);
+    color: var(--text-3);
   }
   .road-body {
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: #fff;
+    border: 1px solid var(--hair-1);
+    border-radius: var(--r-card);
+    background: var(--surface-2);
     padding: 20px 22px;
   }
   .road-row.current .road-body {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
+    border-color: var(--accent-400);
+    box-shadow: 0 0 0 3px var(--hair-2);
   }
   .road-body h3 {
     font-size: 17px;
@@ -131,19 +136,21 @@ const road = copy.road;
   }
   .road-tag {
     font-family: var(--mono);
-    font-size: 10.5px;
+    font-size: var(--fs-micro);
     border-radius: 5px;
     padding: 2px 8px;
     font-weight: 500;
     white-space: nowrap;
   }
   .road-tag.now {
-    background: var(--accent-soft);
-    color: var(--accent);
+    /* 非徽标的 chip 底按映射表落凸面；11px 的字压 --surface-3 走 --accent-400（4.63 过 AA），
+       --text-3 在此档只有 4.19、--accent-300 又被 spec §5.3 锁定给链接与焦点环 */
+    background: var(--surface-3);
+    color: var(--accent-400);
   }
   .road-body p {
     font-size: 13.5px;
-    color: var(--muted);
+    color: var(--text-2);
   }
   .road-note {
     display: inline-flex;
@@ -151,9 +158,9 @@ const road = copy.road;
     align-items: center;
     margin-top: 34px;
     font-size: 13.5px;
-    color: var(--ink-2);
-    border: 1px solid var(--line);
-    background: #fff;
+    color: var(--text-2);
+    border: 1px solid var(--hair-1);
+    background: var(--surface-2);
     border-radius: 999px;
     padding: 8px 16px;
   }
@@ -168,10 +175,10 @@ const road = copy.road;
   @keyframes pulse {
     0%,
     100% {
-      box-shadow: 0 0 0 0 rgba(46, 158, 107, 0.35);
+      box-shadow: 0 0 0 0 var(--ok-weak);
     }
     50% {
-      box-shadow: 0 0 0 6px rgba(46, 158, 107, 0);
+      box-shadow: 0 0 0 6px transparent;
     }
   }
   @media (max-width: 760px) {

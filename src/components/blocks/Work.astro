@@ -57,20 +57,23 @@ const work = copy.work;
     left: calc(100% - 18px);
     width: calc(2 * 18px);
     height: 1px;
-    background: var(--line-2);
+    /* 步骤之间的连接线是装饰线，走发丝族 */
+    background: var(--hair-2);
   }
   .step .snum {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    border: 1px solid var(--line-2);
-    background: #fff;
+    border: 1px solid var(--hair-2);
+    /* 44px 圆号是凸起点（--surface-1 凹 / --surface-2 卡 / --surface-3 凸） */
+    background: var(--surface-3);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-size: 14px;
-    color: var(--accent);
+    /* 序号是字符，强调档走非正文强调 --accent-400（4.63 压 --surface-3），不是被 §5.3 锁定的 300 */
+    color: var(--accent-400);
     margin-bottom: 16px;
   }
   .step h3 {
@@ -79,12 +82,15 @@ const work = copy.work;
   }
   .step p {
     font-size: 13.5px;
-    color: var(--muted);
+    color: var(--text-2);
   }
   .step.current .snum {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
+    background: var(--accent-fill);
+    /* 填充仍是主按钮那一档（压 band 的 --surface-1 实测 3.40，过非文字 3:1）；
+       但这条 1px 描边表达的是「当前步骤」这一状态，按台账通则 3 走 --accent-400，
+       不跟着填充写 --accent-fill。 */
+    border-color: var(--accent-400);
+    color: var(--text-1);
   }
   @media (max-width: 880px) {
     .steps {

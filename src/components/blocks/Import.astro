@@ -71,15 +71,16 @@ const imp = copy.imp;
     grid-template-columns: 120px 1fr;
     gap: 18px;
     padding: 20px 0;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--hair-1);
   }
   .imp-item:last-child {
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--hair-1);
   }
   .imp-item .ik {
     font-family: var(--mono);
     font-size: 12px;
-    color: var(--accent);
+    /* 小标签是非正文强调：--accent-300 归链接与焦点环（spec §5.3），此处走 --accent-400 */
+    color: var(--accent-400);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     padding-top: 3px;
@@ -90,12 +91,14 @@ const imp = copy.imp;
   }
   .imp-item p {
     font-size: 14px;
-    color: var(--muted);
+    color: var(--text-2);
   }
+  /* 拖放面板按判面规则走凸起那一档（--surface-1 凹 / --surface-2 卡 / --surface-3 凸）；
+     它压不住 --text-3（4.19，spec §5.2 限 ≥24px），所以区内小字最低到 --text-2。 */
   .dropzone {
-    border: 1px solid var(--ink);
-    background: var(--ink);
-    color: var(--on-dark);
+    border: 1px solid var(--hair-2);
+    background: var(--surface-3);
+    color: var(--text-1);
     border-radius: 14px;
     padding: 24px;
   }
@@ -105,7 +108,7 @@ const imp = copy.imp;
     gap: 8px;
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--on-dark-3);
+    color: var(--text-2);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     margin-bottom: 16px;
@@ -113,7 +116,7 @@ const imp = copy.imp;
   .dropzone .dz-path {
     font-family: var(--mono);
     font-size: 13px;
-    color: var(--on-dark);
+    color: var(--text-1);
     margin-bottom: 14px;
   }
   .dz-tree {
@@ -122,7 +125,7 @@ const imp = copy.imp;
     gap: 6px;
     font-family: var(--mono);
     font-size: 12.5px;
-    color: var(--on-dark-2);
+    color: var(--text-2);
   }
   .dz-tree .n {
     display: flex;
@@ -130,20 +133,20 @@ const imp = copy.imp;
     align-items: center;
   }
   .dz-tree .n .b {
-    color: var(--on-dark-3);
+    color: var(--text-2);
   }
   .dz-tree .n.hit {
-    color: var(--on-dark);
+    color: var(--text-1);
   }
   .dz-tree .n.hit .b {
-    color: var(--accent);
+    color: var(--accent-400);
   }
   .dz-foot {
     margin-top: 16px;
     padding-top: 14px;
-    border-top: 1px solid rgba(245, 245, 241, 0.18);
+    border-top: 1px solid var(--hair-2);
     font-size: 13px;
-    color: var(--on-dark-2);
+    color: var(--text-2);
   }
   @media (max-width: 880px) {
     .import-grid {

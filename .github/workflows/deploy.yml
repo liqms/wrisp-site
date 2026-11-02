@@ -74,9 +74,27 @@ jobs:
               exit 1
             done < <(grep -o 'href="/wrisp-site/[^"#]*' "$page" | sed 's|href="/wrisp-site/||' | sort -u)
           done
-          # 字体必须是系统栈，不允许引入 webfont 负载
-          if grep -rn '@font-face' dist --include='*.css' --include='*.html'; then
-            echo "::error::webfont payload detected"; exit 1; fi
+          # 自托管子集只许 Newsreader 700 这一份：四个页面各发一次、规则只许一条、来源必须是站内 /assets。
+          # 两个 grep 在无匹配时退出 1；这一步开着 pipefail，所以显式 || true，
+          # 让下面的条数断言去报错，而不是整步静默中止。
+          faces=$(grep -rho '@font-face[[:space:]]*{[^}]*}' dist --include='*.html' | sort -u || true)
+          n=$(grep -rl '@font-face' dist --include='*.html' | wc -l || true)
+          if [[ "$n" -ne 4 ]]; then
+            echo "::error::@font-face found in $n html pages, expected exactly 4: $(grep -rl '@font-face' dist --include='*.html' | tr '\n' ' ' || true)"; exit 1; fi
+          if [[ -z "$faces" ]]; then
+            echo "::error::html carries @font-face but the rule shape matched nothing - output format changed, update this guard"; exit 1; fi
+          if [[ $(printf '%s\n' "$faces" | wc -l) -ne 1 ]]; then
+            echo "::error::expected exactly one @font-face rule, found $(printf '%s\n' "$faces" | wc -l): ${faces//$'\n'/, }"; exit 1; fi
+          if [[ "$faces" != *"font-family:'Newsreader'"* || "$faces" != *"font-weight:700"* || "$faces" != *"src:url('/wrisp-site/assets/newsreader-700-latin.woff2')"* ]]; then
+            echo "::error::@font-face is not the sanctioned Newsreader 700 subset: ${faces//$'\n'/, }"; exit 1; fi
+          if grep -rq '@font-face' dist --include='*.css'; then
+            echo "::error::@font-face leaked into a css bundle; it must stay inline in html"; exit 1; fi
+          remote=$(grep -rhoE "https?://[^\"')[:space:]]*\.(woff2|woff|ttf|otf)" dist --include='*.html' --include='*.css' | sort -u || true)
+          if [[ -n "$remote" ]]; then
+            echo "::error::remote font payload referenced: ${remote//$'\n'/, }"; exit 1; fi
+          fonts=$(find dist \( -name '*.woff' -o -name '*.woff2' -o -name '*.ttf' -o -name '*.otf' \) -printf '%f\n' | sort || true)
+          if [[ "$fonts" != "newsreader-700-latin.woff2" ]]; then
+            echo "::error::unexpected font payloads: ${fonts//$'\n'/, }"; exit 1; fi
           # 站点地图与 robots 属构建期产物：缺文件即等于没配 SEO，直接挡下
           [[ -f dist/robots.txt && -f dist/sitemap.xml ]] || {
             echo "::error::robots.txt or sitemap.xml missing — pnpm build must generate them"; exit 1; }
@@ -89,6 +107,9 @@ jobs:
             if [[ -z "$rel" ]]; then target=dist/index.html; else target="dist/$rel/index.html"; fi
             [[ -f "$target" ]] || { echo "::error::sitemap lists $loc but $target is missing"; exit 1; }
           done < <(grep -o '<loc>[^<]*' dist/sitemap.xml | sed 's|<loc>||')
+
+      - name: Token integrity
+        run: node scripts/check-tokens.mjs
 
       - name: Copy coverage
         run: pnpm check

@@ -35,13 +35,18 @@ const cta = copy.cta;
   .cta {
     padding-block: 44px 96px;
   }
+  /*
+   * 旧版是「浅纸上的一块 --ink 反白面板」，暗色下没有更深的档可反，
+   * 于是按判面规则落回卡片档 --surface-2，让面板内的输入件（--surface-3 凸面，见
+   * global.css 的 .waitlist.on-dark）仍是凸起件——反白关系改由面差与辉光承担。
+   */
   .cta-box {
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--line-2);
+    border: 1px solid var(--hair-2);
     border-radius: 18px;
-    background: var(--ink);
-    color: var(--on-dark);
+    background: var(--surface-2);
+    color: var(--text-1);
     padding: 64px 56px;
     text-align: center;
   }
@@ -49,18 +54,18 @@ const cta = copy.cta;
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(640px 260px at 50% -20%, rgba(76, 95, 213, 0.55), transparent 70%);
+    background: radial-gradient(640px 260px at 50% -20%, var(--glow-strong), transparent 70%);
   }
   .cta-box h2 {
     position: relative;
     font-size: clamp(26px, 3.8vw, 42px);
-    color: #fff;
+    color: var(--text-1);
     max-width: 760px;
     margin: 0 auto;
   }
   .cta-box .lead {
     position: relative;
-    color: var(--on-dark-2);
+    color: var(--text-2);
     margin: 14px auto 0;
   }
   @media (max-width: 760px) {

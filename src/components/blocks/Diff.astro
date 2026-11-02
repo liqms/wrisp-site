@@ -43,23 +43,24 @@ const cmp = copy.cmp;
   /*
    * 这个 span 一直带着 class="accent" 却没有对应规则，等于半句钩子写在标记里、
    * 视觉上从没发生过。补上的依据与 01 区 hero 同一条：拆两半的标题，后半句是重音所在，
-   * 用强调色；强调色经裁决统一为靛蓝（§4.1）。用 --accent 而非 --accent-ink，
-   * 与 01 区同一处装置保持同一个值，不在此处另开一档深浅。
+   * 用强调色；暗色下强调色仍只有品牌蓝一族，不另开深浅。落点 --accent-400 而不是
+   * --accent-300——spec §5.3 把 300 锁在「正文内链接、focus ring」，标题的后半句是非正文
+   * 强调（与 Hero.astro:156 的 .h-title .accent 同一处装置、同一个值）。
    */
   .h-2 .accent {
-    color: var(--accent);
+    color: var(--accent-400);
   }
   .cmp {
     margin-top: 38px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border: 1px solid var(--hair-1);
+    border-radius: var(--r-card);
     overflow: hidden;
-    background: #fff;
+    background: var(--surface-2);
   }
   .cmp-row {
     display: grid;
     grid-template-columns: 230px 1fr;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--hair-1);
   }
   .cmp-row:last-child {
     border-bottom: 0;
@@ -68,46 +69,49 @@ const cmp = copy.cmp;
     padding: 16px 18px;
     font-weight: 600;
     font-size: 14.5px;
-    border-right: 1px solid var(--line);
+    border-right: 1px solid var(--hair-1);
     display: flex;
     align-items: center;
     gap: 9px;
-    background: var(--paper);
+    /* 左列是卡内的凹面（判面规则：--surface-1 凹 / --surface-2 卡 / --surface-3 凸） */
+    background: var(--surface-1);
   }
   .cmp-row .v {
     padding: 16px 18px;
     font-size: 14px;
-    color: var(--ink-2);
+    color: var(--text-2);
   }
   .cmp-row .mk {
     font-family: var(--mono);
     font-size: 12px;
-    color: var(--muted);
+    color: var(--text-3);
     flex: none;
   }
   .cmp-row.us {
-    background: var(--accent-soft);
+    background: var(--badge-meet-bg);
   }
   .cmp-row.us .k {
-    background: var(--accent-soft);
-    color: var(--accent-ink);
-    border-right-color: #D7DDF6;
+    background: var(--badge-meet-bg);
+    color: var(--badge-meet);
+    border-right-color: var(--hair-3);
   }
   .cmp-row.us .v {
-    color: var(--ink);
+    color: var(--text-1);
     font-weight: 600;
   }
   .cmp-row.us .mk {
-    color: var(--accent);
+    /* ◆ 承载字符，走强调族；--accent-300 被 spec §5.3 锁定给链接与焦点环，
+       此处取 --accent-400（压 --badge-meet-bg 实测 4.76） */
+    color: var(--accent-400);
   }
   .qualifier {
     margin-top: 18px;
     font-size: 14.5px;
-    color: var(--ink-2);
+    color: var(--text-2);
     max-width: 680px;
   }
   .qualifier b {
-    color: var(--ink);
+    color: var(--text-1);
   }
   /*
    * 加粗的引导句和后半句之间必须有间隔：拉丁文没有它就是 decide.It 这种粘连，
@@ -123,7 +127,7 @@ const cmp = copy.cmp;
     }
     .cmp-row .k {
       border-right: 0;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--hair-1);
     }
   }
 </style>

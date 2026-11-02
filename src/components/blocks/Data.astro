@@ -52,9 +52,9 @@ const privacyHref = localePath(leafKey(Astro.currentLocale), 'privacy/');
    */
   .trust-sheet {
     margin-top: 44px;
-    border: 1px solid var(--line-2);
-    border-radius: var(--radius);
-    background: #fff;
+    border: 1px solid var(--hair-2);
+    border-radius: var(--r-card);
+    background: var(--surface-2);
     overflow: hidden;
   }
   .trust-row {
@@ -64,7 +64,7 @@ const privacyHref = localePath(leafKey(Astro.currentLocale), 'privacy/');
     align-items: baseline;
     gap: 0 16px;
     padding: 19px 26px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--hair-1);
   }
   .trust-row .tick {
     grid-area: mk;
@@ -79,20 +79,22 @@ const privacyHref = localePath(leafKey(Astro.currentLocale), 'privacy/');
   .trust-row p {
     grid-area: tx;
     font-size: 14px;
-    color: var(--muted);
+    color: var(--text-2);
   }
+  /* 落款条是面板内的凹面（--surface-1 凹 / --surface-2 卡） */
   .trust-foot {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     align-items: center;
     padding: 18px 26px;
-    background: var(--paper-2);
+    background: var(--surface-1);
     font-size: 14px;
-    color: var(--ink-2);
+    color: var(--text-2);
   }
   .trust-foot a {
-    color: var(--accent);
+    /* 正文内链接是 --accent-300 的本职用途（spec §5.3） */
+    color: var(--accent-300);
     text-decoration: underline;
     text-underline-offset: 3px;
     white-space: nowrap;

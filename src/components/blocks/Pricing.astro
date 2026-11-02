@@ -28,9 +28,9 @@ const price = copy.price;
 
 <style>
   .price-box {
-    border: 1px solid var(--line-2);
+    border: 1px solid var(--hair-2);
     border-radius: 14px;
-    background: #fff;
+    background: var(--surface-2);
     padding: 30px;
     margin-top: 40px;
     display: grid;
@@ -44,7 +44,7 @@ const price = copy.price;
     line-height: 1.35;
   }
   .price-box .pb-body p {
-    color: var(--muted);
+    color: var(--text-2);
     font-size: 14.5px;
   }
   .price-tags {
@@ -55,17 +55,18 @@ const price = copy.price;
   }
   .price-tags .tag {
     flex: 1 1 100%;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--hair-1);
+    border-radius: var(--r-sm);
     padding: 12px 14px;
     font-size: 13px;
-    color: var(--ink-2);
-    background: var(--paper);
+    color: var(--text-2);
+    /* 卡内的凹面（--surface-1 凹 / --surface-2 卡 / --surface-3 凸） */
+    background: var(--surface-1);
   }
   .price-tags .tag b {
     display: block;
     font-size: 14px;
-    color: var(--ink);
+    color: var(--text-1);
     margin-bottom: 3px;
   }
   @media (max-width: 760px) {

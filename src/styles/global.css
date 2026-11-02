@@ -25,7 +25,7 @@ section {
   gap: 12px;
   font-family: var(--mono);
   font-size: 12.5px;
-  color: var(--accent);
+  color: var(--text-3);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 20px;
@@ -35,7 +35,7 @@ section {
   content: "";
   height: 1px;
   width: 46px;
-  background: var(--line-2);
+  background: var(--hair-2);
   flex: none;
 }
 /*
@@ -50,12 +50,14 @@ h2 {
   line-height: 1.1;
   font-weight: 700;
   text-wrap: balance;
+  color: var(--text-1);
 }
 h3 {
   letter-spacing: -0.01em;
   line-height: 1.25;
   font-weight: 700;
   text-wrap: balance;
+  color: var(--text-1);
 }
 /*
  * 同一套字距数值不可能同时服侍拉丁与中文：-0.022em 收的是衬线大标题的字母间距，
@@ -72,23 +74,23 @@ h3 {
   letter-spacing: 0;
 }
 .h-title {
-  font-size: clamp(34px, 5.4vw, 58px);
+  font-size: var(--fs-1);
 }
 .h-2 {
-  font-size: clamp(26px, 3.6vw, 40px);
+  font-size: var(--fs-2);
 }
 .lead {
-  color: var(--muted);
-  font-size: 17px;
+  color: var(--text-2);
+  font-size: var(--fs-lead);
   max-width: 680px;
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 
-/* 交替底色带：四个区块用同一套「纸面 2 + 上下细线」，写成一个类而不是各自一段内联样式 */
+/* 交替底色带：四个区块用同一套「--surface-1 的面 + 上下 --hair-1 发丝线」，写成一个类而不是各自一段内联样式；暗色下层次靠面差与发丝线承担 */
 .band {
-  background: var(--paper-2);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  background: var(--surface-1);
+  border-top: 1px solid var(--hair-1);
+  border-bottom: 1px solid var(--hair-1);
 }
 
 /* ---------- 顶部导航：只放动作类入口，章节定位归左侧目录 ---------- */
@@ -96,10 +98,10 @@ h3 {
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(250, 250, 247, 0.88);
+  background: var(--nav-bg);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hair-1);
 }
 .nav-inner {
   max-width: var(--maxw);
@@ -121,7 +123,7 @@ h3 {
   white-space: nowrap;
 }
 .brand .dot {
-  color: var(--accent);
+  color: var(--accent-300);
 }
 .nav-spacer {
   flex: 1;
@@ -130,12 +132,12 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid var(--line);
-  background: #fff;
+  border: 1px solid var(--hair-1);
+  background: var(--surface-2);
   border-radius: 999px;
   padding: 5px 12px;
   font-size: 12.5px;
-  color: var(--ink-2);
+  color: var(--text-2);
   white-space: nowrap;
 }
 .lang a {
@@ -143,10 +145,10 @@ h3 {
   white-space: nowrap;
 }
 .lang a[aria-current] {
-  color: var(--accent);
+  color: var(--accent-300);
 }
 .lang .sep {
-  color: var(--line-2);
+  color: var(--text-3);
 }
 
 .btn {
@@ -163,19 +165,25 @@ h3 {
   white-space: nowrap;
 }
 .btn-primary {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-fill);
+  color: var(--text-1);
 }
+/*
+ * 暗色家族里没有比 --accent-fill 更深的填充档，所以主按钮的 hover 只能往亮走。
+ * 但 --text-1 压 --accent-400 只有 3.07，跌破 AA，故字色同步转成 --bg（实测 5.70）。
+ * 这是映射表没覆盖到的一格（--accent-ink 已随亮色体系作废），待维护者复核。
+ */
 .btn-primary:hover {
-  background: var(--accent-ink);
+  background: var(--accent-400);
+  color: var(--bg);
 }
 .btn-ghost {
-  border-color: var(--line-2);
-  background: #fff;
-  color: var(--ink);
+  border-color: var(--hair-2);
+  background: var(--surface-2);
+  color: var(--text-1);
 }
 .btn-ghost:hover {
-  border-color: var(--ink);
+  border-color: var(--text-1);
 }
 .btn:active {
   transform: translateY(1px);
@@ -201,34 +209,34 @@ h3 {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: var(--muted);
+  color: var(--text-3);
   padding: 4px 9px;
   border-radius: 7px;
   white-space: nowrap;
   transition: color 0.15s, background 0.15s;
 }
 .blocknav a .mk {
-  color: var(--line-2);
-  font-size: 10px;
+  color: var(--text-3);
+  font-size: var(--fs-micro);
 }
 .blocknav a:hover {
-  color: var(--ink);
-  background: var(--paper-2);
+  color: var(--text-1);
+  background: var(--surface-1);
 }
 .blocknav a.active {
-  color: var(--accent);
+  color: var(--accent-300);
 }
 .blocknav a.active .mk {
-  color: var(--accent);
+  color: var(--accent-300);
 }
 .blocknav a .num {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text-3);
   min-width: 18px;
 }
 .blocknav a.active .num {
-  color: var(--accent);
+  color: var(--accent-300);
 }
 
 /* ---------- ≤1180px 的替代：吸顶横向章节条，不能什么都不留 ---------- */
@@ -240,16 +248,16 @@ h3 {
   height: var(--chapter-h);
   align-items: center;
   gap: 10px;
-  background: rgba(250, 250, 247, 0.92);
+  background: var(--chapter-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hair-1);
   padding: 0 14px;
 }
 .chapter .cnum {
   font-family: var(--mono);
   font-size: 11.5px;
-  color: var(--accent);
+  color: var(--accent-300);
   min-width: 18px;
 }
 .chapter .cname {
@@ -262,24 +270,24 @@ h3 {
 .chapter .cbar {
   flex: 1;
   height: 2px;
-  background: var(--line);
+  background: var(--hair-1);
   border-radius: 2px;
   overflow: hidden;
 }
 .chapter .cbar i {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: var(--accent-fill);
   width: 10%;
   transition: width 0.3s ease;
 }
 .chapter button {
   width: 32px;
   height: 32px;
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--hair-2);
   border-radius: 50%;
-  background: #fff;
-  color: var(--ink-2);
+  background: var(--surface-3);
+  color: var(--text-2);
   font-size: 14px;
   line-height: 1;
   display: flex;
@@ -288,10 +296,10 @@ h3 {
   flex: none;
 }
 .chapter button:hover {
-  border-color: var(--ink);
+  border-color: var(--text-1);
 }
 
-/* ---------- 等待名单表单（hero 与 CTA 两处共用） ---------- */
+/* ---------- 等待名单表单（现仅 CTA 一处渲染，hero 只留跳转 #waitlist 的按钮；样式分默认档与 .on-dark 档） ---------- */
 .waitlist {
   display: flex;
   flex-wrap: wrap;
@@ -301,13 +309,13 @@ h3 {
 }
 .waitlist input,
 .waitlist textarea {
-  border: 1px solid var(--line-2);
-  background: #fff;
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--hair-2);
+  background: var(--surface-3);
+  border-radius: var(--r-sm);
   padding: 11px 16px;
   font-size: 14.5px;
   font-family: inherit;
-  color: var(--ink);
+  color: var(--text-1);
   outline: none;
   transition: border-color 0.15s;
   resize: vertical;
@@ -323,7 +331,7 @@ h3 {
 }
 .waitlist input:focus,
 .waitlist textarea:focus {
-  border-color: var(--accent);
+  border-color: var(--accent-300);
 }
 .waitlist .submit {
   flex: 0 0 auto;
@@ -342,7 +350,7 @@ h3 {
 .waitlist .err {
   flex-basis: 100%;
   font-size: 13px;
-  color: #b04a2e;
+  color: var(--err);
   display: none;
 }
 .waitlist .err.show {
@@ -351,7 +359,7 @@ h3 {
 .waitlist-note {
   flex-basis: 100%;
   font-size: 12.5px;
-  color: var(--muted);
+  color: var(--text-3);
 }
 
 /* 蜜罐：留在 DOM 里等机器人填，对真人不可见也不可聚焦 */
@@ -368,7 +376,7 @@ h3 {
 }
 .waitlist input:disabled,
 .waitlist textarea:disabled {
-  background: var(--paper-3);
+  background: var(--surface-2);
   cursor: not-allowed;
 }
 .waitlist .submit:disabled {
@@ -383,42 +391,42 @@ h3 {
 }
 .waitlist.on-dark input,
 .waitlist.on-dark textarea {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  background: var(--surface-3);
+  border-color: var(--hair-2);
+  color: var(--text-1);
 }
 .waitlist.on-dark input::placeholder,
 .waitlist.on-dark textarea::placeholder {
-  color: var(--on-dark-3);
+  color: var(--text-3);
 }
 .waitlist.on-dark .waitlist-note {
-  color: var(--on-dark-3);
+  color: var(--text-3);
 }
 .waitlist.on-dark .ok {
-  color: #7fd9a8;
+  color: var(--ok);
 }
-/* 深色底上原色 #b04a2e 对比不足，失败与说明文案统一提亮 */
 .waitlist.on-dark .err {
-  color: #f0a98c;
+  color: var(--err);
 }
 .waitlist.on-dark input:disabled,
 .waitlist.on-dark textarea:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--on-dark-3);
+  background: var(--hair-1);
+  color: var(--text-3);
 }
 .waitlist.on-dark .btn-primary {
-  background: #fff;
-  color: var(--ink);
+  background: var(--accent-fill);
+  color: var(--text-1);
 }
 .waitlist.on-dark .btn-primary:hover {
-  background: var(--paper-3);
+  background: var(--accent-400);
+  color: var(--bg);
 }
 
 /* ---------- 渐显：初始隐藏只在 JS 已接管时生效；无 JS / 截图 / 爬虫一律直接可读 ---------- */
 .js .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 .js .reveal.in {
   opacity: 1;

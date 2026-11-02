@@ -42,10 +42,10 @@ const questions = Object.keys(faq)
   }
   .faq {
     margin-top: 36px;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--hair-1);
   }
   .faq details {
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--hair-1);
   }
   .faq summary {
     list-style: none;
@@ -67,7 +67,8 @@ const questions = Object.keys(faq)
   .faq summary .qmk {
     font-family: var(--mono);
     font-size: 12px;
-    color: var(--accent);
+    /* 「Q」是承载字符的强调标记，非正文强调走 --accent-400（--accent-300 归链接与焦点环） */
+    color: var(--accent-400);
     padding-top: 4px;
     flex: none;
   }
@@ -75,7 +76,7 @@ const questions = Object.keys(faq)
     margin-left: auto;
     font-family: var(--mono);
     font-size: 12px;
-    color: var(--muted);
+    color: var(--text-3);
     transition: transform 0.18s ease;
     flex: none;
   }
@@ -85,7 +86,7 @@ const questions = Object.keys(faq)
   .faq .ans {
     padding: 0 0 20px 24px;
     font-size: 14.5px;
-    color: var(--muted);
+    color: var(--text-2);
     max-width: 760px;
   }
   .spec {
@@ -95,12 +96,12 @@ const questions = Object.keys(faq)
     margin-top: 34px;
   }
   .spec .chip {
-    border: 1px solid var(--line);
-    background: #fff;
+    border: 1px solid var(--hair-1);
+    background: var(--surface-3);
     border-radius: 999px;
     padding: 8px 14px;
     font-size: 13px;
-    color: var(--ink-2);
+    color: var(--text-2);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -108,7 +109,8 @@ const questions = Object.keys(faq)
   }
   .spec .chip .mono {
     font-size: 11.5px;
-    color: var(--muted);
+    /* 凸面 chip 上的 11.5px 小字：--text-3 压 --surface-3 只 4.19，按 spec §5.2 的档位限制抬到 --text-2 */
+    color: var(--text-2);
   }
   @media (max-width: 640px) {
     .spec {
