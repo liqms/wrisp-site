@@ -33,9 +33,9 @@
 | `src/styles/global.css` | 改 | 基元层：标题/正文套用字阶令牌、`.band` 换面差、`.reveal` 幅度、focus ring、`@media print`；另有 **15 行字面色**要迁走（逐行落点见 Task 4 Step 4） |
 | `scripts/check-tokens.mjs` | 新建 | 三项令牌完整性断言 + 自检；读 baseline 清单 |
 | `scripts/color-baseline.json` | 新建后逐任务清空 | 尚未迁移的文件白名单，最终必须为空数组 |
-| `src/components/blocks/Hero.astro` | 改 | 迁移 **21 行 / 22 处**字面色（5 组徽标 + 3 个窗控点 + 首屏两层渐变 + 一道投影） |
-| `src/components/blocks/Persona.astro`、`Proofs.astro` | 改 | 迁移 19 + 6 行，含 12 个 SVG `fill` 属性；Proofs 另有 3 处 9–10px 字号上提 |
-| `Data/Diff/Cta/Faq/Pain/Pricing/Roadmap/Work.astro`、`Import.astro`、`pages/Privacy.astro`、`SiteNav.astro`、`WaitlistForm.astro` | 改 | 迁移其余字面色与旧令牌引用（Cta 9 行、Roadmap 5 行、Pain 2 行最容易被漏） |
+| `src/components/blocks/Hero.astro` | 改 | 迁移 **19 行 / 20 处**字面色（5 组徽标 10 行 + 3 个窗控点 + 5 处白底 + 一道投影，投影整条删）；另有 2 处 10.5px 字号上提 |
+| `src/components/blocks/Persona.astro`、`Proofs.astro` | 改 | 迁移 2 + 3 行；Proofs 另有 3 处 9–10px 字号上提。**本仓 `src/` 里没有任何 `<svg>`，也没有 `fill=` / `stroke=` 呈现属性**——「SVG 实心色走 style」这条在这批文件里没有落点（2026-11-02 执行期实测，原表按 12 个 SVG 属性写是错的） |
+| `Data/Diff/Cta/Faq/Pain/Pricing/Roadmap/Work/Import.astro`、`pages/Privacy.astro`、`SiteFooter.astro` | 改 | 迁移其余字面色与旧令牌引用（Roadmap 5 行、Diff/Pain/Work/Cta 各 2 行最容易被漏；**SiteFooter 无字面色但有 4 行旧令牌引用，漏了它第一项校验永远红**）。`SiteNav.astro` 与 `WaitlistForm.astro` 实测既无字面色也无旧令牌引用，不在本计划范围内 |
 | `src/layouts/Page.astro` | 改 | `:54` 的 `theme-color` 从 `#FAFAF7` 改成 `#0b0d12`（spec 未逐条裁决，按 D-1 推定，见 Task 4 Step 5） |
 | `.github/workflows/deploy.yml` | 改 | 挂上 `check-tokens`；webfont 守卫按 spec §10.3 重定范围 |
 
@@ -61,34 +61,36 @@
 | `--radius-sm` | `--r-sm` | |
 | `--radius-panel` | `--r-panel` | |
 
-实测的字面色共 **94 处 / 93 行**，分布在 14 个文件（`node /tmp` 复算脚本见 Task 2 Step 3 的 baseline 说明；`tokens.css` 与 `Page.astro` 按 spec §10.2 免扫）。落点映射：
+实测的字面色共 **58 处 / 57 行**（`Hero.astro:178` 一行两处，只占 1 条），分布在 14 个文件（口径 = Task 2 校验器的 `scanLiteralLines`：`LITERAL` 正则命中、跳过注释行、`ALLOW_FILES` 免扫；`tokens.css` 自己另有 16 行、`Page.astro` 1 行，都不计入）。落点映射：
 
-| 字面值 | 处数 | 新令牌 |
-|---|---|---|
-| `#fff`（作 CSS 背景：卡面、圆点、输入底、幽灵按钮、目录按钮、语言切换件） | 24 | `--surface-2`（卡/面板底）或 `--surface-3`（凸起点、输入底、chip 底） |
-| `#fff`（作 CSS 前景文字，压在 `--accent-fill` 上） | 3 | `--text-1`：`.btn-primary`（`global.css:167`）、`Work.astro:87` 的 `.snum.current`、`global.css:388` 的 `.waitlist.on-dark input` |
-| `#fff`（SVG `fill` 或 `stroke`，图标实心） | 14 | `style="fill: var(--text-1)"`。**注意**：`fill="var(--x)"` / `stroke="var(--x)"` 作为呈现属性不被解析，必须走 `style` |
-| `#f1b0a0` / `#edd38c` / `#9fcea9`（各 6 处：窗口三点 + Persona 图标 + Proofs 点） | 18 | `--dot-r` / `--dot-y` / `--dot-g` |
-| `#fdeee8`/`#b04a2e`、`#e7f2ee`/`#23694c`、`#e7ecfa`/`#334e9c`、`#f4efe0`/`#8a6d1c`、`#efeaef`/`#6d4a75`（五组徽标底+字；`#b04a2e` 另有 `global.css:345` 一处） | 11 | `--badge-todo-bg`/`--badge-todo`、`-comp-`、`-meet-`、`-decide-`、`-need-` |
-| `rgba(245,245,241,0.05–0.08)`（Cta 区 11 号骨架图的 7 条发丝线） | 7 | `style="stroke: var(--hair-1)"` / `fill: var(--hair-1)` |
-| `rgba(245,245,241,0.18)`（`Import.astro:144`）、`rgba(245,245,241,0.28)`（`Pain.astro:96`） | 2 | `--hair-2` / `--hair-3`（原本就画在深底上的强线） |
-| `rgba(250,250,247,0.88 / 0.92)`（`global.css:99` 吸顶导航、`:243` 目录条） | 2 | 新增 `--nav-bg` / `--chapter-bg`（见 §5 回写项） |
-| `rgba(76,95,213,0.08)`（`Hero.astro:112` 首屏柔光）、`rgba(76,95,213,0.55)`（`Cta.astro:61` 11 区辉光） | 2 | 新增 `--glow-soft` / `--glow-strong` |
-| `rgba(31,35,40,0.04 / 0.05 / 0.28)`（`Hero.astro:113` 点阵 + `:183` 卡投影） | 3 | 点阵 → `radial-gradient(var(--hair-1) 1px, transparent 1px)`；**投影按 spec §5.1「不引入投影」整条删掉**，不是换色 |
-| `rgba(255,255,255,0.05 / 0.08 / 0.22)`（`global.css:406/386/387`，`.waitlist.on-dark` 一族） | 3 | `--hair-1` / `--surface-3` / `--hair-2`（该族 SP-2 才删，此处只做令牌迁移） |
-| `rgba(46,158,107,0.35)` / `rgba(46,158,107,0)`（`Roadmap.astro:178/181` 已上线节点的呼吸圈） | 2 | 新增 `--ok-weak`；透明终态写 `transparent` |
-| `#7fd9a8`（`global.css:398`）、`#f0a98c`（`:402`） | 2 | `--ok` / `--err`（新值本就提亮过，不再需要单独一档） |
-| `#D7DDF6`（`Diff.astro:132` 的 `border-right-color`） | 1 | `--hair-3` |
+| 字面值 | 行 / 处 | 落点 | 新令牌 |
+|---|---|---|---|
+| `#fff` 作 CSS 背景（卡面、白底凸起点、输入底、幽灵按钮、目录按钮、语言切换件） | 26 / 26 | Hero 127·177·224·449·461、global 134·174·281·305·410、Proofs 92·157·186、Roadmap 91·117·156、Persona 68·90、Data 57、Diff 57、Pain 48、Work 67、Faq 99、Pricing 33、Privacy 120 | `--surface-2`（卡/面板底）或 `--surface-3`（凸起点、输入底、chip 底） |
+| `#fff` 作前景文字（压 `--accent-fill` 或深底） | 4 / 4 | global 167 `.btn-primary`、global 388 `.waitlist.on-dark input`、Work 87 `.snum.current`、Cta 57 | `--text-1`（压 `--accent-fill` 实测 4.84） |
+| `#f1b0a0` / `#edd38c` / `#9fcea9`（窗口三点） | 3 / 3 | Hero 196·199·202 | `--dot-r` / `--dot-y` / `--dot-g` |
+| 五组徽标底+字 | 10 / 10 | Hero 302·303（todo）/306·307（comp）/310·311（meet）/314·315（decide）/318·319（need） | `--badge-*-bg` / `--badge-*` 成对 |
+| `rgba(250,250,247,0.88 / 0.92)`（吸顶导航、目录条） | 2 / 2 | global 99·243 | 新增 `--nav-bg` / `--chapter-bg` |
+| `rgba(255,255,255,0.05 / 0.08 / 0.22)`（`.waitlist.on-dark` 一族） | 3 / 3 | global 406·386·387 | `--hair-1` / `--surface-3` / `--hair-2`（该族 SP-2 才删，此处只做令牌迁移） |
+| `rgba(76,95,213,0.55)`（收束区辉光） | 1 / 1 | Cta 52 | 新增 `--glow-strong` |
+| `rgba(31,35,40,0.04 / 0.28)`（卡片投影） | 1 / 2 | Hero 178 | **整条删掉**，不是换色：spec §5.1「不引入投影」 |
+| `rgba(245,245,241,0.18 / 0.28)`（画在深底上的强线） | 2 / 2 | Import 144、Pain 85 | `--hair-2` / `--hair-3` |
+| `rgba(46,158,107,0.35 / 0)`（已上线节点呼吸圈） | 2 / 2 | Roadmap 171·174 | 新增 `--ok-weak`；透明终态写 `transparent` |
+| `#7fd9a8` / `#f0a98c`（提亮过的成功/失败字色） | 2 / 2 | global 398·402 | `--ok` / `--err`（新值本身就亮，不再单开一档） |
+| `#b04a2e` | 1 / 1 | global 345 | `--err` |
+| `#D7DDF6`（`border-right-color`） | 1 / 1 | Diff 94 | `--hair-3` |
+
+微标签 11px 地板（spec §5.5「不得更低」）实测要抬 7 处，不止 Proofs：`global.css:212` 10px（Task 4）、`Hero.astro:221` 与 `:294` 10.5px、`Proofs.astro:139` 10px / `:162` 9px / `:180` 9.5px（Task 5）、`Roadmap.astro:134` 10.5px（Task 6）。
+
 
 **spec 回写项**（撰写计划时实测出来的空白，spec §5 没写、但暗色翻转必须有落点；本计划 Task 3 实现它们，并在 Task 8 Step 6 请维护者复核后写回 spec §5.1/§5.4）：
 
 1. `--nav-bg: rgba(11, 13, 18, 0.82)`、`--chapter-bg: rgba(11, 13, 18, 0.9)` —— 两块半透明吸顶层。它们不能并进 `--bg`，因为 alpha 与色值绑在一起；也不能留在组件里，否则 baseline 永远清不空。
-2. `--glow-soft: rgba(76, 95, 213, 0.08)`、`--glow-strong: rgba(76, 95, 213, 0.55)` —— 首屏柔光与 11 区辉光，都是品牌蓝的两个 alpha 档，不新增色相。
+2. `--glow-strong: rgba(76, 95, 213, 0.55)` —— 收束区（Cta）辉光，品牌蓝的 alpha 档，不新增色相。**原计划的 `--glow-soft` 不立**：执行期实测 `src/` 里没有 `rgba(76, 95, 213, 0.08)` 这个用法（首屏既无柔光层也无点阵层），立一个零消费者的令牌等于把「令牌表」变成愿望清单；SP-3 真要做首屏柔光时再随用法一起立。
 3. `--ok-weak: rgba(78, 209, 126, 0.35)` —— Roadmap 已上线节点的呼吸圈，必须跟到新 `--ok`，沿用旧 `#2e9e6b` 的 alpha 会在暗底上偏灰。
 4. `Page.astro:54` 的 `<meta name="theme-color" content="#FAFAF7">` —— 纯暗色（D-1）下浏览器 UI 应走 `--bg` 的 `#0b0d12`。
-5. `Hero.astro:183` 的卡片投影整条删除，而不是换色：spec §5.1 明写「层次只靠面与底的亮度差，不引入投影」。这是 SP-1 里唯一一处非令牌级的视觉改动，须在报告里点名。
+5. `Hero.astro:178` 的卡片投影整条删除，而不是换色：spec §5.1 明写「层次只靠面与底的亮度差，不引入投影」。这是 SP-1 里唯一一处非令牌级的视觉改动，须在报告里点名。
 
-另：spec §10.2 初稿写的「现状 62 处（`#fff` 33 处）」是只数十六进制、漏了 `rgba()` 的估值。实测 94 处匹配 / 93 行（`#fff` 41 处），且扫描口径按 spec 文面含 `src/styles`（`global.css` 自己占 15 行）。**spec 已按这个实测数更正**，本计划的 baseline 以 93 行为准。
+另：字面色现状数过三次，前两次都错，口径以校验器自己的 `scanLiteralLines` 为准 —— spec §10.2 初稿「62 处」只数十六进制、漏了 `rgba()`；计划初稿「93 行 / 94 处」用的是一次 `grep '#'` 粗扫，把 CSS id 选择器（`#persona .opt`、`#hero .kicker`、甚至 `border-right-color: #D7DDF6` 那行以外的 `#diff`/`#cta` 之类）一起数了进去，虚高 36 行。**执行期用校验器的正则 + 注释跳过重测：57 行 / 58 处 / 14 个文件，其中 `#fff` 占 30 行。** spec §10.2 与本计划的 baseline 预期均已按这个数更正；后续任务里出现的行数与「baseline 缩到多少」也以 `--emit-baseline` 的现扫输出为唯一权威，本表的行号只作对照。
 
 ---
 
@@ -112,6 +114,8 @@ git status --porcelain
 已知的实情是：会话开始时 `git status --porcelain` 输出了 13 个 ` M ` 文件（`src/styles/tokens.css`、`src/styles/global.css`、`src/lib/copy.ts`、9 个 `src/components/blocks/*.astro`、`src/components/pages/` 无关），`git diff --stat` 合计 **306 insertions / 16 deletions**。这批改动不是本计划产生的，其中包含 body 的 SVG 纸纹、`--radius-panel`、`--accent-line`——前两项按 spec §5.7 都要作废。spec §14.1 已把这件事列为未决项。
 
 执行者在这里的正确动作是**停下来问**，选项交给维护者：① 把这批 WIP 先提交（则 SP-1 的暗色翻转将显式撤回纸纹与 `--radius-panel`，需在提交信息里点名）；② `git stash -u` 收起（**不要**用裸 `git stash`，本仓可能是共享 worktree；用 `git stash push -u -m "sp1-pre-clean-$(date +%Y%m%d)"` 并记下 stash 的 commit SHA 以便 `git stash apply` 精确恢复）；③ 放弃。**不要替他选。**
+
+> **执行期裁决（2026-11-02，见 SDD ledger F-1）**：这条门不必停人。Global Constraints 第 26 行允许 worktree 路线，而 `git worktree add .worktrees/feat/sp1-dark-tokens -b feat/sp1-dark-tokens` 从 `HEAD` 建出的工作树**天然干净**——维护者的 306 行 WIP 原地留在主检出，既没被提交也没被 stash 或丢弃。代价记清楚：`tokens.css`（+9 行）与 `global.css`（+4 行）的 WIP 落在 SP-1 视野之外，前者本就要被 Task 3 整份替换，所以无损失；10 个组件文件的 WIP（`Persona` +97、`Hero` +27 等）要在 SP-1 合回 `main` 之后由维护者自己 rebase。因此 Task 1 的三个 Step 全部由控制方以 worktree 完成，不再派发实现子代理。
 
 - [ ] **Step 2: 建立实施分支**
 
@@ -410,27 +414,25 @@ else run();
 node scripts/check-tokens.mjs --emit-baseline > scripts/color-baseline.json
 ```
 
-预期是一份 93 条、形如 `"src/components/blocks/Hero.astro:183"` 的数组（一行一条，不含色值：同一行有两处也只记一次）。撰写本计划时的实测分布，用来对照 `--emit-baseline` 有没有扫漏：
+预期是一份 **57 条**、形如 `"src/components/blocks/Hero.astro:178"` 的数组（一行一条，不含色值：同一行有两处也只记一次）。执行期（2026-11-02，worktree @ `6b5888b`）用同一份扫描口径实测的分布，用来对照 `--emit-baseline` 有没有扫漏：
 
 | 文件 | 行数 |
 |---|---|
-| Hero.astro | 21（第 183 行有 2 处匹配，仍只占 1 条） |
-| Persona.astro | 19 |
-| Cta.astro | 9 |
-| Diff.astro、Proofs.astro | 6 + 6 |
+| Hero.astro | 19（第 178 行的那道投影有 2 处匹配，仍只占 1 条） |
+| styles/global.css | 15（第 400 行是注释，被 `scanLiteralLines` 跳过，所以是 15 而不是 16） |
 | Roadmap.astro | 5 |
-| Data.astro | 4 |
-| Pain.astro | 2 |
-| Work.astro | 2 |
-| Import.astro、Faq.astro、Pricing.astro、pages/Privacy.astro | 各 1 |
-| styles/global.css | 15 |
-| **合计** | **93** |
+| Proofs.astro | 3 |
+| Cta.astro、Diff.astro、Pain.astro、Persona.astro、Work.astro | 各 2 |
+| Data.astro、Faq.astro、Import.astro、Pricing.astro、pages/Privacy.astro | 各 1 |
+| **合计** | **57**（58 处匹配） |
+
+**这张表是 2026-11-02 执行期更正过的**：计划初稿写的是 93 行，那数来自一次 `grep '#'` 粗扫，把 `#persona .opt` 这类 CSS id 选择器也计了进去（Persona 因此虚报 19 行、Cta 虚报 9 行）。同一个错误口径还生出过「14 处 SVG `fill` 属性」——本仓 `src/` 里 `grep -c '<svg\|fill=\|stroke='` 命中数为 **0**，一条内联 SVG 都没有，所以 Task 5 不再有 SVG 那一档工作。
 
 免扫的两份按 spec §10.2 走 `ALLOW_FILES`：`src/styles/tokens.css`（令牌本体，全是字面值）与 `src/layouts/Page.astro`（`@font-face` 的 `unicode-range`）。这两份里 `data:image/svg+xml` 的整行也被跳过，因为纸纹图里全是编码过的颜色串——`tokens.css` 本就在白名单里，这条跳过是给 `global.css` 万一引入内联 SVG 时兜底的。
 
 > 若 Task 1 之后那 306 行 WIP 被提交而非 stash，行号会漂移，但这条命令重扫的就是当前真实行号， `--emit-baseline` 重跑一次即可，不需要人工修订清单。
 
-- [ ] **Step 4: 跑校验，确认此时全绿**
+- [ ] **Step 4: 跑校验，确认「除矩阵外」两项绿（本任务不要求三项全绿）**
 
 ```bash
 node scripts/check-tokens.mjs
@@ -442,7 +444,7 @@ node scripts/check-tokens.mjs
 node scripts/check-tokens.mjs --selftest && node scripts/check-tokens.mjs
 ```
 
-预期：`selftest: 10/10 passed`；主校验第一项 `✓ 每个 var() 引用都有定义`（旧组件引用的旧令牌都还在）、第三项 `✓`（93 行全在 baseline 里），只有第二项红，且失败信息只有 `matrix needs a hex` 这一类。**本任务的完成判据就是这三条。**
+预期：`selftest: 10/10 passed`；主校验第一项 `✓ 每个 var() 引用都有定义`（旧组件引用的旧令牌都还在）、第三项 `✓`（57 行全在 baseline 里），只有第二项红，且失败信息只有 `matrix needs a hex` 这一类。**本任务的完成判据就是这三条。**
 
 - [ ] **Step 5: 挂进 `pnpm check` 之前先单独确认构建不受影响**
 
@@ -460,7 +462,7 @@ git commit -m "build(tokens): 令牌完整性校验脚本与字面色 baseline
 
 三项断言：var() 引用必须有定义、文字族压底色族的 WCAG 对比达标、组件内不出现
 字面色。校验器沿用 edge/router/smoke.mjs 的进程内 check() 风格，不起浏览器也不
-依赖测试框架。现状 93 行字面色先登记进 baseline，后续任务逐文件清零。"
+依赖测试框架。现状 57 行字面色先登记进 baseline，后续任务逐文件清零。"
 ```
 
 ---
@@ -472,9 +474,9 @@ git commit -m "build(tokens): 令牌完整性校验脚本与字面色 baseline
 
 **Interfaces:**
 - Consumes: Task 2 的 `check-tokens.mjs` 契约表
-- Produces: 下列令牌名，供 `global.css` 与全部组件引用（名字写错会在 Task 2 的 ref 校验里立刻报红）：`--bg`、`--surface-1/2/3`、`--band`、`--text-1/2/3`、`--accent-fill`、`--accent-400`、`--accent-300`、`--hair-1/2/3`、`--nav-bg`、`--chapter-bg`、`--glow-soft`、`--glow-strong`、`--ok`、`--ok-weak`、`--warn`、`--err`、`--badge-todo|comp|meet|decide|need` 及各自 `-bg`、`--dot-r|y|g`、`--mono`、`--sans`、`--display`、`--fs-1|2|3|lead|body|sm|xs|micro|mono`、`--space-1..11`、`--r-card|panel|sm|pill`、`--maxw`、`--nav-h`、`--chapter-h`
+- Produces: 下列令牌名，供 `global.css` 与全部组件引用（名字写错会在 Task 2 的 ref 校验里立刻报红）：`--bg`、`--surface-1/2/3`、`--band`、`--text-1/2/3`、`--accent-fill`、`--accent-400`、`--accent-300`、`--hair-1/2/3`、`--nav-bg`、`--chapter-bg`、`--glow-strong`、`--ok`、`--ok-weak`、`--warn`、`--err`、`--badge-todo|comp|meet|decide|need` 及各自 `-bg`、`--dot-r|y|g`、`--mono`、`--sans`、`--display`、`--fs-1|2|3|lead|body|sm|xs|micro|mono`、`--space-1..11`、`--r-card|panel|sm|pill`、`--maxw`、`--nav-h`、`--chapter-h`
 
-后五个（`--nav-bg`、`--chapter-bg`、`--glow-soft`、`--glow-strong`、`--ok-weak`）是本计划回写 spec 的半透明功能令牌，理由见「spec 回写项」一节；`--fs-micro` 是 spec §5.5 表里那行「（微标签地板）11px」的令牌名。
+后四个（`--nav-bg`、`--chapter-bg`、`--glow-strong`、`--ok-weak`）是本计划回写 spec 的半透明功能令牌，理由见「spec 回写项」一节；`--fs-micro` 是 spec §5.5 表里那行「（微标签地板）11px」的令牌名。
 
 - [ ] **Step 1: 先把预期失败写成一个可跑的断言**
 
@@ -484,7 +486,7 @@ const fs=require('fs');
 const css=fs.readFileSync('src/styles/tokens.css','utf8');
 const need=['--bg','--surface-1','--surface-2','--surface-3','--band','--text-1','--text-2','--text-3',
 '--accent-fill','--accent-400','--accent-300','--hair-1','--hair-2','--hair-3',
-'--nav-bg','--chapter-bg','--glow-soft','--glow-strong','--ok-weak',
+'--nav-bg','--chapter-bg','--glow-strong','--ok-weak',
 '--badge-todo','--badge-todo-bg','--dot-r','--fs-1','--fs-micro','--space-11','--r-pill'];
 const miss=need.filter(t=>!css.includes(t));
 console.log(miss.length?'MISSING: '+miss.join(' '):'ALL PRESENT');
@@ -539,7 +541,6 @@ process.exit(miss.length?1:0);
    */
   --nav-bg: rgba(11, 13, 18, 0.82);
   --chapter-bg: rgba(11, 13, 18, 0.9);
-  --glow-soft: rgba(76, 95, 213, 0.08);
   --glow-strong: rgba(76, 95, 213, 0.55);
 
   --ok: #4ed17e;
@@ -700,7 +701,6 @@ button {
     --hair-3: rgba(0, 0, 0, 0.34);
     --nav-bg: rgba(255, 255, 255, 0.9);
     --chapter-bg: rgba(255, 255, 255, 0.94);
-    --glow-soft: rgba(47, 67, 184, 0.06);
     --glow-strong: rgba(47, 67, 184, 0.28);
     --ok: #1c7a4b;
     --warn: #8a6d1c;
@@ -727,7 +727,7 @@ const fs=require('fs');
 const css=fs.readFileSync('src/styles/tokens.css','utf8');
 const need=['--bg','--surface-1','--surface-2','--surface-3','--band','--text-1','--text-2','--text-3',
 '--accent-fill','--accent-400','--accent-300','--hair-1','--hair-2','--hair-3',
-'--nav-bg','--chapter-bg','--glow-soft','--glow-strong','--ok-weak',
+'--nav-bg','--chapter-bg','--glow-strong','--ok-weak',
 '--badge-todo','--badge-todo-bg','--dot-r','--fs-1','--fs-micro','--space-11','--r-pill'];
 const miss=need.filter(t=>!css.includes(t));
 console.log(miss.length?'MISSING: '+miss.join(' '):'ALL PRESENT');
@@ -866,10 +866,11 @@ h3 {
 | 406 | `:disabled` 的 `rgba(255,255,255,0.05)` | `var(--hair-1)` |
 | 410 | `.waitlist.on-dark .btn-primary` 的 `background: #fff` | `background: var(--accent-fill); color: var(--text-1)`（原来是白底黑字，跟 D-5 的品牌蓝主按钮相反） |
 
-另有两处不在这次统计口径里、但同属基元层：
+另有三处不在这次统计口径里、但同属基元层：
 
 - `.btn-primary` 若是 `background: var(--ink)` → `background: var(--accent-fill)`（D-5：主按钮填品牌蓝，不照抄参考站的白底幽灵胶囊）。
 - `.waitlist` 一族（约 `global.css:295-345`）本任务只做令牌迁移，组件与样式在 SP-2 才删除，此处不要提前删。
+- `global.css:212` 的 `.blocknav a .mk` 是 `font-size: 10px`，踩在 spec §5.5 那条「微标签地板 11px」之下 → 改成 `font-size: var(--fs-micro)`。这一行不含字面色，机检抓不到；其余 6 处小字号分派在 Task 5（Hero 2 处、Proofs 3 处）与 Task 6（Roadmap 1 处）。
 
 - [ ] **Step 5: `Page.astro` 的浏览器 UI 色**
 
@@ -886,7 +887,7 @@ node scripts/check-tokens.mjs --emit-baseline > scripts/color-baseline.json && \
   node scripts/check-tokens.mjs && pnpm build
 ```
 
-预期：baseline 从 93 缩到 78（`tokens=N baseline=78` 那行看得到）；第二、三项通过；第一项的失败清单里**不再出现 `global.css`**，只剩 `src/components/**` 的旧令牌名。随后 `pnpm build` 成功。
+预期：baseline 从 57 缩到 42（`tokens=N baseline=42` 那行看得到）；第二、三项通过；第一项的失败清单里**不再出现 `global.css`**，只剩 `src/components/**` 的旧令牌名。随后 `pnpm build` 成功。
 
 - [ ] **Step 7: 提交**
 
@@ -903,17 +904,19 @@ theme-color 跟着翻成 #0b0d12，浏览器 UI 不再留一条暖纸白带。"
 
 ---
 
-### Task 5: Hero 与 Persona/Proofs 迁移（含 SVG 填充）
+### Task 5: Hero 与 Persona/Proofs 迁移
 
 **Files:**
-- Modify: `src/components/blocks/Hero.astro:112,113,132,182,183,201,204,207,229,307,308,311,312,315,316,319,320,323,324,454,466`（21 行）
-- Modify: `src/components/blocks/Persona.astro:33,36,37,38,46,53,56,57,58,71,74,75,76,89,92,93,94,144,166`（19 行）
-- Modify: `src/components/blocks/Proofs.astro:97,132,135,138,183,212` 加 `:165,188,206` 三处字号
+- Modify: `src/components/blocks/Hero.astro:127,177,178,196,199,202,224,302,303,306,307,310,311,314,315,318,319,449,461`（19 行 / 20 处）
+- Modify: `src/components/blocks/Persona.astro:68,90`（2 行）
+- Modify: `src/components/blocks/Proofs.astro:92,157,186`（3 行）加 `:139,162,180` 三处字号、`Hero.astro:221,294` 两处字号
 - Modify: `scripts/color-baseline.json`
+
+行号是 2026-11-02 执行期在 worktree @ `6b5888b`（= 不含维护者那 306 行 WIP 的 `HEAD`）实测的。计划初稿这里的数来自带 WIP 的工作树，整体漂了 5 行（如 `:183` 实为 `:178`），且 Persona/Proofs/Cta 的行数被 `grep '#'` 的粗扫口径虚报。**动手前先跑一次 `--emit-baseline` 对表**，以脚本现扫为准。
 
 **Interfaces:**
 - Consumes: Task 3 的 `--badge-*`、`--dot-*`、`--surface-*`、`--hair-*`、`--text-*`
-- Produces: 一个可复用写法——SVG 实心色一律走 `style="fill: var(--token)"`，供 Task 6 照抄
+- Produces: 一个可复用的判面规则——同一个白底字面值按「它在谁上面」落不同令牌：贴在页面底（`--bg`）上的卡/面板用 `--surface-2`，嵌在面板里的凹陷容器用 `--surface-1`，凸起点（chip、按钮、勾选框、输入底）用 `--surface-3`。Task 6 照这条判，不要自创。**（原计划这里写的「SVG 实心色走 `style=`」契约作废：`src/` 里没有任何 `<svg>` 与 `fill=` / `stroke=` 呈现属性。）**
 
 - [ ] **Step 1: Hero 的五个徽标改成成对令牌**
 
@@ -956,55 +959,58 @@ theme-color 跟着翻成 #0b0d12，浏览器 UI 不再留一条暖纸白带。"
 }
 ```
 
-- [ ] **Step 2: Hero 其余 8 处字面 `#fff` 与旧令牌**
+- [ ] **Step 2: Hero 其余 5 处白底与 40 行旧令牌引用**
 
-`132/182/229/454/466` 这五处是卡面与圆形指示底 → `background: var(--surface-3)`（凸起点/小圆底）或 `var(--surface-2)`（面板底），按该元素是否落在某张卡上就地判断：已经贴在 `--surface-2` 卡里的用 `--surface-3`，贴在页面底上的用 `--surface-2`。同文件内所有 `var(--line)`/`var(--line-2)` → `var(--hair-1)`/`var(--hair-2)`，`var(--muted)` → `var(--text-3)`，`var(--ink)`/`var(--ink-2)` → `var(--text-1)`/`var(--text-2)`，`var(--accent)` 当文字或图标色时 → `var(--accent-300)`，当边框/填充时 → `var(--accent-fill)`，`var(--radius)`/`var(--radius-sm)` → `var(--r-card)`/`var(--r-sm)`。
+五处 `background: #fff` 按判面规则就地落位（行号为 HEAD 实测）：
 
-首屏那两层渐变（`:112-113`）与卡投影（`:183`）单独处理：
+| 行 | 选择器 | 落在谁上面 | 改成 |
+|---|---|---|---|
+| 127 | `.hero .kicker` | 页面底上的胶囊 chip | `background: var(--surface-3)` |
+| 177 | `.appwin` | 演示面板本体 | `background: var(--surface-2)` |
+| 224 | `.appwin-ctl button` | 面板内的凸起按钮 | `background: var(--surface-3)` |
+| 449 | `.appwin .cardpanel` | 面板里的凹陷容器 | `background: var(--surface-1)` |
+| 461 | `.appwin .card` | 凹容器里抬起的小卡 | `background: var(--surface-3)` |
 
-```css
-  .hero {
-    padding-block: 72px 56px;
-    /* 首屏极淡靛蓝柔光 + 点阵，两层都是既有做法，只把字面色换成令牌 */
-    background:
-      radial-gradient(560px 320px at 12% -8%, var(--glow-soft), transparent 70%),
-      radial-gradient(var(--hair-1) 1px, transparent 1px);
-    background-size: auto, 22px 22px;
-  }
-```
+同文件内所有旧令牌按映射表整批替换（40 行）：`var(--line)`/`var(--line-2)` → `var(--hair-1)`/`var(--hair-2)`，`var(--muted)` → `var(--text-3)`，`var(--ink)`/`var(--ink-2)` → `var(--text-1)`/`var(--text-2)`，`var(--accent)` 当文字或图标色时 → `var(--accent-300)`、当边框/填充时 → `var(--accent-fill)`，`var(--accent-soft)`/`var(--accent-ink)` → 对应徽标的 `--badge-*-bg`/`--badge-*`（非徽标处用 `--surface-3`），`var(--radius)`/`var(--radius-sm)` → `var(--r-card)`/`var(--r-sm)`，`var(--paper*)` → `--bg`/`--surface-1`/`--surface-2`，`var(--on-dark*)` → `--text-1/2/3`。
 
-`.appwin` 的 `box-shadow: 0 1px 0 rgba(31, 35, 40, 0.04), 0 18px 44px -26px rgba(31, 35, 40, 0.28)`（`:183`）**整条删除**，不是换色：spec §5.1 定了「层次只靠面与底的亮度差，不引入投影」，而暗底上的墨色投影本来就看不见。卡片改由 `--surface-2` + `--hair-1` 描边立起来。这是 SP-1 唯一一处非令牌级视觉改动，Task 8 Step 6 要点名。
+卡投影那一行（`:178` 的 `box-shadow: 0 1px 0 rgba(31, 35, 40, 0.04), 0 18px 44px -26px rgba(31, 35, 40, 0.28)`）**整条删除**，不是换色：spec §5.1 定了「层次只靠面与底的亮度差，不引入投影」，而暗底上的墨色投影本来就看不见。`.appwin` 改由 `--surface-2` 面差 + `--hair-2` 描边立起来。这是 SP-1 唯一一处非令牌级视觉改动，Task 8 Step 6 要点名。
 
-- [ ] **Step 3: Persona 的 12 个 SVG `fill` 属性改成 style**
+> **计划初稿在这里还要求给 `.hero` 加两层 `radial-gradient`（柔光 + 点阵）。实测 HEAD 的 `.hero` 只有 `padding-block: 72px 56px`，既没有柔光层也没有点阵层**——那是参考站的做法，不是本仓现状。凭空加一层装饰渐变属于内容改动，违反 Global Constraints 的「SP-1 不得混入内容改动」，因此本步不做，`--glow-soft` 令牌也随之不立（见「spec 回写项」第 2 条）。首屏要不要这层底，是 SP-3 的选择题（spec §13 那行 canvas 动画层也没裁决）。
 
-`fill="var(--x)"` 作为呈现属性不被浏览器解析，必须走 `style`。Persona 里四组重复结构，每组按同一种改法。示例（第 33-38 行那一组，其余三组 46-58、71-76、89-94 同样处理）：
+- [ ] **Step 3: Persona 的两处白底与 12 行旧令牌引用**
 
-```astro
-<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-  <circle cx="12" cy="12" r="10" style="fill: var(--surface-3)" />
-  <path d="..." style="fill: var(--dot-r)" />
-  <path d="..." style="fill: var(--dot-y)" />
-  <path d="..." style="fill: var(--dot-g)" />
-</svg>
-```
+`Persona.astro` 实测只有 2 行字面色（计划初稿的 19 行是把 `#persona .opt` 这类 id 选择器数进去了）：
 
-`Persona.astro:144,166` 两处 CSS `background: #fff` → 卡内凸起点用 `var(--surface-3)`，面板底用 `var(--surface-2)`。
+| 行 | 选择器 | 改成 |
+|---|---|---|
+| 68 | `.opt`（人群选项胶囊，凸起件） | `background: var(--surface-3)` |
+| 90 | `#persona .panel`（面板本体） | `background: var(--surface-2)` |
 
-- [ ] **Step 4: Proofs 的三点与三处白底**
+其余按映射表替换该文件的 12 行旧令牌引用。**本任务不动 Persona 的结构与文案**——维护者主检出里那 97 行 Persona WIP 与本计划无关，留给他自己 rebase。
 
-`Proofs.astro:132,135,138` 三个点色 → `var(--dot-r)` / `var(--dot-y)` / `var(--dot-g)`；`97/183/212` 三处 `background: #fff` → 分别按「勾选框底」用 `--surface-3`、「卡底」用 `--surface-2`、「引用徽标底」用 `--surface-3` 处理。同文件的 `--accent-soft`/`--accent-ink` → `--badge-meet-bg`/`--badge-meet`（这两处原本是蓝味 chip）。
+- [ ] **Step 4: Proofs 的三处白底与 21 行旧令牌引用**
 
-`Proofs.astro:165,188,206` 另有三处字号踩在暗面的可读地板下——`10px` / `9px` / `9.5px`，按 spec §5.5 那行「微标签地板 11px」全部上提：
+实测 3 行字面色（不是 6 行；该文件没有点色，三个 `--dot-*` 只在 Hero 的窗口标题条上）：
+
+| 行 | 选择器 | 改成 |
+|---|---|---|
+| 92 | `.proof-card`（卡底） | `background: var(--surface-2)` |
+| 157 | 勾选框那个 13×13 方框（凸起件） | `background: var(--surface-3)` |
+| 186 | `.mock .q`（引用 chip） | `background: var(--surface-3)` |
+
+同文件的 `var(--accent-soft)` / `var(--accent-ink)`（`:142-143`、`:167`、`:177-178`）→ 这两处原本是蓝味 chip，按映射表走 `--badge-meet-bg` / `--badge-meet`；纯底不带字的 `:167` 只用 `-bg`。
+
+`Proofs.astro:139,162,180` 另有三处字号踩在暗面的可读地板下——`10px` / `9px` / `9.5px`，按 spec §5.5 那行「微标签地板 11px」全部上提：
 
 ```css
   font-size: var(--fs-micro);
 ```
 
-这三行不含字面色，所以 baseline 里没有它们，机检也抓不到；它们是 spec §5.5 明写的整改项，只能靠这一步手工做，做完在 Step 6 用 Task 8 Step 3 的同一条 grep 自查一次。
+`Hero.astro:221`（`.appwin-ctl button`）与 `:294` 两处 `10.5px` 同批上提。这几行不含字面色，所以 baseline 里没有它们，机检也抓不到；它们是 spec §5.5 明写的整改项，只能靠这一步手工做，做完在 Step 6 用 Task 8 Step 3 的同一条 grep 自查一次。
 
 - [ ] **Step 5: 把这三份文件的 baseline 行删干净**
 
-从 `scripts/color-baseline.json` 清掉 `Hero.astro:`、`Persona.astro:`、`Proofs.astro:` 三份的全部条目（21 + 19 + 6 = 46 行）。别手删——重扫一次，脚本记什么就是什么：
+从 `scripts/color-baseline.json` 清掉 `Hero.astro:`、`Persona.astro:`、`Proofs.astro:` 三份的全部条目（19 + 2 + 3 = 24 行）。别手删——重扫一次，脚本记什么就是什么：
 
 ```bash
 node scripts/check-tokens.mjs --emit-baseline > scripts/color-baseline.json && \
@@ -1016,7 +1022,7 @@ process.exit(mine.length?1:0);
 "
 ```
 
-预期打印 `baseline=32 这三份残留=0`（Task 4 已把 global.css 那 15 行清掉，93 − 15 = 78；78 − 46 = 32），退出码 0。若这三份还有残留，说明 Step 2–4 有漏改，回去补完再重跑。
+预期打印 `baseline=18 这三份残留=0`（Task 4 已把 global.css 那 15 行清掉，57 − 15 = 42；42 − 24 = 18），退出码 0。若这三份还有残留，说明 Step 2–4 有漏改，回去补完再重跑。
 
 - [ ] **Step 6: 跑校验确认这三个文件干净**
 
@@ -1039,8 +1045,9 @@ git add src/components/blocks/Hero.astro src/components/blocks/Persona.astro src
 git commit -m "feat(blocks): 首屏、人群路由与能力证明区跟到暗色
 
 五类记录徽标从各写各的十六进制对改成成对令牌，文字压自己的底实测 7.75–9.45。
-窗口三点走 --dot-*。Persona 的 12 个 SVG 实心色从 fill 属性挪进 style，
-因为 fill=\"var(--x)\" 作为呈现属性不被解析。"
+窗口三点走 --dot-*，白底按「凹 1 / 卡 2 / 凸 3」判面规则落 --surface-*。
+首屏那道卡投影整条删除（spec §5.1 不引入投影），这是本任务唯一一处非令牌级视觉改动。
+五个踩在 11px 地板下的字号（Hero 2 处、Proofs 3 处）上提走 --fs-micro。"
 ```
 
 ---
@@ -1049,27 +1056,30 @@ git commit -m "feat(blocks): 首屏、人群路由与能力证明区跟到暗色
 
 **Files:**
 - Modify: `src/components/blocks/{Data,Diff,Cta,Faq,Pain,Pricing,Roadmap,Work,Import}.astro`
-- Modify: `src/components/blocks/WaitlistForm.astro`、`src/components/SiteNav.astro`、`src/components/pages/Privacy.astro`
+- Modify: `src/components/blocks/SiteFooter.astro`、`src/components/pages/Privacy.astro`
 - Modify: `scripts/color-baseline.json`
 
 **Interfaces:**
-- Consumes: Task 3 令牌、Task 5 确立的 `style="fill: var(--token)"` 写法
+- Consumes: Task 3 令牌、Task 5 确立的判面规则（`--surface-1` 凹 / `--surface-2` 卡 / `--surface-3` 凸）
 - Produces: 空的 `color-baseline.json`（`[]`），从此 CI 上任何新字面色直接构建失败
 
 - [ ] **Step 1: 逐文件替换**
 
-本任务清掉 baseline 剩下的 32 行。逐文件：
+本任务清掉 baseline 剩下的 **18 行**（Task 4 迁 15 行、Task 5 迁 24 行，57 − 15 − 24 = 18）。逐文件的行号与落点都是 2026-11-02 在 worktree @ `6b5888b` 实测的；计划初稿这里的数来自 `grep '#'` 粗扫与带 WIP 的工作树，两者都错（虚报的 14 处 SVG `fill`、Cta 的 7 条骨架线都不存在——本仓 `src/` 没有任何 `<svg>`）。
 
-- `Diff.astro`（6 行）：`42/47/54` 三个 `fill="#fff"` → `style="fill: var(--text-1)"`；`84/95` 两处 `background: #fff` → `--surface-2` 卡底与 `--surface-3` 凸起点；`132` `border-right-color: #D7DDF6` → `var(--hair-3)`。
-- `Cta.astro`（9 行）：`30-36` 是 11 区那张灰骨架图的 7 条线，`stroke="rgba(245,245,241,0.0x)"` / `fill="rgba(...)"` 全是呈现属性——和 `fill` 一样，`stroke="var(--x)"` 不被解析，必须整体挪进 `style`：`<rect … style="stroke: var(--hair-1)" />`、`<rect … style="fill: var(--hair-1)" />`。`61` 的辉光 → `radial-gradient(640px 260px at 50% -20%, var(--glow-strong), transparent 70%)`；`75` 的 `color: #fff` 在 `--accent-fill` 底上 → `var(--text-1)`。
-- `Roadmap.astro`（5 行）：`91/124/163` 三处白底 → 时间线节点底用 `--surface-3`、卡底用 `--surface-2`；`178/181` 是「已上线」节点的呼吸圈，`rgba(46,158,107,0.35)` → `var(--ok-weak)`，终态那个 `rgba(46,158,107,0)` 直接写 `transparent`（keyframe 里颜色渐隐用透明，不需要第四个令牌）。注意旧 `--ok` 是 `#2e9e6b`，新 `--ok` 换成 `#4ed17e`，圈色必须跟着换，不能照抄原 alpha 串。
-- `Pain.astro`（2 行）：`48` 白底 → `--surface-2`；`96` 的 `border: 1px solid rgba(245,245,241,0.28)` 本来就画在深色 punch 面板上 → `var(--hair-3)`。
-- `Import.astro`（1 行）：`144` 的 `border-top: 1px solid rgba(245,245,241,0.18)` → `var(--hair-2)`。**这个文件在「12 区 → 8 区」里要被并进新 04 区，但 SP-1 不动结构，所以照样得迁。**
-- `Data.astro`（4 行）：`22/29` 两个 SVG fill → `style="fill: var(--text-1)"`；`81/91` 两个 CSS 白底 → `--surface-2`。
-- `Faq.astro`（`99`）、`Pricing.astro`（`33`）、`Privacy.astro`（`120`）各 1 处白底 → `--surface-2`。
-- `Work.astro`（2 行）：`67` `background: #fff` → `--surface-2`；`87` `.snum.current` 的 `background: var(--accent); color: #fff` → `background: var(--accent-fill); color: var(--text-1)`。
+- `Diff.astro`（2 行 / 16 行旧令牌引用）：`:57` `.diff` 卡底 `#fff` → `var(--surface-2)`；`:94` `.cmp-row.us .k` 的 `border-right-color: #D7DDF6` → `var(--hair-3)`（同行的 `--accent-soft`/`--accent-ink` 一起按映射表走 `--badge-meet-bg`/`--badge-meet`）。
+- `Cta.astro`（2 行 / 4 行旧引用）：`:52` `.cta-box::before` 的辉光 → `radial-gradient(640px 260px at 50% -20%, var(--glow-strong), transparent 70%)`；`:57` `.cta-box h2` 的 `color: #fff` → `var(--text-1)`。
+- `Roadmap.astro`（5 行 / 18 行旧引用）：`:91` 时间线节点（凸起圆点）→ `var(--surface-3)`；`:117` `.road-body` 卡底、`:156` 尾部注卡 → `var(--surface-2)`；`:171`/`:174` 是「已上线」节点的呼吸圈，`rgba(46,158,107,0.35)` → `var(--ok-weak)`，终态那个 `rgba(46,158,107,0)` 直接写 `transparent`（keyframe 里颜色渐隐用透明，不需要第四个令牌）。注意旧 `--ok` 是 `#2e9e6b`，新 `--ok` 换成 `#4ed17e`，圈色必须跟着换，不能照抄原 alpha 串。`:134` 的 `font-size: 10.5px` → `var(--fs-micro)`。
+- `Pain.astro`（2 行 / 12 行旧引用）：`:48` `.pain-card` 卡底 → `var(--surface-2)`；`:85` 的 `border: 1px solid rgba(245,245,241,0.28)` 本来就画在深色 punch 面板上 → `var(--hair-3)`。
+- `Import.astro`（1 行 / 14 行旧引用）：`:144` 的 `border-top: 1px solid rgba(245,245,241,0.18)` → `var(--hair-2)`。**这个文件在「12 区 → 8 区」里要被并进新 04 区，但 SP-1 不动结构，所以照样得迁。**
+- `Data.astro`（1 行 / 7 行旧引用）：`:57` `.trust-sheet` 凭证面板底 → `var(--surface-2)`。**这个面板的形状（3a2596f）是 spec §6 新 06 区要保留的，本任务只换底色令牌，不动布局。**
+- `Faq.astro`（1 行 / 8 行旧引用）：`:99` `.spec .chip` → `var(--surface-3)`。
+- `Pricing.astro`（1 行 / 7 行旧引用）：`:33` `.price-box` 卡底 → `var(--surface-2)`。
+- `Privacy.astro`（1 行 / 16 行旧引用）：`:120` 表格卡底 → `var(--surface-2)`。
+- `Work.astro`（2 行 / 6 行旧引用）：`:67` 44px 圆号（凸起）→ `var(--surface-3)`；`:87` `.step.current .snum` 的 `background: var(--accent); color: #fff` → `background: var(--accent-fill); color: var(--text-1)`。
+- `SiteFooter.astro`（**0 行字面色，但 4 行旧令牌引用：`:32 --line`、`:34 --muted`、`:54/:58 --ink`**）：计划初稿的文件清单漏了这个组件。它是 `src/components/blocks/` 里的第 15 个文件，不迁它 Task 6 Step 3 的第一项就红，Task 7 把校验并进 `pnpm check` 之后 CI 直接挂。**这是本任务最容易漏的一处。**
 
-`WaitlistForm.astro` 与 `SiteNav.astro` 没有字面色，但仍有旧令牌引用，按映射表一起改：`--line*`→`--hair-*`、`--muted`→`--text-3`、`--ink*`→`--text-1/-2`、`--accent`（文字/图标）→`--accent-300`、`--accent`（底/边）→`--accent-fill`、`--accent-soft`→`--surface-3`、`--paper*`→`--bg`/`--surface-1`/`--surface-2`、`--radius*`→`--r-*`、`--on-dark*`→`--text-*`。
+`SiteNav.astro` 与 `WaitlistForm.astro` 实测既无字面色也无旧令牌引用（两处 grep 均 0 命中），本任务不碰它们——`#waitlist` 锚点与表单本体是 SP-2 的删除项，与 SP-1 无关。
 
 - [ ] **Step 2: 清空 baseline**
 
@@ -1111,7 +1121,7 @@ pnpm build && pnpm check && node scripts/check-tokens.mjs
 git add src/components scripts/color-baseline.json
 git commit -m "feat(blocks): 其余组件跟到暗色，字面色 baseline 清零
 
-剩下 12 个文件的暖纸引用与字面色改完，baseline 交空数组——从现在起任何组件里
+剩下 11 个文件（含初稿漏掉的 SiteFooter.astro）的暖纸引用与字面色改完，baseline 交空数组——从现在起任何组件里
 出现字面色，CI 直接构建失败，tokens.css 里那条纪律不再是注释。"
 ```
 
@@ -1241,7 +1251,7 @@ process.exit(miss.length?1:0);
 grep -rho "font-size: *[0-9]\{1,2\}px" src/components | sort -u
 ```
 
-预期：出现的值不小于 11px（`--fs-micro` 的地板）。若冒出 `9px`/`9.5px`/`10px`，那是 `Proofs.astro:165,188,206` 三处漏改，回 Task 5 Step 4 补。注意此检查只看字面 px，走 `var(--fs-*)` 的行不会也不该出现在这里。
+预期：出现的值不小于 11px（`--fs-micro` 的地板）。若冒出 `9px`/`9.5px`/`10px`/`10.5px`，那是这六处漏改：`Proofs.astro:139,162,180`（Task 5 Step 4）、`Hero.astro:221,294`（Task 5 Step 4）、`Roadmap.astro:134`（Task 6 Step 1），另有一处在 `global.css:212`（Task 4 Step 4，本条 grep 只看 `src/components`，抓不到它，单独 `grep -n "font-size: 10px" src/styles/global.css` 确认已消失）。注意此检查只看字面 px，走 `var(--fs-*)` 的行不会也不该出现在这里。
 
 - [ ] **Step 4: 中英两页目测（本计划的已知弱项）**
 
@@ -1268,7 +1278,7 @@ git commit -m "feat(theme): 全站令牌层翻成蓝调暗色（SP-1）
 间距 11 档、圆角四级并让交互件走胶囊、reveal 40px、打印回亮色。
 
 新增 scripts/check-tokens.mjs 做三项令牌完整性断言并挂进 pnpm check；组件内
-93 行字面色清零并把 baseline 交空，tokens.css 那条「不得写死十六进制」的纪律
+57 行字面色清零并把 baseline 交空，tokens.css 那条「不得写死十六进制」的纪律
 从此由 CI 强制。CI 的 webfont 守卫重定成只允许 Newsreader 700 那一份子集。
 
 本提交不含任何文案、区块结构与叙事改动，那些在 SP-2。
@@ -1281,6 +1291,6 @@ git commit -m "feat(theme): 全站令牌层翻成蓝调暗色（SP-1）
 
 报告须含：基线 SHA（Task 1 Step 3）、`pnpm build && pnpm check` 的实际输出行、Task 8 各步结果、Step 4 视觉验收做了还是没做，以及**三件需要维护者回话的事**：
 
-1. **spec 回写项**（本计划开头那一节：`--nav-bg`、`--chapter-bg`、`--glow-soft`、`--glow-strong`、`--ok-weak` 五个半透明令牌）——它们已按 Task 3 落地，须写回 spec §5.1/§5.4 才算过裁决，请维护者确认后由维护者或经其授权的下一轮改写。（§10.2 的扫描口径与实测数已在计划阶段一并更正，不用再动。）
+1. **spec 回写项**（本计划开头那一节：`--nav-bg`、`--chapter-bg`、`--glow-strong`、`--ok-weak` 四个半透明令牌）——它们已按 Task 3 落地，须写回 spec §5.1/§5.4 才算过裁决，请维护者确认后由维护者或经其授权的下一轮改写。原列的 `--glow-soft` 已在执行期撤销（`src/` 里没有它的用法，见该节第 2 条）。（§10.2 的字面色口径数在 2026-11-02 执行期又更正了一次：粗扫得到的 93 行实为 57 行，spec 已同步。）
 2. **两处推定**：`Page.astro` 的 `theme-color` 翻成 `#0b0d12`（按 D-1 推定，spec 没逐条写）、`Hero.astro:183` 的卡投影整条删除（按 §5.1「不引入投影」推定，是 SP-1 唯一的非令牌级视觉改动）。
 3. 一句明确提醒——**SP-2（叙事重排、撤表单、删 `edge/waitlist/`、文案撤回注）尚未开始**，spec §12 登记的 8 处口径此刻仍是旧文案，而首屏还没有下载入口（SP-3）；`SiteNav` 的目录项仍指向 `#waitlist`，`chapters` 仍是 11 条，与新令牌层并存但不自洽，这属于路线 A 的预期中间态。

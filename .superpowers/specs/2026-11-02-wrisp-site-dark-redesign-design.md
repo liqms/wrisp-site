@@ -111,7 +111,7 @@
 | `--fs-body` | `16px` | 中文行高 1.75 / 拉丁 1.65 |
 | `--fs-sm` | `14px` | 次级 |
 | `--fs-xs` | `12px` | 正文地板，不得更低 |
-| （微标签地板） | `11px` | 现 `Proofs.astro:165,188,206` 的 9 / 9.5 / 10px 三档上提 |
+| （微标签地板） | `11px` | 实测踩在地板下的共 **7 处**，不止 Proofs：`global.css:212`（10px）、`Hero.astro:221,294`（10.5px）、`Proofs.astro:139`（10px）`:162`（9px）`:180`（9.5px）、`Roadmap.astro:134`（10.5px），全部上提（本文初稿写作 `Proofs.astro:165,188,206` 三处，行号与处数都在 2026-11-02 执行期按 HEAD 更正） |
 | `--fs-mono` | `13px` | `--mono` 栈 |
 
 ### 5.6 间距、圆角、动效
@@ -174,7 +174,8 @@ og-zh / og-en（1200×630）由维护者侧私有脚本重导，本仓不手工�
 新增两条挂进 `pnpm check`：
 
 1. **令牌对比度矩阵**：纯 node 函数读 `tokens.css`，遍历文字族 × 底色族，正文断言 ≥4.5、大字与微标签 ≥3，无需浏览器。
-2. **组件禁字面色**：扫 `src/**`（`components` + `styles` + `layouts` + `pages`）出现 `#hex` 或 `rgb(`/`rgba(` 字面量即失败，白名单只留 `tokens.css` 与 `Page.astro`。现状经实施计划复扫为 **93 行 / 94 处匹配**（本文初稿写的「62 处（`#fff` 33 处）」只数了十六进制、漏了 `rgba()`，`#fff` 实为 41 处；2026-11-02 计划阶段以脚本实测更正），其中 `src/styles/global.css` 占 15 行，最密的三份是 Hero 21 行、Persona 19 行、Cta 9 行——本计划把 `global.css` 一并纳入扫描，否则基元层可以继续私写颜色。这 93 行在 SP-1 内清零，白名单交空数组；`--emit-baseline` 负责生成清单，避免手抄行号随编辑漂移。
+2. **组件禁字面色**：扫 `src/**`（`components` + `styles` + `layouts` + `pages`）出现 `#hex` 或 `rgb(`/`rgba(` 字面量即失败，白名单只留 `tokens.css` 与 `Page.astro`。现状以校验器 `scanLiteralLines` 的口径为唯一权威：**57 行 / 58 处匹配 / 14 个文件**，其中 `#fff` 占 30 行、`src/styles/global.css` 占 15 行，最密的三份是 Hero 19 行、`global.css` 15 行、Roadmap 5 行（Persona 只有 2 行、Cta 只有 2 行）。——本计划把 `global.css` 一并纳入扫描，否则基元层可以继续私写颜色。这 57 行在 SP-1 内清零，白名单交空数组；`--emit-baseline` 负责生成清单，避免手抄行号随编辑漂移。
+   - 口径更正记录（2026-11-02，两次）：本文初稿「62 处（`#fff` 33 处）」只数十六进制、漏 `rgba()`；实施计划阶段一度改写成「93 行 / 94 处」，那个数来自一次 `grep '#'` 粗扫，把 `#persona .opt`、`#hero .kicker` 这类 CSS id 选择器也计成了字面色，虚高 36 行，并生出「14 处 SVG `fill`」这一不存在的工作项（本仓 `src/` 里 `<svg>` / `fill=` / `stroke=` 命中数为 0）。SP-1 执行期用校验器自己的正则 + 注释行跳过重测，得 57 行 / 58 处。**以后引用这个数，只引用 `--emit-baseline` 的现扫输出，不引用任何手工统计。**
 
 3. **CI webfont 守卫重定范围**（不是删除）：现规则「见到 `@font-face` 即失败」与 888490a 有意发布的那一份子集相冲（见 §3）。按 D-9「保持现有子集、不加新 webfont」改写成**只允许那一份**：断言 `@font-face` 出现次数为 4（四个 HTML 页各一次）且每次都指向 `newsreader-700-latin.woff2`；出现任何其他 `font-family` 或新的 woff 引用即失败。这样守卫回到它本意——挡新增字体负载。
 
