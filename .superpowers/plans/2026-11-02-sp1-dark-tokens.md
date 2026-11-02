@@ -54,7 +54,7 @@
 | `--accent`（当文字/图标色） | `--accent-300` | **不是** `--accent-fill`。旧值压暗底只有 3.61，正文不达标 |
 | `--accent`（当填充/描边） | `--accent-fill` | |
 | `--accent-ink` | 对应徽标的 `--badge-*` 文字令牌 | 五个徽标各有自己的文字色 |
-| `--accent-soft` | 对应徽标的 `--badge-*-bg`；非徽标处（chip 底）用 `--surface-3` | |
+| `--accent-soft` | 对应徽标的 `--badge-*-bg`；非徽标处（chip 底）用 `--surface-3`；**`box-shadow` 的呼吸圈/外环用 `--hair-2`** | 2026-11-02 执行期补（Ruling T6-1）。旧值 `#edf0fb` 在白纸上是 ≈1.06:1 的近不可见装饰，本表原来只写了 chip 底，Task 6 照通则把它抬给了 `--glow-strong`（`.55` 硬边环），等于把装饰提成前景，还多造了两个非 CTA 消费者。判法：信息已由状态描边承担时，圈属装饰，走发丝族（spec §5.4）。 |
 | `--accent-line` | `--hair-2` | 装饰发丝线归入发丝线族 |
 | `--on-dark` / `-2` / `-3` | `--text-1` / `-2` / `-3` | 暗色下三者已是同一用途 |
 | `--radius` | `--r-card` | |
