@@ -107,6 +107,9 @@ const demo = {
    */
   .hero {
     padding-block: 72px 56px;
+    /* 首屏极淡靛蓝柔光：强度远低于 11 区 CTA 的辉光，只给第一屏一点层次；重音仍交给 .accent 半句。
+       原先叠的 22px 墨点阵随亮色体系删掉——ink 色点压在近黑底上不可见，要留这层质感得另立白色低透令牌。 */
+    background: radial-gradient(560px 320px at 12% -8%, var(--glow-hero), transparent 70%);
   }
   .hero-grid {
     display: grid;
@@ -727,6 +730,28 @@ const demo = {
       if (!paused) startStream();
     });
     narrow.addEventListener('change', startStream);
+
+    // 离屏暂停（skill 复核 P1）：滚动离开 hero 就停循环，回来再续；仍受手动暂停 / reduced-motion / 窄屏约束。
+    const heroEl = document.getElementById('streamRows')?.closest('section');
+    let outOfView = false;
+    if (heroEl && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const nowOut = !entry.isIntersecting;
+            if (nowOut === outOfView) continue;
+            outOfView = nowOut;
+            if (outOfView) {
+              token++; // 让上一轮残留定时器全部过期
+            } else if (!paused && !reduced && !narrow.matches) {
+              startStream();
+            }
+          }
+        },
+        { threshold: 0.05 },
+      );
+      io.observe(heroEl);
+    }
     startStream();
   }
 </script>

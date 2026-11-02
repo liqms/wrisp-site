@@ -15,17 +15,17 @@ const pain = copy.pain;
     <p class="lead">{pain.sub}</p>
     <div class="pain-grid">
       <div class="pain-card">
-        <div class="pi">01</div>
+        <div class="pi"><span class="pic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><circle cx="17" cy="7" r="1.7"/><circle cx="7" cy="17" r="1.7"/></svg></span><span>01</span></div>
         <h3>{pain['1t']}</h3>
         <p>{pain['1b']}</p>
       </div>
       <div class="pain-card">
-        <div class="pi">02</div>
+        <div class="pi"><span class="pic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v17l-6-4-6 4z"/><path d="M12 2v6"/><path d="M9 5l3 3 3-3"/></svg></span><span>02</span></div>
         <h3>{pain['2t']}</h3>
         <p>{pain['2b']}</p>
       </div>
       <div class="pain-card punch">
-        <div class="pi">03</div>
+        <div class="pi"><span class="pic" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/><path d="M8 10.5h5"/></svg></span><span>03</span></div>
         <h3>{pain['3t']}</h3>
         <p>{pain['3b']}</p>
         <span class="tag">{pain['3tag']}</span>
@@ -56,6 +56,16 @@ const pain = copy.pain;
     font-family: var(--mono);
     font-size: 12px;
     color: var(--text-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pain-card .pi .pic {
+    display: inline-flex;
+    color: var(--text-2);
+  }
+  .pain-card.punch .pi .pic {
+    color: var(--text-1);
   }
   .pain-card h3 {
     font-size: 19px;
@@ -74,6 +84,8 @@ const pain = copy.pain;
   .pain-card.punch {
     background: var(--surface-3);
     border-color: var(--hair-2);
+    /* 02 punch 与 06 dropzone 共用面板档圆角，比常规卡收一档，重音读起来更像一块嵌板 */
+    border-radius: var(--r-panel);
     color: var(--text-1);
   }
   .pain-card.punch .pi {

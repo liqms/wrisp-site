@@ -37,5 +37,9 @@ export async function loadCopy(key: LeafKey): Promise<Copy> {
   return grouped;
 }
 
-/** 压平后的整站文案：区块 id → 该区块的纯文本树。组件按此接 props。 */
-export type Copy = Record<string, Record<string, any>>;
+/**
+ * 压平后的整站文案：区块 id → 该区块的纯文本树。组件按此接 props。
+ * 值取 any 而非 Record<string, any>：strictest 的 noUncheckedIndexedAccess 会让每次区块读取都带上 undefined，
+ * 而区块是否齐全已由 check-copy-coverage 在构建期保证。
+ */
+export type Copy = Record<string, any>;

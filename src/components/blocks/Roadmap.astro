@@ -16,7 +16,7 @@ const road = copy.road;
       <div class="road-row current">
         <div class="road-rail">
           <span class="pnode filled"></span>
-          <div class="road-phase">V1</div>
+          <div class="road-phase"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h5l2 2h11v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>V1</div>
           <div class="road-sub">{road.v1sub}</div>
         </div>
         <div class="road-body">
@@ -27,7 +27,7 @@ const road = copy.road;
       <div class="road-row">
         <div class="road-rail">
           <span class="pnode"></span>
-          <div class="road-phase">V2</div>
+          <div class="road-phase"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 11l10-4M7 13l10 4"/></svg>V2</div>
           <div class="road-sub">{road.v2sub}</div>
         </div>
         <div class="road-body">
@@ -38,7 +38,7 @@ const road = copy.road;
       <div class="road-row">
         <div class="road-rail">
           <span class="pnode"></span>
-          <div class="road-phase">V3</div>
+          <div class="road-phase"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>V3</div>
           <div class="road-sub">{road.v3sub}</div>
         </div>
         <div class="road-body">
@@ -111,6 +111,13 @@ const road = copy.road;
     font-weight: 700;
     color: var(--text-1);
     margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .road-phase svg {
+    color: var(--text-3);
+    flex: none;
   }
   .road-sub {
     font-size: 12.5px;

@@ -15,6 +15,7 @@ const proof = copy.proof;
     <div class="proof-grid">
       <div class="proof-card wide">
         <div class="mock" data-shot="info-cards">
+          <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="mrow"><span class="mk-badge">{proof.m1t}</span><span>{proof.m1a}</span></div>
           <div class="mrow"><span class="mk-badge">{proof.m1b}</span><span>{proof.m1c}</span></div>
           <div class="mrow"><span class="mk-badge">{proof.m1d}</span><span>{proof.m1e}</span></div>
@@ -27,6 +28,7 @@ const proof = copy.proof;
       </div>
       <div class="proof-card">
         <div class="mock" data-shot="todo">
+          <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="mrow"><span class="box on">✓</span><span>{proof.m2a}</span></div>
           <div class="mrow"><span class="box"></span><span>{proof.m2b}</span></div>
           <div class="mrow"><span class="box"></span><span>{proof.m2c}</span></div>
@@ -39,6 +41,7 @@ const proof = copy.proof;
       </div>
       <div class="proof-card">
         <div class="mock" data-shot="report">
+          <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="mrow"><span class="mk-badge">{proof.m3a}</span></div>
           <div class="doc-l"><b>{proof.m3s1}</b><span>{proof.m3p1}</span></div>
           <div class="doc-l"><b>{proof.m3s2}</b><span>{proof.m3p2}</span></div>
@@ -52,6 +55,7 @@ const proof = copy.proof;
       </div>
       <div class="proof-card">
         <div class="mock" data-shot="qa">
+          <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="q">{proof.m4q}</div>
           <div class="doc-p">{proof.m4b}</div>
           <div class="mrow"><span>{proof.m4a}</span><span class="cite">1</span><span class="cite">2</span><span class="cite">3</span></div>
@@ -64,6 +68,7 @@ const proof = copy.proof;
       </div>
       <div class="proof-card">
         <div class="mock" data-shot="creation">
+          <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="doc-h">{proof.m5h}</div>
           <div class="doc-p">{proof.m5p}</div>
           <div class="mrow"><span class="mk-badge">{proof.m5a}</span><span>{proof.m5b}</span></div>
@@ -105,11 +110,32 @@ const proof = copy.proof;
   .mock {
     background: var(--surface-1);
     border-bottom: 1px solid var(--hair-1);
-    padding: 16px;
+    padding: 14px 16px 16px;
     min-height: 132px;
     display: flex;
     flex-direction: column;
     gap: 7px;
+  }
+  /* 产品窗口 chrome：与 hero 应用窗同一套三色点，让五张卡读作「产品截图」而非抽象示意 */
+  .mock-chrome {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .mock-chrome i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--hair-3);
+  }
+  .mock-chrome i:nth-child(1) {
+    background: var(--dot-r);
+  }
+  .mock-chrome i:nth-child(2) {
+    background: var(--dot-y);
+  }
+  .mock-chrome i:nth-child(3) {
+    background: var(--dot-g);
   }
   /* 文档类 mock 的三种行：作品标题 / 带内联节标的成稿行 / 一条回答。
      灰骨架条只表示「这里将来有字」，读者拿不到任何信息；换成真实文字后，五张卡

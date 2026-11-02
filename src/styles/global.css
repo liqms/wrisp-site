@@ -453,6 +453,10 @@ h3 {
   }
 }
 @media (max-width: 640px) {
+  /* v0.29 裁决：移动端隐藏吸顶章节条（用户指令）——移动端不再有章节导航，靠滚动本身定位 */
+  .chapter {
+    display: none;
+  }
   .wrap {
     padding: 0 20px;
   }
