@@ -30,7 +30,7 @@
 | D-11 | 窄口留白 | 区块纵向 `clamp(88px, 12vw, 160px)`，窄口收到 88 |
 | D-12 | 演示形态 | 一条三段流水线（§8），不做三个并列面板，不在参考站意义上重绘 App 壳 |
 | D-13 | 等待名单 | 表单彻底移除，`edge/` 收集端一并删除（D-14） |
-| D-14 | 收集端 | `edge/waitlist/`、`edge/README.md`、`.env.example` 的端点变量一并删除 |
+| D-14 | 收集端 | **仅** `edge/waitlist/`（worker.js + wrangler.toml + smoke.mjs）、`edge/README.md` 中收集端段落、`.env.example` 的端点变量删除。`edge/router/` 是独立的语言跳转层，27 条冒烟自成一套且 `priv.json` 的 `wrisp_lang` cookie 声明依赖它，**保留** |
 | D-15 | 孤儿叶子 | 删冗余，不留备用（保留等于永久放宽 `check-copy-coverage`） |
 
 ## 3. 前提核实与外部依赖
@@ -47,6 +47,8 @@
 | h1/h2 有 400 字重可用 | ❌ 只有 700 | 仓库仅 `public/assets/newsreader-700-latin.woff2`（23,796 B），`src/layouts/Page.astro:33` 的 `@font-face` 只声明 `font-weight:700` |
 | 滚动揭示已存在 | ✅ | `src/styles/global.css:418-426` `.js .reveal`（`translateY(18px)`）+ `:468-473` reduced-motion 兜底；驱动在 `src/components/Home.astro:59-74` |
 | 中文标题已有零字距裁决 | ✅ 保持 | `src/styles/global.css:60-73` `:lang(zh) h1,h2,h3 { letter-spacing: 0 }`，附理由注释 |
+| CI 的 webfont 守卫与已发布字面子集相容 | ❌ **相冲** | `.github/workflows/deploy.yml` 的 Sanity checks 含 `grep -rn '@font-face' dist --include='*.css' --include='*.html'` → `exit 1`；而 `dist/index.html`、`dist/zh/index.html`、两个 privacy 页都内联了 `Page.astro:33` 发出的 Newsreader 700 `@font-face`。守卫由 0182733 引入，字面子集由 888490a 在其之后同日引入，两者从未在同一次 CI 运行里相遇 |
+| 该冲突是否已暴露 | ❌ 未暴露 | `origin/main` 停在 fde4ac3（2026-10-23），本地 main 领先 15 个提交；唯一一次 Workflow 运行是 2026-10-22 的 success。**下一次推送会在 Sanity checks 直接变红** |
 
 **外部依赖（阻塞 SP-3 上线，不由本仓完成）**：维护者向 `wrisp-releases` 发出第一个 release，且资产名严格等于 D-7 的三个固定名。`releases/latest` 在没有任何 release 时同样 404，因此 **SP-3 不得在包发出前合入 `main`**——这是顺序约束，不设「未发布」视觉态。
 
@@ -55,7 +57,7 @@
 | 子项目 | 范围 | 依赖 | 产出 |
 |---|---|---|---|
 | SP-1 | 令牌与基元层：`tokens.css` 重写、`global.css` 基元、字面色清零、两条新机检 | — | 暗色地基（此时区块仍是旧骨架） |
-| SP-2 | 叙事重排 12→8：`Home.astro` 装配、`SiteNav.chapters`、eyebrow 编号、撤表单与 `edge/`、删孤儿叶子 | SP-1 | 8 区亮色骨架 |
+| SP-2 | 叙事重排 12→8：`Home.astro` 装配、`SiteNav.chapters`、eyebrow 编号、撤表单与 `edge/waitlist/`、删孤儿叶子 | SP-1 | 8 区亮色骨架 |
 | SP-3 | 首屏与下载机关：`src/lib/downloads.ts`、平台探测、分裂胶囊、JSON-LD、文案撤回注 | SP-1, SP-2, 外部发包 | 新首屏 |
 | SP-4 | 三段流水线演示组件契约 | SP-1, SP-2 | `src/components/demo/` 三件 |
 | SP-5 | 周边一致性：og 卡重导、页脚链接、序号三处同步终检、sitemap/robots | SP-1..4 | 收口 |
@@ -139,7 +141,7 @@
 
 `SiteNav.chapters` 由 11 条改为 8 条，Faq 自此有目录项。1e6550c「03 区后半句上强调色」重定位到新 03 的后半句。
 
-同批移除：`WaitlistForm.astro`、`global.css:295-345` 的 `.waitlist` 一族、`Cta.astro` 表单挂载、`cta.json` 与 `form.json` 全部叶子、`Hero.astro:38` / `SiteNav.astro:25,47` / `Privacy.astro:30` 四处 `#waitlist` 锚点、整个 `edge/`、`.env.example`、README 目录说明中的 `edge/` 行。
+同批移除：`WaitlistForm.astro`、`global.css:295-345` 的 `.waitlist` 一族、`Cta.astro` 表单挂载、`cta.json` 与 `form.json` 全部叶子、`Hero.astro:38` / `SiteNav.astro:25,47` / `Privacy.astro:30` 四处 `#waitlist` 锚点、`edge/waitlist/`（保留 `edge/router/`）、`.env.example`、README 与 `edge/README.md` 中的收集端段落。
 
 序号纪律：chapters + 各区 eyebrow + 维护者侧清单三处必须同号（README 明写）。
 
@@ -173,6 +175,8 @@ og-zh / og-en（1200×630）由维护者侧私有脚本重导，本仓不手工�
 
 1. **令牌对比度矩阵**：纯 node 函数读 `tokens.css`，遍历文字族 × 底色族，正文断言 ≥4.5、大字与微标签 ≥3，无需浏览器。
 2. **组件禁字面色**：扫 `src/components/**` 出现 `#hex` 或 `rgb(` 字面量即失败，白名单只留 `tokens.css` 与 `Page.astro` 的 `@font-face`。现状 62 处（`#fff` 33 处，Hero 18 处、Persona 19 处最密）在 SP-1 内清零。
+
+3. **CI webfont 守卫重定范围**（不是删除）：现规则「见到 `@font-face` 即失败」与 888490a 有意发布的那一份子集相冲（见 §3）。按 D-9「保持现有子集、不加新 webfont」改写成**只允许那一份**：断言 `@font-face` 出现次数为 4（四个 HTML 页各一次）且每次都指向 `newsreader-700-latin.woff2`；出现任何其他 `font-family` 或新的 woff 引用即失败。这样守卫回到它本意——挡新增字体负载。
 
 既有五条不动：双语成对 schema、`check-copy-coverage` 逐叶子回比、英文页汉字纯净度、产物无 HTML 注释、sitemap/robots。
 
