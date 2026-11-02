@@ -64,6 +64,7 @@
 > **两条判法优先级，2026-11-02 执行期补（Task 4 实测，台账 Ruling T4-3 / T4-4）：**
 > 1. **表里的发丝族只给描边**。`--hair-1/2/3` 是 `rgba(255,255,255,.07/.12/.2)`，落到 `color:` 上承载字符会近乎不可见。判法看声明落在哪个属性上：`border-*-color:` / 装饰线的 `background:` → 发丝族；真的显示字符的 `color:` → 文字族（一般 `--text-3`）。Task 4 据此把 `.lang .sep`、`.blocknav a .mk` 从机械映射给出的 `--hair-2` 改回 `--text-3`。
 > 2. **spec 的逐元素用途表胜过本表通则**。spec §5.2 把 eyebrow 归 `--text-3`，§5.3 把 `--accent-300` 限定为「正文内链接、focus ring」——所以本表「`--accent` 当文字色 → `--accent-300`」不适用于 eyebrow。冲突时按 spec 走并在报告里点名。
+> 3. **状态指示件的边框不是填充**（2026-11-02 执行期追加，Task 5 复核 C-5）。本表「`--accent` 当填充/描边 → `--accent-fill`」把两者混为一谈，但 `--accent-fill #4c5fd5` 压 `--surface-3` 只有 **2.93**，跌破 WCAG 1.4.11 的非文字 3:1——这正是 spec §5.3 为 `:focus-visible` 判过死刑的那个数值。凡是**用边框颜色来表达选中/激活态**的地方（`:checked`、`.current`、`[aria-selected]`），描边走 `--accent-400`（vs surface-3 4.63），而不是 `--accent-fill`，也不是 `--accent-300`（第 2 条锁定了 300 的用途）。`--accent-fill` 只留给真正的实心填充：按钮底、进度/色块。
 
 实测的字面色共 **58 处 / 57 行**（`Hero.astro:178` 一行两处，只占 1 条），分布在 14 个文件（口径 = Task 2 校验器的 `scanLiteralLines`：`LITERAL` 正则命中、跳过注释行、`ALLOW_FILES` 免扫；`tokens.css` 自己另有 16 行、`Page.astro` 1 行，都不计入）。落点映射：
 
