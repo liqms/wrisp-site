@@ -1,7 +1,7 @@
 {
   "eyebrow": {
-    "zh": "07 · 你会拿到什么",
-    "en": "07 · What you get"
+    "zh": "04 · 你会拿到什么",
+    "en": "04 · What you get"
   },
   "title": {
     "zh": "整理是过程，产物才是你能用的东西",
@@ -95,26 +95,6 @@
     "zh": "按你选的模板把这一周组织成稿，直接拿去发。",
     "en": "Your template assembles the week into a draft you can send as is."
   },
-  "m4q": {
-    "zh": "「上次客户提的风险是什么？」",
-    "en": "\"What risk did the client raise last time?\""
-  },
-  "m4a": {
-    "zh": "来自 3 条记录",
-    "en": "from 3 entries"
-  },
-  "m4b": {
-    "zh": "客户提过一次排期风险，要求周五前给回话。",
-    "en": "The client raised a scheduling risk and wants a reply by Friday."
-  },
-  "4t": {
-    "zh": "检索问答",
-    "en": "Search & Q&A"
-  },
-  "4b": {
-    "zh": "从关键词到智能问答，四种找法按需开启；答案带着出处，点得回原文。",
-    "en": "Keyword through smart Q&A — four ways to look, enabled as you need them; answers cite their sources back to the original."
-  },
   "m5a": {
     "zh": "手边素材",
     "en": "AT HAND"
@@ -132,11 +112,15 @@
     "en": "competitor news · review call · client reply"
   },
   "5t": {
-    "zh": "作品创作",
-    "en": "Writing works"
+    "zh": "创作空间",
+    "en": "Creation Space"
   },
   "5b": {
     "zh": "结构化编辑器，写作时随手把你自己的资料摆到手边。",
     "en": "A structured editor that keeps your own material within reach while you write."
+  },
+  "band": {
+    "zh": "同一批记录，长成四种你直接能用的东西。",
+    "en": "The same entries, grown into four things you can use directly."
   }
 }

@@ -86,13 +86,6 @@ h3 {
   margin-top: var(--space-4);
 }
 
-/* 交替底色带：四个区块用同一套「--surface-1 的面 + 上下 --hair-1 发丝线」，写成一个类而不是各自一段内联样式；暗色下层次靠面差与发丝线承担 */
-.band {
-  background: var(--surface-1);
-  border-top: 1px solid var(--hair-1);
-  border-bottom: 1px solid var(--hair-1);
-}
-
 /* ---------- 顶部导航：品牌 + 语言 + 一个主行动；章节定位交给滚动与各区 eyebrow ---------- */
 .nav {
   position: sticky;

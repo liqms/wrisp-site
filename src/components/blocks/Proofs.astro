@@ -8,12 +8,12 @@ const { copy } = Astro.props;
 const proof = copy.proof;
 ---
 
-<section class="band reveal" id="proofs">
+<section class="reveal" id="proofs">
   <div class="wrap">
     <div class="eyebrow">{proof.eyebrow}</div>
     <h2 class="h-2">{proof.title}</h2>
     <div class="proof-grid">
-      <div class="proof-card wide">
+      <div class="proof-card">
         <div class="mock" data-shot="info-cards">
           <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="mrow"><span class="mk-badge">{proof.m1t}</span><span>{proof.m1a}</span></div>
@@ -54,19 +54,6 @@ const proof = copy.proof;
         </div>
       </div>
       <div class="proof-card">
-        <div class="mock" data-shot="qa">
-          <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="q">{proof.m4q}</div>
-          <div class="doc-p">{proof.m4b}</div>
-          <div class="mrow"><span>{proof.m4a}</span><span class="cite">1</span><span class="cite">2</span><span class="cite">3</span></div>
-        </div>
-        <div class="proof-body">
-          <div class="pname">RETRIEVAL &amp; Q&amp;A</div>
-          <h3>{proof['4t']}</h3>
-          <p>{proof['4b']}</p>
-        </div>
-      </div>
-      <div class="proof-card">
         <div class="mock" data-shot="creation">
           <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="doc-h">{proof.m5h}</div>
@@ -74,13 +61,18 @@ const proof = copy.proof;
           <div class="mrow"><span class="mk-badge">{proof.m5a}</span><span>{proof.m5b}</span></div>
         </div>
         <div class="proof-body">
-          <div class="pname">MAKING WORKS</div>
+          <div class="pname">CREATION SPACE</div>
           <h3>{proof['5t']}</h3>
           <p>{proof['5b']}</p>
         </div>
       </div>
     </div>
   </div>
+    <div class="closer">
+      <div class="wrap">
+        <p>{proof.band}</p>
+      </div>
+    </div>
 </section>
 
 <style>
@@ -104,9 +96,6 @@ const proof = copy.proof;
     border-color: var(--accent-fill);
     transform: translateY(-2px);
   }
-  .proof-card.wide {
-    grid-column: 1 / -1;
-  }
   .mock {
     background: var(--surface-1);
     border-bottom: 1px solid var(--hair-1);
@@ -116,7 +105,7 @@ const proof = copy.proof;
     flex-direction: column;
     gap: 7px;
   }
-  /* 产品窗口 chrome：与 hero 应用窗同一套三色点，让五张卡读作「产品截图」而非抽象示意 */
+  /* 产品窗口 chrome：与 hero 应用窗同一套三色点，让四张卡读作「产品截图」而非抽象示意 */
   .mock-chrome {
     display: flex;
     gap: 6px;
@@ -137,9 +126,10 @@ const proof = copy.proof;
   .mock-chrome i:nth-child(3) {
     background: var(--dot-g);
   }
-  /* 文档类 mock 的三种行：作品标题 / 带内联节标的成稿行 / 一条回答。
-     灰骨架条只表示「这里将来有字」，读者拿不到任何信息；换成真实文字后，五张卡
-     讲的其实是同一批记录长成了五种产物——这条线索只有真文字才递得出去。 */
+  /* 文档类 mock 的三种行：作品标题 / 带内联节标的成稿行 / 成稿段落。
+     灰骨架条只表示「这里将来有字」，读者拿不到任何信息；换成真实文字后，四张卡
+     讲的其实是同一批记录长成了四种产物——这条线索只有真文字才递得出去。
+     区尾收束带那句（proof.band）就是这条线索的落点：同一批记录，长成四种你直接能用的东西。 */
   .mock .doc-h {
     font-size: 13.5px;
     font-weight: 700;
@@ -196,30 +186,6 @@ const proof = copy.proof;
        只 3.02、余量 0.02），改 --accent-400（4.76）；除这条注释外不动 Proofs.astro 别处。 */
     border-color: var(--accent-400);
   }
-  .mock .cite {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 16px;
-    height: 15px;
-    border-radius: 4px;
-    background: var(--badge-meet-bg);
-    color: var(--badge-meet);
-    font-family: var(--mono);
-    font-size: var(--fs-micro);
-    padding: 0 3px;
-  }
-  .mock .q {
-    border: 1px solid var(--hair-2);
-    border-radius: 999px;
-    background: var(--surface-3);
-    padding: 5px 12px;
-    font-size: 12px;
-    color: var(--text-2);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   .proof-body {
     padding: 20px 22px 22px;
     display: flex;
@@ -240,6 +206,17 @@ const proof = copy.proof;
     /* 卡下的这句是「说明」不是「注」：按 spec §5.2 用途表走 --text-2
        （Ruling T4-4：用途表胜过 --muted→--text-3 的映射通则） */
     color: var(--text-2);
+  }
+  /* NB-7：全站唯一一次换底色落在这里；令牌是 --band，与被退役的 .band 类无关（NB-15） */
+  .closer {
+    margin-top: 56px;
+    padding: 30px 0;
+    background: var(--band);
+  }
+  .closer p {
+    font-size: var(--fs-lead);
+    color: var(--text-1);
+    max-width: 720px;
   }
   @media (max-width: 760px) {
     .proof-grid {
