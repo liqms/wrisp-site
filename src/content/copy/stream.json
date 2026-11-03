@@ -83,8 +83,8 @@
       },
       "cls": "decide",
       "text": {
-        "zh": "定了：先做三个平台，移动端下阶段",
-        "en": "Three platforms first, mobile next"
+        "zh": "定了：先做桌面，移动端下阶段",
+        "en": "Desktop first, mobile next"
       },
       "type": {
         "zh": "决策",
