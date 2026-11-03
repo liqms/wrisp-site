@@ -1,31 +1,22 @@
 ---
-import WaitlistForm from '@/components/WaitlistForm.astro';
 import type { Copy } from '@/lib/copy';
+import { leafKey } from '@/lib/copy';
+import { localePath } from '@/lib/locales';
 
 interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
 const cta = copy.cta;
+const home = localePath(leafKey(Astro.currentLocale));
 ---
 
-<section class="cta">
+<section class="cta" id="next">
   <div class="wrap">
     <div class="cta-box">
       <h2>{cta.title}</h2>
       <p class="lead">{cta.sub}</p>
-      <WaitlistForm
-        labels={{
-          ph: cta.formph,
-          q: cta.formq,
-          btn: cta.btn,
-          err: cta.formerr,
-          ok: cta.formok,
-          note: cta.formnote,
-          ...copy.form,
-        }}
-        onDark
-      />
+      <p class="cta-priv"><a href={`${home}privacy/`}>{cta.privacy}</a></p>
       <svg class="cta-ghost" viewBox="0 0 360 200" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
         <rect x="2" y="2" width="356" height="196" rx="16" fill="none" stroke="var(--hair-2)" stroke-width="1.5"/>
         <rect x="18" y="18" width="36" height="140" rx="6" fill="none" stroke="var(--hair-1)"/>
@@ -45,9 +36,8 @@ const cta = copy.cta;
     padding-block: 44px 96px;
   }
   /*
-   * 旧版是「浅纸上的一块 --ink 反白面板」，暗色下没有更深的档可反，
-   * 于是按判面规则落回卡片档 --surface-2，让面板内的输入件（--surface-3 凸面，见
-   * global.css 的 .waitlist.on-dark）仍是凸起件——反白关系改由面差与辉光承担。
+   * 面板按判面规则落卡片档 --surface-2，辉光与发丝线承担反白关系
+   * （.cta-box::before 的 --glow-strong 仍是该令牌唯一消费者，spec §4.5）。
    */
   .cta-box {
     position: relative;
@@ -85,6 +75,16 @@ const cta = copy.cta;
     position: relative;
     color: var(--text-2);
     margin: 14px auto 0;
+  }
+  /* 与 h2 / .lead 同样走定位层：不写 relative，这行字会沉到 ::before 的径向辉光底下 */
+  .cta-box .cta-priv {
+    position: relative;
+    margin: 26px auto 0;
+    font-size: 13.5px;
+    color: var(--text-2);
+  }
+  .cta-box .cta-priv a {
+    color: var(--accent-300);
   }
   @media (max-width: 760px) {
     .cta-box {

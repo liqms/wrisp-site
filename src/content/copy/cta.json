@@ -4,31 +4,11 @@
     "en": "Let it remember today."
   },
   "sub": {
-    "zh": "加入内测名单，拿到第一版时第一批通知你。",
-    "en": "Join the beta and be in the first batch told about the first build."
+    "zh": "现在还在内测迭代，没有对外公布的日期；可下载版本就绪时会在这里说。",
+    "en": "Still iterating in private, with no published date — we'll say it here when a downloadable build is ready."
   },
-  "formph": {
-    "zh": "留下邮箱，发布时通知你",
-    "en": "Leave your email — we'll notify you at launch"
-  },
-  "formq": {
-    "zh": "现在最挡着你的一件事是什么？（选填）",
-    "en": "What blocks you the most today? (optional)"
-  },
-  "btn": {
-    "zh": "加入等待名单",
-    "en": "Join waitlist"
-  },
-  "formerr": {
-    "zh": "请填写一个可用的邮箱地址。",
-    "en": "Please enter a valid email address."
-  },
-  "formok": {
-    "zh": "已加入内测等待名单，发布时第一时间通知你。",
-    "en": "You're on the waitlist — we'll notify you first at launch."
-  },
-  "formnote": {
-    "zh": "仅用于内测通知 · 不用于营销 · 可随时退订",
-    "en": "Beta notices only · no marketing · unsubscribe anytime"
+  "privacy": {
+    "zh": "哪些内容可能离开你的机器，「隐私与数据声明」逐条列着。",
+    "en": "What can leave your machine is listed path by path in the privacy statement."
   }
 }
