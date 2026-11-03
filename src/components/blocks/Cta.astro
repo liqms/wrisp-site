@@ -8,7 +8,7 @@ interface Props {
 }
 const { copy } = Astro.props;
 const cta = copy.cta;
-const home = localePath(leafKey(Astro.currentLocale));
+const here = leafKey(Astro.currentLocale);
 ---
 
 <section class="cta" id="next">
@@ -16,7 +16,7 @@ const home = localePath(leafKey(Astro.currentLocale));
     <div class="cta-box">
       <h2>{cta.title}</h2>
       <p class="lead">{cta.sub}</p>
-      <p class="cta-priv"><a href={`${home}privacy/`}>{cta.privacy}</a></p>
+      <p class="cta-priv"><a href={localePath(here, 'privacy/')}>{cta.privacy}</a></p>
       <svg class="cta-ghost" viewBox="0 0 360 200" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
         <rect x="2" y="2" width="356" height="196" rx="16" fill="none" stroke="var(--hair-2)" stroke-width="1.5"/>
         <rect x="18" y="18" width="36" height="140" rx="6" fill="none" stroke="var(--hair-1)"/>
@@ -76,9 +76,10 @@ const home = localePath(leafKey(Astro.currentLocale));
     color: var(--text-2);
     margin: 14px auto 0;
   }
-  /* 与 h2 / .lead 同样走定位层：不写 relative，这行字会沉到 ::before 的径向辉光底下 */
+  /* relative 浮到 ::before 辉光之上；z-index:1 压过 z-index:0 的 ghost */
   .cta-box .cta-priv {
     position: relative;
+    z-index: 1;
     margin: 26px auto 0;
     font-size: 13.5px;
     color: var(--text-2);
