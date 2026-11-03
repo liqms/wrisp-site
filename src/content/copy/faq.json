@@ -1,7 +1,7 @@
 {
   "eyebrow": {
-    "zh": "11 · 常见问题",
-    "en": "11 · FAQ"
+    "zh": "05 · 常见问题",
+    "en": "05 · FAQ"
   },
   "title": {
     "zh": "先回答六个最常被问的",
@@ -52,7 +52,7 @@
     "en": "When does the beta ship?"
   },
   "6a": {
-    "zh": "现在还在内测迭代中，没有对外公布日期。加入名单，首个可下载版本就绪时第一批通知你。",
-    "en": "We're still iterating privately and haven't published a date. Join the waitlist and you're in the first batch when a downloadable build is ready."
+    "zh": "还在内测迭代，没有对外公布的日期。可下载版本就绪时，会在这个站点上公布。",
+    "en": "Still in private iteration, with no published date. When a downloadable build is ready, we'll say so here on the site."
   }
 }

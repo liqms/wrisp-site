@@ -6,7 +6,6 @@ interface Props {
 }
 const { copy } = Astro.props;
 const faq = copy.faq;
-const spec = copy.spec;
 // 按编号键渲染：加一条问答只改文案文件，不必再动这个组件
 const questions = Object.keys(faq)
   .filter((k) => /^\d+q$/.test(k))
@@ -14,7 +13,7 @@ const questions = Object.keys(faq)
   .sort((a, b) => a - b);
 ---
 
-<section class="reveal faq-sec" id="waitlist">
+<section class="reveal faq-sec" id="faq">
   <div class="wrap">
     <div class="eyebrow">{faq.eyebrow}</div>
     <h2 class="h-2">{faq.title}</h2>
@@ -25,12 +24,6 @@ const questions = Object.keys(faq)
           <div class="ans">{faq[`${n}a`]}</div>
         </details>
       ))}
-    </div>
-    <div class="spec">
-      <span class="chip"><span>{spec.p}</span><span class="mono">{spec.pv}</span></span>
-      <span class="chip"><span>{spec.m}</span><span class="mono">{spec.mv}</span></span>
-      <span class="chip"><span>{spec.g}</span><span class="mono">{spec.gv}</span></span>
-      <span class="chip"><span>{spec.u}</span><span class="mono">{spec.uv}</span></span>
     </div>
   </div>
 </section>
@@ -88,39 +81,5 @@ const questions = Object.keys(faq)
     font-size: 14.5px;
     color: var(--text-2);
     max-width: 760px;
-  }
-  .spec {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 34px;
-  }
-  .spec .chip {
-    border: 1px solid var(--hair-1);
-    background: var(--surface-3);
-    border-radius: 999px;
-    padding: 8px 14px;
-    font-size: 13px;
-    color: var(--text-2);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-  }
-  .spec .chip .mono {
-    font-size: 11.5px;
-    /* 凸面 chip 上的 11.5px 小字：--text-3 压 --surface-3 只 4.19，按 spec §5.2 的档位限制抬到 --text-2 */
-    color: var(--text-2);
-  }
-  @media (max-width: 640px) {
-    .spec {
-      gap: 8px;
-    }
-    .spec .chip {
-      white-space: normal;
-      flex-wrap: wrap;
-      font-size: 12.5px;
-      padding: 7px 12px;
-    }
   }
 </style>
