@@ -2,21 +2,5 @@
   "cta": {
     "zh": "怎么拿到",
     "en": "How to get it"
-  },
-  "toc": {
-    "zh": "章节目录",
-    "en": "Sections"
-  },
-  "chapter": {
-    "zh": "章节进度",
-    "en": "Chapter"
-  },
-  "prev": {
-    "zh": "上一章节",
-    "en": "Previous chapter"
-  },
-  "next": {
-    "zh": "下一章节",
-    "en": "Next chapter"
   }
 }

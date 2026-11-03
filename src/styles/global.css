@@ -93,7 +93,7 @@ h3 {
   border-bottom: 1px solid var(--hair-1);
 }
 
-/* ---------- 顶部导航：只放动作类入口，章节定位归左侧目录 ---------- */
+/* ---------- 顶部导航：品牌 + 语言 + 一个主行动；章节定位交给滚动与各区 eyebrow ---------- */
 .nav {
   position: sticky;
   top: 0;
@@ -193,112 +193,6 @@ h3 {
   font-size: 13.5px;
 }
 
-/* ---------- 左侧微缩目录（signature） ---------- */
-.blocknav {
-  position: fixed;
-  left: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  font-size: 12.5px;
-}
-.blocknav a {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--text-3);
-  padding: 4px 9px;
-  border-radius: 7px;
-  white-space: nowrap;
-  transition: color 0.15s, background 0.15s;
-}
-.blocknav a .mk {
-  color: var(--text-3);
-  font-size: var(--fs-micro);
-}
-.blocknav a:hover {
-  color: var(--text-1);
-  background: var(--surface-1);
-}
-.blocknav a.active {
-  color: var(--accent-300);
-}
-.blocknav a.active .mk {
-  color: var(--accent-300);
-}
-.blocknav a .num {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text-3);
-  min-width: 18px;
-}
-.blocknav a.active .num {
-  color: var(--accent-300);
-}
-
-/* ---------- ≤1180px 的替代：吸顶横向章节条，不能什么都不留 ---------- */
-.chapter {
-  display: none;
-  position: sticky;
-  top: var(--nav-h);
-  z-index: 55;
-  height: var(--chapter-h);
-  align-items: center;
-  gap: 10px;
-  background: var(--chapter-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--hair-1);
-  padding: 0 14px;
-}
-.chapter .cnum {
-  font-family: var(--mono);
-  font-size: 11.5px;
-  color: var(--accent-300);
-  min-width: 18px;
-}
-.chapter .cname {
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.chapter .cbar {
-  flex: 1;
-  height: 2px;
-  background: var(--hair-1);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.chapter .cbar i {
-  display: block;
-  height: 100%;
-  background: var(--accent-fill);
-  width: 10%;
-  transition: width 0.3s ease;
-}
-.chapter button {
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--hair-2);
-  border-radius: 50%;
-  background: var(--surface-3);
-  color: var(--text-2);
-  font-size: 14px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-.chapter button:hover {
-  border-color: var(--text-1);
-}
-
 /* ---------- 渐显：初始隐藏只在 JS 已接管时生效；无 JS / 截图 / 爬虫一律直接可读 ---------- */
 .js .reveal {
   opacity: 0;
@@ -310,30 +204,12 @@ h3 {
   transform: none;
 }
 
-@media (max-width: 1180px) {
-  .blocknav {
-    display: none;
-  }
-  .chapter {
-    display: flex;
-  }
-}
 @media (max-width: 760px) {
   section {
     padding-block: 64px;
   }
 }
-@media (max-width: 560px) {
-  .chapter {
-    padding: 0 10px;
-    gap: 8px;
-  }
-}
 @media (max-width: 640px) {
-  /* v0.29 裁决：移动端隐藏吸顶章节条（用户指令）——移动端不再有章节导航，靠滚动本身定位 */
-  .chapter {
-    display: none;
-  }
   .wrap {
     padding: 0 20px;
   }
