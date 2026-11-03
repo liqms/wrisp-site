@@ -12,8 +12,8 @@
     "en": "Your local notes stay yours"
   },
   "1b": {
-    "zh": "现有目录指进来就能用，不转格式、不重打标；记录与作品都是你文件夹里的 Markdown，想走随时原样带走。",
-    "en": "Point it at your folder and go — no conversion, no re-tagging. Entries and works are Markdown you can take with you as they are."
+    "zh": "现有目录指进来就能用，Markdown 还是你原来的那些文件；记录与作品都在自己的文件夹里，想走随时原样带走。",
+    "en": "Point it at your folder and go — the Markdown stays your own files. Entries and works live in that folder, ready to take with you as they are."
   },
   "2t": {
     "zh": "Community 免费",
