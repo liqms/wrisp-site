@@ -27,12 +27,13 @@ const demo = {
   <div class="wrap">
     <div class="hero-grid">
       <div class="hero-copy">
-        <span class="kicker"><span class="kicker-dot" aria-hidden="true"></span>{hero.kicker}</span>
+        <div class="eyebrow">{hero.kicker}</div>
         <h1 class="h-title">
           <span class="h-lead">{hero.title1}</span><br />
           <span class="accent">{hero.title2}</span>
         </h1>
         <p class="lead">{hero.sub}</p>
+        <p class="situation">{hero.situation}</p>
         <p class="guard">{hero.guard}</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#next">{hero.cta1}</a>
@@ -117,33 +118,6 @@ const demo = {
     gap: 56px;
     align-items: center;
   }
-  .hero .kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--mono);
-    font-size: 12.5px;
-    /* 凸起胶囊上的强调标签：--text-3 压 --surface-3 只有 4.19 且此处 12.5px，
-       --accent-300 又被 spec §5.3 限定为正文内链接 / focus ring，都不合，
-       落到 --accent-400（非正文强调，实测 4.63 过 AA）。 */
-    color: var(--accent-400);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    border: 1px solid var(--hair-1);
-    background: var(--surface-3);
-    border-radius: 999px;
-    padding: 6px 14px;
-    margin-bottom: 22px;
-    white-space: nowrap;
-  }
-  .hero .kicker .kicker-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--ok);
-    display: inline-block;
-    flex: none;
-  }
   .hero .h-title {
     font-size: clamp(38px, 6vw, 62px);
   }
@@ -158,6 +132,13 @@ const demo = {
   }
   .hero .h-title .accent {
     color: var(--accent-400);
+  }
+  .hero .situation {
+    margin-top: 12px;
+    max-width: 640px;
+    /* §4.1：--text-2 一行、--fs-lead 档；三段中点分隔，不加句号 */
+    font-size: var(--fs-lead);
+    color: var(--text-2);
   }
   .hero .guard {
     margin-top: 14px;

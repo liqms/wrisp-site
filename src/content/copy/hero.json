@@ -1,7 +1,7 @@
 {
   "kicker": {
-    "zh": "本地优先 · 个人创作 AI",
-    "en": "Local-first · Personal creation AI"
+    "zh": "01 · 本地优先 · 个人创作 AI",
+    "en": "01 · Local-first · Personal creation AI"
   },
   "title1": {
     "zh": "今天，你需要",
@@ -14,6 +14,10 @@
   "sub": {
     "zh": "说话代替打字，整理交给 AI，数据永远留在你的机器。",
     "en": "Talk instead of type. AI does the organizing. Your data stays on your machine."
+  },
+  "situation": {
+    "zh": "散落的记录 · 沉底的收藏 · 调不回来的记忆",
+    "en": "scattered notes · sunken saves · memory you can't call back"
   },
   "guard": {
     "zh": "现在能用上的是它的记忆底座：说一句话，它替你记好、整理好、在你写东西时找回来。",

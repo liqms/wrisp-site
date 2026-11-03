@@ -1,0 +1,63 @@
+---
+import type { Copy } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+const { copy } = Astro.props;
+const features = copy.features;
+const cards = ['1', '2', '3'];
+---
+
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">{features.eyebrow}</div>
+    <h2 class="h-2">{features.title}</h2>
+    <div class="feat-grid">
+      {cards.map((n) => (
+        <div class="feat-card">
+          <span class="tick" aria-hidden="true">✓</span>
+          <h3>{features[`${n}t`]}</h3>
+          <p>{features[`${n}b`]}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* §4.2：≥900px 三列并排，以下一行一张——不留「两列 + 一张跨列」那种第三态 */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 44px;
+  }
+  .feat-card {
+    border: 1px solid var(--hair-1);
+    border-radius: var(--r-card);
+    background: var(--surface-2);
+    padding: 24px 26px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .feat-card .tick {
+    font-family: var(--mono);
+    font-size: 14px;
+    /* 非正文强调走 --accent-400（--accent-300 被 spec §5.3 锁给链接与焦点环） */
+    color: var(--accent-400);
+  }
+  .feat-card h3 {
+    font-size: 17px;
+  }
+  .feat-card p {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+  @media (min-width: 900px) {
+    .feat-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

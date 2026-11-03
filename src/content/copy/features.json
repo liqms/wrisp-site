@@ -1,0 +1,34 @@
+{
+  "eyebrow": {
+    "zh": "02 · 产品特性",
+    "en": "02 · Product features"
+  },
+  "title": {
+    "zh": "三件你现在就能核验的事",
+    "en": "Three things you can check today"
+  },
+  "1t": {
+    "zh": "本地笔记还是你的",
+    "en": "Your local notes stay yours"
+  },
+  "1b": {
+    "zh": "现有目录指进来就能用，不转格式、不重打标；记录与作品都是你文件夹里的 Markdown，想走随时原样带走。",
+    "en": "Point it at your folder and go — no conversion, no re-tagging. Entries and works are Markdown you can take with you as they are."
+  },
+  "2t": {
+    "zh": "Community 免费",
+    "en": "Community is free"
+  },
+  "2b": {
+    "zh": "当前阶段的能力完整可用；AI 用量走你自己的 Key，模型账单落在你的账户上，不经我们。",
+    "en": "Everything in the current stage is usable; AI usage runs on your own key, billed to your account, never through us."
+  },
+  "3t": {
+    "zh": "模板与技能",
+    "en": "Templates and skills"
+  },
+  "3b": {
+    "zh": "取用别人整理好的结构与能力，装好就能用在你自己的作品里。",
+    "en": "Take a structure or an ability someone else put up, install it, and use it inside your own work."
+  }
+}
