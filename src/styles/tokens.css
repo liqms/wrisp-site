@@ -36,10 +36,9 @@
 
   /*
    * 半透明功能面：alpha 与色值绑在一起，没法从实色令牌推，所以单独立令牌。
-   * 有了这四个，吸顶层与辉光就能从 baseline 白名单里彻底走出来（spec 回写项 1/2/3）。
+   * 有了这三个，吸顶层与辉光就能从 baseline 白名单里彻底走出来（spec 回写项 1/2/3）。
    */
   --nav-bg: rgba(11, 13, 18, 0.82);
-  --chapter-bg: rgba(11, 13, 18, 0.9);
   --glow-strong: rgba(76, 95, 213, 0.55);
   /* 首屏柔光：比 11 区 CTA 辉光低两档，只给第一屏一点层次，不作第二个发光面 */
   --glow-hero: rgba(76, 95, 213, 0.08);
@@ -109,7 +108,6 @@
 
   --maxw: 1120px;
   --nav-h: 64px;
-  --chapter-h: 44px;
 }
 
 *,
@@ -122,7 +120,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--nav-h) + var(--chapter-h) + 12px);
+  scroll-padding-top: calc(var(--nav-h) + 12px);
   /*
    * 声明式暗色：表单控件、滚动条、系统配色都按暗色画。
    * 但**不写 prefers-color-scheme: light 的分支**——D-1 裁决暗色是唯一形态，
@@ -201,7 +199,6 @@ button {
     --hair-2: rgba(0, 0, 0, 0.22);
     --hair-3: rgba(0, 0, 0, 0.34);
     --nav-bg: rgba(255, 255, 255, 0.9);
-    --chapter-bg: rgba(255, 255, 255, 0.94);
     --glow-strong: rgba(47, 67, 184, 0.28);
     --ok: #1c7a4b;
     --warn: #8a6d1c;
