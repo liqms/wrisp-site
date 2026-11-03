@@ -1,8 +1,4 @@
 {
-  "eyebrow": {
-    "zh": "09 · 路线图",
-    "en": "09 · Roadmap"
-  },
   "title": {
     "zh": "三个阶段，一步一步走",
     "en": "Three stages, one at a time"
@@ -47,8 +43,12 @@
     "zh": "再往后：按你的风格成稿，可授权、可代理，判断权仍在你在。",
     "en": "Later: finished pieces in your style, with delegation and authorization — judgment stays yours."
   },
+  "pro": {
+    "zh": "Pro 从下一阶段起提供，卖的是同步与便利，基础能力不靠它解锁。",
+    "en": "Pro arrives with the next stage, selling sync and convenience rather than unlocking basics."
+  },
   "note": {
-    "zh": "现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱。",
-    "en": "Still iterating in private beta, which is why there is no download button here — leave an email instead."
+    "zh": "现在还在内测迭代，这一页没有下载按钮；就绪时会在这里公布。",
+    "en": "Still iterating in private, so there's no download button on this page; we'll announce it here when it's ready."
   }
 }
