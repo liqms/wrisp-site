@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/gen-seo.mjs",
-    "check": "node scripts/check-copy-coverage.mjs && node scripts/check-tokens.mjs",
+    "check": "node scripts/check-copy-coverage.mjs && node scripts/check-tokens.mjs && node scripts/check-anchors.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
