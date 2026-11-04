@@ -21,6 +21,36 @@ const BASE = '/wrisp-site/';
 // spec §6：改完后站内 href="#…" 的取值集合收敛为这五个。
 export const ALLOWED = ['top', 'how', 'proofs', 'faq', 'next'];
 
+// SP-4 §7：取景与开关都是「恰好这么多」型清单——多一枚、少一枚、改个名都判红。
+export const SHOTS = ['hero-flow', 'hero-qa', 'info-cards', 'todo', 'report', 'creation'];
+export const TOGGLES = ['streamToggle', 'qaToggle'];
+
+export const shotsIn = (html) => [...html.matchAll(/data-shot="([^"]*)"/g)].map((m) => m[1]);
+const countOf = (haystack, needle) => haystack.split(needle).length - 1;
+
+export const checkShots = (pages) => {
+  const bad = [];
+  for (const p of pages) {
+    const isHome = p.at === 'index.html' || p.at === 'zh/index.html';
+    const shots = shotsIn(p.html);
+    if (!isHome) {
+      if (shots.length) bad.push(`${p.at} 不该出现 data-shot，实际有：${shots.join(',')}`);
+      continue;
+    }
+    const extra = shots.filter((s) => !SHOTS.includes(s));
+    if (extra.length) bad.push(`${p.at} 有清单外的 data-shot：${extra.join(',')}`);
+    for (const id of SHOTS) {
+      const n = countOf(p.html, `data-shot="${id}"`);
+      if (n !== 1) bad.push(`${p.at} 的 data-shot="${id}" 出现 ${n} 次，应为 1 次`);
+    }
+    for (const id of TOGGLES) {
+      const n = countOf(p.html, `id="${id}"`);
+      if (n !== 1) bad.push(`${p.at} 的暂停开关 #${id} 出现 ${n} 次，应为 1 次`);
+    }
+  }
+  return bad;
+};
+
 export const hrefsIn = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
 
 /**
@@ -89,8 +119,12 @@ const run = () => {
   }));
   const bad = [...new Set(checkAnchors(pages))];
   check('站内每个锚点都指向存在的 id，且取值在 §6 集合内', bad.length === 0, bad.slice(0, 30));
+  const shotBad = [...new Set(checkShots(pages))];
+  check('取景与开关清单恰好（六枚 data-shot、两枚暂停开关；辅助页零枚）', shotBad.length === 0, shotBad.slice(0, 30));
   const failed = results.filter((r) => !r.pass);
-  console.log(`\nanchors=${new Set(pages.flatMap((p) => hrefsIn(p.html).map((h) => resolveAnchor(h)?.frag).filter(Boolean))).size} pages=${pages.length}`);
+  console.log(
+    `\nanchors=${new Set(pages.flatMap((p) => hrefsIn(p.html).map((h) => resolveAnchor(h)?.frag).filter(Boolean))).size} pages=${pages.length} shots=${new Set(pages.flatMap((p) => shotsIn(p.html))).size} toggles=${TOGGLES.filter((id) => pages.some((p) => p.html.includes(`id="${id}"`))).length}`,
+  );
   if (failed.length) {
     console.error(`\n=== ANCHOR CHECK FAILED (${failed.length}) ===`);
     process.exit(1);
@@ -125,6 +159,30 @@ if (process.argv.includes('--selftest')) {
     checkAnchors(DEAD));
   const NOHOME = [OK[0], { ...OK[1], html: OK[1].html.replace('id="faq"', 'id="other"') }];
   check('中文首页漏一个区 → 报缺 id', checkAnchors(NOHOME).some((m) => m.includes('zh/index.html 缺少 id="faq"')), checkAnchors(NOHOME));
+
+  const SHOT_HOME =
+    '<div data-shot="hero-flow"></div><button id="streamToggle"></button><div data-shot="hero-qa"></div><button id="qaToggle"></button><div data-shot="info-cards"></div><div data-shot="todo"></div><div data-shot="report"></div><div data-shot="creation"></div>';
+  const SHOTS_OK = [
+    { at: 'index.html', html: SHOT_HOME },
+    { at: 'zh/index.html', html: SHOT_HOME },
+    { at: 'privacy/index.html', html: '<p>no shot here</p>' },
+  ];
+  check('取景与开关清单齐 → 零失败', checkShots(SHOTS_OK).length === 0, checkShots(SHOTS_OK));
+  check(
+    '首屏少一枚 hero-qa → 判红',
+    checkShots(SHOTS_OK.map((p) => (p.at === 'index.html' ? { ...p, html: p.html.replace('data-shot="hero-qa"', 'data-shot="hero-q"') } : p))).some((m) => m.includes('hero-qa')),
+    '缺的那枚要报出来',
+  );
+  check(
+    '暂停开关少一枚 → 判红',
+    checkShots(SHOTS_OK.map((p) => (p.at === 'index.html' ? { ...p, html: p.html.replace('id="qaToggle"', 'id="otherToggle"') } : p))).some((m) => m.includes('#qaToggle')),
+    '开关要各命中一次',
+  );
+  check(
+    '辅助页混进 data-shot → 判红',
+    checkShots(SHOTS_OK.map((p) => (p.at === 'privacy/index.html' ? { ...p, html: '<div data-shot="todo"></div>' } : p))).some((m) => m.includes('privacy/index.html 不该出现')),
+    '隐私页必须零枚',
+  );
 
   const failed = results.filter((r) => !r.pass);
   console.log(`\nselftest: ${results.length - failed.length}/${results.length} passed`);
