@@ -192,6 +192,14 @@
     "m5b": {
       "zh": "竞品动态 · 评审结论 · 客户回话",
       "en": "competitor news · review call · client reply"
+    },
+    "hit2": {
+      "zh": "数据指标 · 转写平均 42 秒",
+      "en": "Metric · transcription averages 42s"
+    },
+    "cite": {
+      "zh": "[42 秒 · 本周]",
+      "en": "[42s · this week]"
     }
   }
 }

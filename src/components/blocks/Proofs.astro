@@ -62,8 +62,9 @@ const flow = copy.flow;
         <div class="mock" data-shot="creation">
           <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
           <div class="doc-h">{flow.recall.m5h}</div>
-          <div class="doc-p">{flow.recall.m5p}</div>
-          <div class="mrow"><span class="mk-badge">{flow.recall.m5a}</span><span>{flow.recall.m5b}</span></div>
+          <div class="doc-p">{flow.recall.m5p}<sup class="mk-cite" data-fade="3">{flow.recall.cite}</sup></div>
+          <div class="mrow" data-fade="1"><span class="mk-badge">{flow.recall.m5a}</span><span>{flow.recall.m5b}</span></div>
+          <div class="mrow" data-fade="2"><span class="mk-badge">{flow.recall.hit2}</span></div>
         </div>
         <div class="proof-body">
           <div class="pname">CREATION SPACE</div>
@@ -202,6 +203,14 @@ const flow = copy.flow;
   }
   .mock .mock-tostream {
     color: var(--text-3);
+  }
+  /* 创作卡的角标是裸 sup（DOM 里排在两条记录之前，按 data-fade 的帧序落到最后）。
+     显式声明 font-size 是地板要求：UA 给 sup 的 font-size: smaller 会把 13px 压到约 10.8px，
+     破 §5.4 的微标签地板。放在 .mock 系列规则之后，靠等特异性的先后次序压住 UA 表。 */
+  .mock .mk-cite {
+    font-family: var(--mono);
+    font-size: var(--fs-mono);
+    color: var(--accent-400);
   }
   /* 裁决④：pre 态只挂在 .demo-running 上——驱动不出场（无 JS / reduced-motion / 搬离视口后
      落定）时整条失效，五行照常显示；只有 opacity 动，不碰高度与显隐，卡面不回排。
