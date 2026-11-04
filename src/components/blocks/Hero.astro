@@ -7,7 +7,7 @@ interface Props {
 const { copy } = Astro.props;
 // hero.guard 是时态护栏：主标题讲终局，紧跟一行讲当下能用上的部分。
 const hero = copy.hero;
-// 会动的文案都住 flow.json（参与动画的句子在这里，不动的卡与卡标题住 proof.json）；
+// 参与动画的句子都住 flow.json（不动的卡与卡标题住 proof.json），只有两条「来源」标签仍从 hero 取；
 // 日期「10-22」与 CSS 类名是结构字段、不是文案，因此不走双语叶子。
 const flow = copy.flow;
 const stream = flow.stream;
@@ -551,9 +551,11 @@ const demo = {
 </style>
 
 <script>
-  const root = document.querySelector<HTMLElement>('.appwin');
-  const payload = root?.dataset.demo;
-  if (root && payload) {
+  import { mountDemo, type DemoRuntime } from '../../lib/demo-driver';
+
+  const win = document.querySelector<HTMLElement>('.appwin');
+  const payload = win?.dataset.demo;
+  if (win && payload) {
     type Scene = {
       time: string;
       mode: string;
@@ -571,7 +573,6 @@ const demo = {
       dictating: string;
       play: string;
       pause: string;
-      pause: string;
       rows: Scene[];
       incoming: Scene[];
     };
@@ -585,13 +586,6 @@ const demo = {
     const cardBadge = document.getElementById('cardBadge')!;
     const cardSource = document.getElementById('cardSource')!;
     const cardStatus = document.getElementById('cardStatus')!;
-    const toggle = document.getElementById('streamToggle')!;
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const narrow = window.matchMedia('(max-width: 640px)');
-    let paused = false;
-    // 每次重启换一个令牌，上一轮残留的定时器发现自己过期就直接退出。
-    let token = 0;
 
     const rowEl = (scene: Scene, landing: boolean) => {
       const node = document.createElement('div');
@@ -609,6 +603,7 @@ const demo = {
       return node;
     };
 
+    // 无 JS 与 reduced-motion 都到不了这里（驱动早退），所以 flip 无需再问一次 reduced。
     const setCard = (scene: Scene) => {
       cardType.textContent = scene.type;
       cardTypeV.textContent = scene.type;
@@ -618,11 +613,9 @@ const demo = {
       cardSource.textContent = `${scene.time} · ${scene.mode === 'voice' ? demo.dictated : demo.today}`;
       cardStatus.textContent = scene.status;
       card.classList.add('show');
-      if (!reduced) {
-        card.classList.remove('flip');
-        void card.offsetWidth;
-        card.classList.add('flip');
-      }
+      card.classList.remove('flip');
+      void card.offsetWidth;
+      card.classList.add('flip');
     };
 
     const renderFrame = () => {
@@ -640,7 +633,7 @@ const demo = {
       label.textContent = demo.dictating;
       const wave = document.createElement('span');
       wave.className = 'wave';
-      wave.setAttribute('aria-hidden', 'true');
+      wave.setAttribute('aria-hidden', 'true'); // 装饰性中间帧才挂 aria-hidden
       for (let i = 0; i < 5; i++) wave.appendChild(document.createElement('i'));
       const dur = document.createElement('span');
       dur.className = 'dur';
@@ -650,92 +643,45 @@ const demo = {
       return node;
     };
 
-    const typeInto = (full: string, currentToken: number) => {
+    const typeInto = (rt: DemoRuntime, full: string) => {
       let k = 0;
       const step = () => {
-        if (token !== currentToken || paused || reduced) return;
         typebar.textContent = full.slice(0, k);
         if (k >= full.length) return;
         k += 1;
-        setTimeout(step, 26);
+        rt.at(26, step);
       };
       step();
     };
 
-    const loopIncoming = (n: number) => {
-      if (paused || reduced || narrow.matches) return;
-      const currentToken = token;
-      const scene = demo.incoming[n % demo.incoming.length];
-      let voiceNode: HTMLElement | null = null;
-      let delay = 1200;
-      if (scene.mode === 'voice') {
-        voiceNode = showVoice(scene);
-        delay = 2400;
-      } else {
-        typeInto(demo.prefix + scene.text, currentToken);
-      }
-      setTimeout(() => {
-        if (token !== currentToken) return;
-        voiceNode?.remove();
-        typebar.textContent = '';
-        const node = rowEl(scene, true);
-        node.classList.add('living');
-        rowsBox.appendChild(node);
-        requestAnimationFrame(() => node.classList.add('show'));
-        setCard(scene);
-        setTimeout(() => {
-          if (token !== currentToken) return;
-          if ((n + 1) % demo.incoming.length === 0) {
-            setTimeout(() => {
-              if (token !== currentToken) return;
-              renderFrame();
-              loopIncoming(0);
-            }, 1400);
-          } else {
-            loopIncoming(n + 1);
-          }
-        }, 3000);
-      }, delay);
-    };
-
-    const startStream = () => {
-      const currentToken = ++token;
-      renderFrame();
-      if (paused || reduced || narrow.matches) return;
-      setTimeout(() => {
-        if (token === currentToken) loopIncoming(0);
-      }, 2200);
-    };
-
-    toggle.addEventListener('click', () => {
-      paused = !paused;
-      toggle.setAttribute('aria-pressed', String(paused));
-      toggle.textContent = paused ? demo.play : demo.pause;
-      if (!paused) startStream();
+    // 演示一：SSR 已经交出终态（三条记录 + 一张展开卡片），循环只做增量。
+    mountDemo({
+      root: win,
+      watch: document.querySelector<HTMLElement>('.hero') ?? undefined,
+      toggle: document.getElementById('streamToggle'),
+      labels: { play: demo.play, pause: demo.pause },
+      reset: () => renderFrame(),
+      run(rt) {
+        const total = demo.incoming.length;
+        let n = 0;
+        const next = () => {
+          const scene = demo.incoming[n % total]!;
+          const voice = scene.mode === 'voice' ? showVoice(scene) : null;
+          if (!voice) typeInto(rt, demo.prefix + scene.text);
+          rt.at(voice ? 2400 : 1200, () => {
+            voice?.remove();
+            typebar.textContent = '';
+            const node = rowEl(scene, true);
+            node.classList.add('living');
+            rowsBox.appendChild(node);
+            requestAnimationFrame(() => node.classList.add('show'));
+            setCard(scene);
+            n += 1;
+            rt.at(rt.stepMs, n % total === 0 ? () => rt.loop() : next);
+          });
+        };
+        rt.at(2200, next);
+      },
     });
-    narrow.addEventListener('change', startStream);
-
-    // 离屏暂停（skill 复核 P1）：滚动离开 hero 就停循环，回来再续；仍受手动暂停 / reduced-motion / 窄屏约束。
-    const heroEl = document.getElementById('streamRows')?.closest('section');
-    let outOfView = false;
-    if (heroEl && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            const nowOut = !entry.isIntersecting;
-            if (nowOut === outOfView) continue;
-            outOfView = nowOut;
-            if (outOfView) {
-              token++; // 让上一轮残留定时器全部过期
-            } else if (!paused && !reduced && !narrow.matches) {
-              startStream();
-            }
-          }
-        },
-        { threshold: 0.05 },
-      );
-      io.observe(heroEl);
-    }
-    startStream();
   }
 </script>
