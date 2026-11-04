@@ -1,0 +1,167 @@
+{
+  "stream": {
+    "prefix": {
+      "zh": "记录：",
+      "en": "Noted: "
+    },
+    "idle": {
+      "zh": "把这一周归拢成周报",
+      "en": "Turn this week into a report"
+    },
+    "date": "10-22",
+    "rows": [
+      {
+        "time": "09:41",
+        "mode": "type",
+        "badge": {
+          "zh": "待办",
+          "en": "To-do"
+        },
+        "cls": "todo",
+        "text": {
+          "zh": "周五前给客户回话：进度与风险",
+          "en": "Reply to the client by Friday"
+        },
+        "type": {
+          "zh": "待办",
+          "en": "To-do"
+        },
+        "status": {
+          "zh": "已整理 · 可撤回",
+          "en": "Filed · revocable"
+        }
+      },
+      {
+        "time": "10:02",
+        "mode": "type",
+        "badge": {
+          "zh": "竞品动态",
+          "en": "Competitor update"
+        },
+        "cls": "comp",
+        "text": {
+          "zh": "竞品上了语音转写，主打会议",
+          "en": "A rival shipped voice notes"
+        },
+        "type": {
+          "zh": "竞品动态",
+          "en": "Competitor update"
+        },
+        "status": {
+          "zh": "已整理 · 可撤回",
+          "en": "Filed · revocable"
+        }
+      },
+      {
+        "time": "10:26",
+        "mode": "type",
+        "badge": {
+          "zh": "会议纪要",
+          "en": "Meeting notes"
+        },
+        "cls": "meet",
+        "text": {
+          "zh": "评审定了：周报先按模板出",
+          "en": "Settled: template report first"
+        },
+        "type": {
+          "zh": "会议纪要",
+          "en": "Meeting notes"
+        },
+        "status": {
+          "zh": "已整理 · 可撤回",
+          "en": "Filed · revocable"
+        }
+      }
+    ],
+    "incoming": [
+      {
+        "time": "11:48",
+        "mode": "voice",
+        "badge": {
+          "zh": "决策",
+          "en": "Decision"
+        },
+        "cls": "decide",
+        "text": {
+          "zh": "定了：先做桌面，移动端下阶段",
+          "en": "Desktop first, mobile next"
+        },
+        "type": {
+          "zh": "决策",
+          "en": "Decision"
+        },
+        "status": {
+          "zh": "已整理 · 可撤回",
+          "en": "Filed · revocable"
+        },
+        "dur": "0:07"
+      },
+      {
+        "time": "12:05",
+        "mode": "type",
+        "badge": {
+          "zh": "用户需求",
+          "en": "Requirement"
+        },
+        "cls": "need",
+        "text": {
+          "zh": "希望导出把图片一起带走",
+          "en": "Exports should carry images"
+        },
+        "type": {
+          "zh": "用户需求",
+          "en": "Requirement"
+        },
+        "status": {
+          "zh": "已整理 · 可撤回",
+          "en": "Filed · revocable"
+        }
+      }
+    ]
+  },
+  "file": {
+    "m1t": {
+      "zh": "待办",
+      "en": "To-do"
+    },
+    "m1a": {
+      "zh": "周五前给客户回话：进度 / 风险 / 下周计划",
+      "en": "Reply to the client by Friday: progress / risks / next week"
+    },
+    "m1b": {
+      "zh": "会议纪要",
+      "en": "Meeting notes"
+    },
+    "m1c": {
+      "zh": "评审结论：周报先模板化，智能化留给下个版本",
+      "en": "Review call: ship the template-based report first, intelligence next release"
+    },
+    "m1d": {
+      "zh": "竞品动态",
+      "en": "Competitor update"
+    },
+    "m1e": {
+      "zh": "竞品 App 上了语音转写，主打会议场景",
+      "en": "A rival app shipped voice transcription for meeting use cases"
+    }
+  },
+  "recall": {
+    "m5a": {
+      "zh": "手边素材",
+      "en": "AT HAND"
+    },
+    "m5h": {
+      "zh": "我们的语音转写慢在哪",
+      "en": "Where our transcription lags"
+    },
+    "m5p": {
+      "zh": "差异不在识别率，而在会议场景里的默认动线。",
+      "en": "The gap is not accuracy — it is the default flow in a meeting."
+    },
+    "m5b": {
+      "zh": "竞品动态 · 评审结论 · 客户回话",
+      "en": "competitor news · review call · client reply"
+    }
+  }
+}

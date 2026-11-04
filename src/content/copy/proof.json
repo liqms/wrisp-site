@@ -7,30 +7,6 @@
     "zh": "整理是过程，产物才是你能用的东西",
     "en": "Organizing is the process; the output is what you use"
   },
-  "m1t": {
-    "zh": "待办",
-    "en": "To-do"
-  },
-  "m1a": {
-    "zh": "周五前给客户回话：进度 / 风险 / 下周计划",
-    "en": "Reply to the client by Friday: progress / risks / next week"
-  },
-  "m1b": {
-    "zh": "会议纪要",
-    "en": "Meeting notes"
-  },
-  "m1c": {
-    "zh": "评审结论：周报先模板化，智能化留给下个版本",
-    "en": "Review call: ship the template-based report first, intelligence next release"
-  },
-  "m1d": {
-    "zh": "竞品动态",
-    "en": "Competitor update"
-  },
-  "m1e": {
-    "zh": "竞品 App 上了语音转写，主打会议场景",
-    "en": "A rival app shipped voice transcription for meeting use cases"
-  },
   "1t": {
     "zh": "信息卡片",
     "en": "Knowledge cards"
@@ -94,22 +70,6 @@
   "3b": {
     "zh": "按你选的模板把这一周组织成稿，直接拿去发。",
     "en": "Your template assembles the week into a draft you can send as is."
-  },
-  "m5a": {
-    "zh": "手边素材",
-    "en": "AT HAND"
-  },
-  "m5h": {
-    "zh": "我们的语音转写慢在哪",
-    "en": "Where our transcription lags"
-  },
-  "m5p": {
-    "zh": "差异不在识别率，而在会议场景里的默认动线。",
-    "en": "The gap is not accuracy — it is the default flow in a meeting."
-  },
-  "m5b": {
-    "zh": "竞品动态 · 评审结论 · 客户回话",
-    "en": "competitor news · review call · client reply"
   },
   "5t": {
     "zh": "创作空间",

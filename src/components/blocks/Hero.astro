@@ -7,7 +7,10 @@ interface Props {
 const { copy } = Astro.props;
 // hero.guard 是时态护栏：主标题讲终局，紧跟一行讲当下能用上的部分。
 const hero = copy.hero;
-const stream = copy.stream;
+// 会动的文案都住 flow.json（参与动画的句子在这里，不动的卡与卡标题住 proof.json）；
+// 日期「10-22」与 CSS 类名是结构字段、不是文案，因此不走双语叶子。
+const flow = copy.flow;
+const stream = flow.stream;
 const lastFiled = stream.rows[stream.rows.length - 1];
 
 // 循环动画要的数据：语言已压平，随元素带下去，省掉一份平行字典。

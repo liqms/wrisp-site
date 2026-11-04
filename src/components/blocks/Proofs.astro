@@ -6,6 +6,9 @@ interface Props {
 }
 const { copy } = Astro.props;
 const proof = copy.proof;
+// 这两张卡的 mock 文字参与动画，按裁决②住在 flow.json；卡标题（1t/1b…5t/5b）与
+// 另外两张不动的卡（m2* / m3*）留在 proof.json。
+const flow = copy.flow;
 ---
 
 <section class="reveal" id="proofs">
@@ -16,9 +19,9 @@ const proof = copy.proof;
       <div class="proof-card">
         <div class="mock" data-shot="info-cards">
           <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="mrow"><span class="mk-badge">{proof.m1t}</span><span>{proof.m1a}</span></div>
-          <div class="mrow"><span class="mk-badge">{proof.m1b}</span><span>{proof.m1c}</span></div>
-          <div class="mrow"><span class="mk-badge">{proof.m1d}</span><span>{proof.m1e}</span></div>
+          <div class="mrow"><span class="mk-badge">{flow.file.m1t}</span><span>{flow.file.m1a}</span></div>
+          <div class="mrow"><span class="mk-badge">{flow.file.m1b}</span><span>{flow.file.m1c}</span></div>
+          <div class="mrow"><span class="mk-badge">{flow.file.m1d}</span><span>{flow.file.m1e}</span></div>
         </div>
         <div class="proof-body">
           <div class="pname">INFO CARDS</div>
@@ -56,9 +59,9 @@ const proof = copy.proof;
       <div class="proof-card">
         <div class="mock" data-shot="creation">
           <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="doc-h">{proof.m5h}</div>
-          <div class="doc-p">{proof.m5p}</div>
-          <div class="mrow"><span class="mk-badge">{proof.m5a}</span><span>{proof.m5b}</span></div>
+          <div class="doc-h">{flow.recall.m5h}</div>
+          <div class="doc-p">{flow.recall.m5p}</div>
+          <div class="mrow"><span class="mk-badge">{flow.recall.m5a}</span><span>{flow.recall.m5b}</span></div>
         </div>
         <div class="proof-body">
           <div class="pname">CREATION SPACE</div>
