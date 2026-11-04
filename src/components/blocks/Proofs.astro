@@ -19,9 +19,11 @@ const flow = copy.flow;
       <div class="proof-card">
         <div class="mock" data-shot="info-cards">
           <div class="mock-chrome" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div class="mrow"><span class="mk-badge">{flow.file.m1t}</span><span>{flow.file.m1a}</span></div>
-          <div class="mrow"><span class="mk-badge">{flow.file.m1b}</span><span>{flow.file.m1c}</span></div>
-          <div class="mrow"><span class="mk-badge">{flow.file.m1d}</span><span>{flow.file.m1e}</span></div>
+          <div class="mrow"><span class="mk-badge" data-fade="1">{flow.file.m1t}</span><span>{flow.file.m1a}</span></div>
+          <div class="mrow"><span class="mk-badge" data-fade="2">{flow.file.m1b}</span><span>{flow.file.m1c}</span></div>
+          <div class="mrow"><span class="mk-badge" data-fade="3">{flow.file.m1d}</span><span>{flow.file.m1e}</span></div>
+          <div class="mrow mock-note" data-fade="4"><span class="mock-link">{flow.file.link}</span></div>
+          <div class="mrow mock-note" data-fade="5"><span class="mock-tostream">{flow.file.toStream}</span></div>
         </div>
         <div class="proof-body">
           <div class="pname">INFO CARDS</div>
@@ -190,6 +192,28 @@ const flow = copy.flow;
        只 3.02、余量 0.02），改 --accent-400（4.76）；除这条注释外不动 Proofs.astro 别处。 */
     border-color: var(--accent-400);
   }
+  /* 信息卡的终态两行：互链标记与「进当日流」。二者只活在终态，中间帧不另加文字。 */
+  .mock .mock-note {
+    font-family: var(--mono);
+    font-size: var(--fs-mono);
+  }
+  .mock .mock-link {
+    color: var(--accent-400);
+  }
+  .mock .mock-tostream {
+    color: var(--text-3);
+  }
+  /* 裁决④：pre 态只挂在 .demo-running 上——驱动不出场（无 JS / reduced-motion / 搬离视口后
+     落定）时整条失效，五行照常显示；只有 opacity 动，不碰高度与显隐，卡面不回排。
+     `.js` 挂在 <html> 上，不在本组件作用域内，所以只能走 :global()——否则 Astro 会给它
+     也补 [data-astro-cid-…]，而 <html> 上没有这个属性，整条选择器永不命中。 */
+  :global(.js) .mock.demo-running [data-fade] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  :global(.js) .mock.demo-running [data-fade].demo-in {
+    opacity: 1;
+  }
   .proof-body {
     padding: 20px 22px 22px;
     display: flex;
@@ -228,3 +252,17 @@ const flow = copy.flow;
     }
   }
 </style>
+
+<script>
+  import { mountDemo } from '../../lib/demo-driver';
+
+  for (const mock of Array.from(document.querySelectorAll<HTMLElement>('.mock'))) {
+    if (!mock.querySelector('[data-fade]')) continue; // 待办卡与周报卡是静态的，不给它们挂闸门
+    mountDemo({
+      root: mock,
+      run(rt) {
+        rt.fades().forEach((el, i) => rt.at(600 + i * 700, () => rt.show(el)));
+      },
+    });
+  }
+</script>

@@ -166,6 +166,14 @@
     "m1e": {
       "zh": "竞品 App 上了语音转写，主打会议场景",
       "en": "A rival app shipped voice transcription for meeting use cases"
+    },
+    "link": {
+      "zh": "⌁ 与客户回话互链",
+      "en": "⌁ cross-linked to the client reply"
+    },
+    "toStream": {
+      "zh": "↓ 已进当日流 · 11:48",
+      "en": "↓ into today's stream · 11:48"
     }
   },
   "recall": {
