@@ -89,6 +89,9 @@ export const checkCoverage = (leaves, pages) => {
 
 export const STATIC_PREFIXES = ['flow.qa.', 'flow.file.', 'flow.recall.'];
 
+/** STATIC_PREFIXES 真实命中的叶子数：前缀被改名后这一层会静默空转，所以它要进摘要并被断言非零。 */
+export const staticMatched = (leaves) => leaves.filter((l) => STATIC_PREFIXES.some((p) => l.at.startsWith(p))).length;
+
 /** 会动的文案必须能在元素文本里读到；只活在标签或属性里的，判红。 */
 export const checkStatic = (leaves, pages) => {
   const bad = [];
@@ -125,16 +128,19 @@ const run = () => {
     process.exit(1);
   }
   const leaves = collectLeaves(COPY);
+  const matched = staticMatched(leaves);
   const missing = checkCoverage(leaves, pages);
   const staticBad = checkStatic(leaves, pages);
   const leaked = [...new Set(pages.en.flatMap((p) => strayCjk(p.html).map((w) => `${p.at} ${w}`)))];
   console.log(
-    `leaves=${leaves.length} pages=${pages.zh.length + pages.en.length} missing=${missing.length} static=${staticBad.length} en-cjk=${leaked.length}`,
+    `leaves=${leaves.length} pages=${pages.zh.length + pages.en.length} missing=${missing.length} static=${staticBad.length} static-matched=${matched} en-cjk=${leaked.length}`,
   );
   for (const m of missing) console.log('  MISS ' + m);
   for (const s of staticBad) console.log('  STAT ' + s);
   for (const w of leaked) console.log('  CJK  ' + w);
-  if (missing.length || staticBad.length || leaked.length) {
+  if (matched === 0)
+    console.error('  STATIC_PREFIXES 命中 0 条：元素文本这一层是空转的，多半是 flow 前缀被改名了。');
+  if (missing.length || staticBad.length || leaked.length || matched === 0) {
     console.error('=== COPY CHECK FAILED ===');
     process.exit(1);
   }
@@ -155,6 +161,7 @@ const selftest = () => {
 
   const STREAM_LEAF = { at: 'flow.stream.rows[0].text', zh: '什么时候定的', en: 'When did we settle' };
   check('flow.stream.* 豁免（循环增量，无 JS 时本就不在产物里）', checkStatic([STREAM_LEAF], ONLY_ATTR).length === 0, checkStatic([STREAM_LEAF], ONLY_ATTR));
+  check('static 命中计数能被前缀改名戳破（flow.stream.* 记 0，flow.qa.* 记 1）', staticMatched([STREAM_LEAF]) === 0 && staticMatched([LEAF]) === 1, [staticMatched([STREAM_LEAF]), staticMatched([LEAF])]);
 
   const ESCAPED = { zh: [{ at: 'zh/index.html', html: '<p>它带着&nbsp;时间戳</p>' }], en: [{ at: 'index.html', html: '<p>it&#39;s back</p>' }] };
   check('转义写法也算命中（& 与 &#39;）', checkStatic([{ at: 'flow.qa.ans', zh: '它带着&nbsp;时间戳', en: "it's back" }], ESCAPED).length === 0, checkStatic([{ at: 'flow.qa.ans', zh: '它带着&nbsp;时间戳', en: "it's back" }], ESCAPED));

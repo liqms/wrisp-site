@@ -95,9 +95,8 @@ export function mountDemo(m: DemoMount): void {
       toggle.setAttribute('aria-pressed', String(paused));
       toggle.textContent = paused ? labels.play : labels.pause;
       if (paused) {
-        // 暂停要停在「读得到全部信息」的那一帧：让残留定时器过期，把没露面的增量补齐。
-        token += 1;
-        rt.all();
+        // 暂停要停在「读得到全部信息」的那一帧：settle 负责作废残留定时器、撤 pre 态、回终态。
+        settle();
       } else {
         begin();
       }

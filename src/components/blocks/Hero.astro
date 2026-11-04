@@ -7,7 +7,7 @@ interface Props {
 const { copy } = Astro.props;
 // hero.guard 是时态护栏：主标题讲终局，紧跟一行讲当下能用上的部分。
 const hero = copy.hero;
-// 参与动画的句子都住 flow.json（不动的卡与卡标题住 proof.json），只有两条「来源」标签仍从 hero 取；
+// 参与动画的句子都住 flow.json（不动的卡与卡标题住 proof.json）；hero 还供播放/暂停、窗口标题与麦克风来源等标签。
 // 日期「10-22」与 CSS 类名是结构字段、不是文案，因此不走双语叶子。
 const flow = copy.flow;
 const stream = flow.stream;
@@ -45,16 +45,16 @@ const demo = {
         </div>
       </div>
 
-      <div class="appwin" data-demo={JSON.stringify(demo)}>
+      <div class="appwin">
         <div class="appwin-top">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
           <span class="appwin-title">{hero.window}</span>
           <span class="appwin-ctl">
-            <button type="button" id="streamToggle" aria-pressed="false">{hero.pause}</button>
+            <button type="button" id="streamToggle" aria-pressed="false" aria-controls="streamRows">{hero.pause}</button>
           </span>
         </div>
         <div class="appwin-body">
-          <div class="demo-flow" data-shot="hero-flow">
+          <div class="demo-flow" data-shot="hero-flow" data-demo={JSON.stringify(demo)}>
             <div class="stream">
               <div class="stream-head"><span>{hero.stream}</span><span class="mono">{stream.date}</span></div>
               <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
@@ -104,10 +104,10 @@ const demo = {
             <div class="qa-head">
               <p class="q">{qa.q}</p>
               <span class="appwin-ctl">
-                <button type="button" id="qaToggle" aria-pressed="false">{hero.pause}</button>
+                <button type="button" id="qaToggle" aria-pressed="false" aria-controls="qaHits">{hero.pause}</button>
               </span>
             </div>
-            <div class="hits">
+            <div class="hits" id="qaHits">
               <span class="hit" data-fade="1">{qa.h1}</span>
               <span class="hit" data-fade="2">{qa.h2}</span>
             </div>
@@ -638,9 +638,9 @@ const demo = {
 <script>
   import { mountDemo, type DemoRuntime } from '../../lib/demo-driver';
 
-  const win = document.querySelector<HTMLElement>('.appwin');
-  const payload = win?.dataset.demo;
-  if (win && payload) {
+  const flowFace = document.querySelector<HTMLElement>('.demo-flow');
+  const payload = flowFace?.dataset.demo;
+  if (flowFace && payload) {
     type Scene = {
       time: string;
       mode: string;
@@ -705,6 +705,7 @@ const demo = {
 
     const renderFrame = () => {
       rowsBox.textContent = '';
+      typebar.textContent = '';
       for (const scene of demo.rows) rowsBox.appendChild(rowEl(scene, false));
       setCard(demo.rows[demo.rows.length - 1]);
     };
@@ -741,7 +742,7 @@ const demo = {
 
     // 演示一：SSR 已经交出终态（三条记录 + 一张展开卡片），循环只做增量。
     mountDemo({
-      root: win,
+      root: flowFace,
       watch: document.querySelector<HTMLElement>('.hero') ?? undefined,
       toggle: document.getElementById('streamToggle'),
       labels: { play: demo.play, pause: demo.pause },
