@@ -78,7 +78,8 @@ export function mountDemo(m: DemoMount): void {
   }
 
   function begin() {
-    if (narrow.matches) return settle();
+    // 暂停中的重排（例如跨过 640px）只许落回终态：pre 态会把暂停刚交出的内容重新藏起来。
+    if (narrow.matches || paused) return settle();
     token += 1;
     m.root.classList.add(RUNNING);
     if (m.reset) m.reset(rt);

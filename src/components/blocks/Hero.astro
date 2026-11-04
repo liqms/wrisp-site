@@ -17,6 +17,8 @@ const lastFiled = stream.rows[stream.rows.length - 1];
 // 循环动画要的数据：语言已压平，随元素带下去，省掉一份平行字典。
 const demo = {
   prefix: stream.prefix,
+  // 暂停与挂载都要落回 SSR 终态的那一行，空闲句因此随 payload 下去。
+  idle: stream.idle,
   today: hero.stream,
   dictated: hero.micSource,
   dictating: hero.micLabel,
@@ -705,7 +707,8 @@ const demo = {
 
     const renderFrame = () => {
       rowsBox.textContent = '';
-      typebar.textContent = '';
+      // 回帧要与 SSR 终态逐字一致，否则暂停会停在没有文字的语音条上。
+      typebar.textContent = demo.prefix + demo.idle;
       for (const scene of demo.rows) rowsBox.appendChild(rowEl(scene, false));
       setCard(demo.rows[demo.rows.length - 1]);
     };
