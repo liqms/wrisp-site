@@ -108,10 +108,10 @@ const demo = {
               </span>
             </div>
             <div class="hits">
-              <span class="hit">{qa.h1}</span>
-              <span class="hit">{qa.h2}</span>
+              <span class="hit" data-fade="1">{qa.h1}</span>
+              <span class="hit" data-fade="2">{qa.h2}</span>
             </div>
-            <p class="ans">{qa.ans}<span class="cite">{qa.cite}</span></p>
+            <p class="ans">{qa.ans}<span class="cite" data-fade="3">{qa.cite}</span></p>
           </div>
         </div>
       </div>
@@ -530,7 +530,7 @@ const demo = {
     font-family: var(--mono);
   }
 
-  /* ---------- 问答段：本任务只交静态终态，驱动在下一任务才挂 ---------- */
+  /* ---------- 问答段：SSR 终态 + 共用驱动；pre 态与演示一同一形状 ---------- */
   .appwin .demo-qa {
     border-top: 1px solid var(--hair-1);
     padding: 16px 18px 18px;
@@ -586,6 +586,13 @@ const demo = {
     font-family: var(--mono);
     font-size: var(--fs-mono);
     color: var(--accent-400);
+  }
+  .js .appwin .demo-qa.demo-running [data-fade] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .js .appwin .demo-qa.demo-running [data-fade].demo-in {
+    opacity: 1;
   }
 
   .js .appwin .srow.living {
@@ -759,6 +766,18 @@ const demo = {
           });
         };
         rt.at(2200, next);
+      },
+    });
+
+    // 演示二：问句 → 命中两条记录 → 角标落回回答。循环演，因为它是首屏的一段演示（NB-8）。
+    mountDemo({
+      root: document.querySelector<HTMLElement>('.demo-qa')!,
+      toggle: document.getElementById('qaToggle'),
+      labels: { play: demo.play, pause: demo.pause },
+      run(rt) {
+        const els = rt.fades();
+        els.forEach((el, i) => rt.at(500 + i * 800, () => rt.show(el)));
+        rt.at(500 + els.length * 800 + rt.stepMs + rt.dwellMs, () => rt.loop());
       },
     });
   }
