@@ -11,6 +11,7 @@ const hero = copy.hero;
 // 日期「10-22」与 CSS 类名是结构字段、不是文案，因此不走双语叶子。
 const flow = copy.flow;
 const stream = flow.stream;
+const qa = flow.qa;
 const lastFiled = stream.rows[stream.rows.length - 1];
 
 // 循环动画要的数据：语言已压平，随元素带下去，省掉一份平行字典。
@@ -53,49 +54,64 @@ const demo = {
           </span>
         </div>
         <div class="appwin-body">
-          <div class="stream">
-            <div class="stream-head"><span>{hero.stream}</span><span class="mono">{stream.date}</span></div>
-            <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
-              {
-                stream.rows.map((row: any) => (
-                  <div class="srow">
-                    <span class="t">{row.time}</span>
-                    <span class="txt">{row.text}</span>
-                    <span class:list={['badge', row.cls]}>{row.badge}</span>
-                  </div>
-                ))
-              }
-            </div>
-            <div class="typebar">
-              <div class="typing">
-                <span class="caret">▸</span>
-                <span class="txt" id="typebar">{stream.prefix}{stream.idle}</span>
-                <span class="cursor" id="cursor" aria-hidden="true"></span>
+          <div class="demo-flow" data-shot="hero-flow">
+            <div class="stream">
+              <div class="stream-head"><span>{hero.stream}</span><span class="mono">{stream.date}</span></div>
+              <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
+                {
+                  stream.rows.map((row: any) => (
+                    <div class="srow">
+                      <span class="t">{row.time}</span>
+                      <span class="txt">{row.text}</span>
+                      <span class:list={['badge', row.cls]}>{row.badge}</span>
+                    </div>
+                  ))
+                }
               </div>
-              <span class="mic">{hero.mic}</span>
+              <div class="typebar">
+                <div class="typing">
+                  <span class="caret">▸</span>
+                  <span class="txt" id="typebar">{stream.prefix}{stream.idle}</span>
+                  <span class="cursor" id="cursor" aria-hidden="true"></span>
+                </div>
+                <span class="mic">{hero.mic}</span>
+              </div>
+            </div>
+            <div class="cardpanel" id="cardPanel">
+              <div class="card show" id="infoCard">
+                <div class="ch">
+                  <span class="ct" id="cardType">{lastFiled.type}</span>
+                  <span class:list={['badge', lastFiled.cls]} id="cardBadge">{lastFiled.badge}</span>
+                </div>
+                <div class="cbody" id="cardBody">{lastFiled.text}</div>
+                <div class="fld">
+                  <b>{hero.fType}</b>
+                  <span id="cardTypeV">{lastFiled.type}</span>
+                </div>
+                <div class="fld">
+                  <b>{hero.fSource}</b>
+                  <span id="cardSource">{lastFiled.time} · {hero.stream}</span>
+                </div>
+                <div class="fld">
+                  <b>{hero.fStatus}</b>
+                  <span id="cardStatus">{lastFiled.status}</span>
+                </div>
+              </div>
+              <span class="card-hint">{hero.cardhint}</span>
             </div>
           </div>
-          <div class="cardpanel" id="cardPanel">
-            <div class="card show" id="infoCard">
-              <div class="ch">
-                <span class="ct" id="cardType">{lastFiled.type}</span>
-                <span class:list={['badge', lastFiled.cls]} id="cardBadge">{lastFiled.badge}</span>
-              </div>
-              <div class="cbody" id="cardBody">{lastFiled.text}</div>
-              <div class="fld">
-                <b>{hero.fType}</b>
-                <span id="cardTypeV">{lastFiled.type}</span>
-              </div>
-              <div class="fld">
-                <b>{hero.fSource}</b>
-                <span id="cardSource">{lastFiled.time} · {hero.stream}</span>
-              </div>
-              <div class="fld">
-                <b>{hero.fStatus}</b>
-                <span id="cardStatus">{lastFiled.status}</span>
-              </div>
+          <div class="demo-qa" data-shot="hero-qa">
+            <div class="qa-head">
+              <p class="q">{qa.q}</p>
+              <span class="appwin-ctl">
+                <button type="button" id="qaToggle" aria-pressed="false">{hero.pause}</button>
+              </span>
             </div>
-            <span class="card-hint">{hero.cardhint}</span>
+            <div class="hits">
+              <span class="hit">{qa.h1}</span>
+              <span class="hit">{qa.h2}</span>
+            </div>
+            <p class="ans">{qa.ans}<span class="cite">{qa.cite}</span></p>
           </div>
         </div>
       </div>
@@ -224,8 +240,12 @@ const demo = {
   }
   .appwin-body {
     display: grid;
-    grid-template-columns: 1.22fr 0.78fr;
+    grid-template-columns: 1fr;
     background: var(--surface-2);
+  }
+  .appwin .demo-flow {
+    display: grid;
+    grid-template-columns: 1.22fr 0.78fr;
   }
   .appwin .stream {
     border-right: 1px solid var(--hair-1);
@@ -510,6 +530,64 @@ const demo = {
     font-family: var(--mono);
   }
 
+  /* ---------- 问答段：本任务只交静态终态，驱动在下一任务才挂 ---------- */
+  .appwin .demo-qa {
+    border-top: 1px solid var(--hair-1);
+    padding: 16px 18px 18px;
+  }
+  .appwin .demo-qa .qa-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .appwin .demo-qa .q {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .appwin .demo-qa .hits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 9px;
+  }
+  .appwin .demo-qa .hit {
+    position: relative;
+    padding: 3px 8px 3px 16px;
+    font-family: var(--mono);
+    font-size: var(--fs-mono);
+    color: var(--text-2);
+    background: var(--surface-3);
+    border: 1px solid var(--hair-1);
+    border-radius: 6px;
+  }
+  /* 装饰点走几何而不是 content 字符：装饰层不占文案叶子，也不给 EN 页添汉字风险。
+     --text-2 压 --surface-3 ≈7.0（--text-3 只 4.19，未过 4.5）。 */
+  .appwin .demo-qa .hit::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    margin-top: -2.5px;
+    border-radius: 50%;
+    background: var(--accent-400);
+  }
+  .appwin .demo-qa .ans {
+    margin-top: 9px;
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+  .appwin .demo-qa .cite {
+    margin-left: 6px;
+    font-family: var(--mono);
+    font-size: var(--fs-mono);
+    color: var(--accent-400);
+  }
+
   .js .appwin .srow.living {
     opacity: 0;
     transform: translateY(-4px);
@@ -534,7 +612,7 @@ const demo = {
   }
   @media (max-width: 640px) {
     /* 移动端退化：静态流 + 卡片，不参与循环 */
-    .appwin-body {
+    .appwin .demo-flow {
       grid-template-columns: 1fr;
     }
     .appwin .stream {

@@ -120,6 +120,28 @@
       }
     ]
   },
+  "qa": {
+    "q": {
+      "zh": "「先做桌面」这句，是什么时候定下的？",
+      "en": "When did we settle on desktop first?"
+    },
+    "h1": {
+      "zh": "决策 · 11:48 · 先做桌面",
+      "en": "Decision · 11:48 · desktop first"
+    },
+    "h2": {
+      "zh": "需求 · 12:05 · 导出带图",
+      "en": "Request · 12:05 · exports carry images"
+    },
+    "cite": {
+      "zh": "出处 · 11:48 决策",
+      "en": "source · 11:48 decision"
+    },
+    "ans": {
+      "zh": "不用回忆。它带着时间戳回来了。",
+      "en": "No need to remember. It came back with its timestamp."
+    }
+  },
   "file": {
     "m1t": {
       "zh": "待办",
