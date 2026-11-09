@@ -72,8 +72,8 @@
     "en": "when checking for updates"
   },
   "5b": {
-    "zh": "你在表单里填的邮箱，和那句「现在最挡着你的一件事」。",
-    "en": "The email you submit, plus the one line about what blocks you most."
+    "zh": "你在表单里填的邮箱，和那句「你最想要的功能是什么」。",
+    "en": "The email you submit, plus the one line about what feature you want."
   },
   "5s": {
     "zh": "你主动提交时",
@@ -128,8 +128,8 @@
     "en": "Unsubscribing and deletion"
   },
   "d1": {
-    "zh": "内测通知邮件都带退订入口；也可以直接来信要求删除，说明里给出邮箱即可，我们不核对身份之外的任何信息。",
-    "en": "Every beta notice carries an unsubscribe link. You can also write to us asking for deletion — the address alone is enough, we don't ask for anything beyond it."
+    "zh": "内测通知邮件会说明如何退出名单；也可以直接来信要求删除，说明里给出邮箱即可，我们不核对身份之外的任何信息。",
+    "en": "Every beta notice explains how to leave the list. You can also write to us asking for deletion — the address alone is enough; we don't ask for anything beyond it."
   },
   "d2": {
     "zh": "收件通道上线前，上面这条针对的是「将来会存到的数据」；现在提交不会产生任何记录。",

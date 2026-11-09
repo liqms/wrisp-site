@@ -22,7 +22,7 @@ const BASE = '/wrisp-site/';
 export const ALLOWED = ['top', 'how', 'proofs', 'faq', 'next'];
 
 // SP-4 §7：取景与开关都是「恰好这么多」型清单——多一枚、少一枚、改个名都判红。
-export const SHOTS = ['hero-flow', 'hero-qa', 'info-cards', 'todo', 'report', 'creation'];
+export const SHOTS = ['hero-flow', 'hero-qa', 'knowledge', 'todo', 'report', 'creation'];
 export const TOGGLES = ['streamToggle', 'qaToggle'];
 
 export const shotsIn = (html) => [...html.matchAll(/data-shot="([^"]*)"/g)].map((m) => m[1]);
@@ -161,7 +161,7 @@ if (process.argv.includes('--selftest')) {
   check('中文首页漏一个区 → 报缺 id', checkAnchors(NOHOME).some((m) => m.includes('zh/index.html 缺少 id="faq"')), checkAnchors(NOHOME));
 
   const SHOT_HOME =
-    '<div data-shot="hero-flow"></div><button id="streamToggle"></button><div data-shot="hero-qa"></div><button id="qaToggle"></button><div data-shot="info-cards"></div><div data-shot="todo"></div><div data-shot="report"></div><div data-shot="creation"></div>';
+    '<div data-shot="hero-flow"></div><button id="streamToggle"></button><div data-shot="hero-qa"></div><button id="qaToggle"></button><div data-shot="knowledge"></div><div data-shot="todo"></div><div data-shot="report"></div><div data-shot="creation"></div>';
   const SHOTS_OK = [
     { at: 'index.html', html: SHOT_HOME },
     { at: 'zh/index.html', html: SHOT_HOME },

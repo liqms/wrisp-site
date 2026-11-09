@@ -10,7 +10,7 @@ import Cta from '@/components/blocks/Cta.astro';
 import SiteFooter from '@/components/blocks/SiteFooter.astro';
 import { leafKey, loadCopy } from '@/lib/copy';
 
-const key = leafKey(Astro.currentLocale);
+const key = leafKey(Astro.currentLocale || '');
 const copy = await loadCopy(key);
 const meta = copy.meta;
 // 产品实体只在首页声明：辅助页描述的是口径，不是一个可下载的东西。
@@ -35,9 +35,9 @@ const jsonld = {
   <SiteNav copy={copy} />
   <main id="top">
     <Hero copy={copy} />
-    <Features copy={copy} />
     <Work copy={copy} />
     <Proofs copy={copy} />
+    <Features copy={copy} />
     <Faq copy={copy} />
     <Cta copy={copy} />
   </main>

@@ -1,14 +1,34 @@
 {
   "title": {
-    "zh": "先让它记住今天。",
-    "en": "Let it remember today."
+    "zh": "我想体验新产品",
+    "en": "Join the beta to try the new product."
   },
   "sub": {
-    "zh": "现在还在内测迭代，没有对外公布的日期；可下载版本就绪时会在这里说。",
-    "en": "Still iterating in private, with no published date — we'll say it here when a downloadable build is ready."
+    "zh": "产品正在迭代中，就绪时会发布可下载版本",
+    "en": "The product is currently being iterated on, and a downloadable version will be released when ready."
   },
-  "privacy": {
-    "zh": "哪些内容可能离开你的机器，「隐私与数据声明」逐条列着。",
-    "en": "What can leave your machine is listed path by path in the privacy statement."
+  "formph": {
+    "zh": "留下邮箱，就绪时通知你",
+    "en": "Leave your email — we'll tell you when it's ready"
+  },
+  "formq": {
+    "zh": "你最想要的功能是什么？（选填）",
+    "en": "What feature do you want? (optional)"
+  },
+  "btn": {
+    "zh": "加入内测",
+    "en": "Join the beta"
+  },
+  "formerr": {
+    "zh": "请填写一个可用的邮箱地址。",
+    "en": "Please enter a valid email address."
+  },
+  "formok": {
+    "zh": "已登记，可下载版本就绪时第一批通知你。",
+    "en": "You're on the list — first batch notified when a downloadable build is ready."
+  },
+  "formnote": {
+    "zh": "仅用于内测通知 · 不用于营销",
+    "en": "Beta notices only · no marketing"
   }
 }

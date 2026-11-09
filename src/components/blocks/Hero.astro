@@ -5,7 +5,7 @@ interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
-// hero.guard 是时态护栏：主标题讲终局，紧跟一行讲当下能用上的部分。
+// 时态护栏住在扩展描述的后半句里：主标题讲终局，同一句的破折号之后讲当下能用上的部分。
 const hero = copy.hero;
 // 参与动画的句子都住 flow.json（不动的卡与卡标题住 proof.json）；hero 还供播放/暂停、窗口标题与麦克风来源等标签。
 // 日期「10-22」与 CSS 类名是结构字段、不是文案，因此不走双语叶子。
@@ -13,6 +13,8 @@ const flow = copy.flow;
 const stream = flow.stream;
 const qa = flow.qa;
 const lastFiled = stream.rows[stream.rows.length - 1];
+// 两拍并成一行后，中文两拍直接相接；英文之间必须留一个真空格，它同时是词距和换行点。
+const titleJoin = Astro.currentLocale === 'en' ? ' ' : '';
 
 // 循环动画要的数据：语言已压平，随元素带下去，省掉一份平行字典。
 const demo = {
@@ -33,17 +35,12 @@ const demo = {
   <div class="wrap">
     <div class="hero-grid">
       <div class="hero-copy">
-        <div class="eyebrow">{hero.kicker}</div>
         <h1 class="h-title">
-          <span class="h-lead">{hero.title1}</span><br />
-          <span class="accent">{hero.title2}</span>
+          <span class="h-lead">{hero.title1}</span>{titleJoin}<span class="accent">{hero.title2}</span>
         </h1>
         <p class="lead">{hero.sub}</p>
-        <p class="situation">{hero.situation}</p>
-        <p class="guard">{hero.guard}</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#next">{hero.cta1}</a>
-          <a class="btn btn-ghost" href="#how">{hero.cta2}</a>
         </div>
       </div>
 
@@ -53,67 +50,107 @@ const demo = {
           <span class="appwin-title">{hero.window}</span>
           <span class="appwin-ctl">
             <button type="button" id="streamToggle" aria-pressed="false" aria-controls="streamRows">{hero.pause}</button>
+            <button type="button" id="qaToggle" aria-pressed="false" aria-controls="qaThread" hidden>{hero.pause}</button>
           </span>
         </div>
+        <div class="demo-tabs" role="tablist" aria-label={hero.tabLabel}>
+          <button type="button" role="tab" id="tab-flow" aria-controls="panel-flow" aria-selected="true" tabindex="0">{hero.tabFlow}</button>
+          <button type="button" role="tab" id="tab-qa" aria-controls="panel-qa" aria-selected="false" tabindex="-1">{hero.tabQa}</button>
+        </div>
         <div class="appwin-body">
-          <div class="demo-flow" data-shot="hero-flow" data-demo={JSON.stringify(demo)}>
-            <div class="stream">
-              <div class="stream-head"><span>{hero.stream}</span><span class="mono">{stream.date}</span></div>
-              <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
-                {
-                  stream.rows.map((row: any) => (
-                    <div class="srow">
-                      <span class="t">{row.time}</span>
-                      <span class="txt">{row.text}</span>
-                      <span class:list={['badge', row.cls]}>{row.badge}</span>
-                    </div>
-                  ))
-                }
-              </div>
-              <div class="typebar">
-                <div class="typing">
-                  <span class="caret">▸</span>
-                  <span class="txt" id="typebar">{stream.prefix}{stream.idle}</span>
-                  <span class="cursor" id="cursor" aria-hidden="true"></span>
+          <div class="demo-panel" id="panel-flow" role="tabpanel" aria-labelledby="tab-flow">
+            <div class="demo-flow" data-shot="hero-flow" data-demo={JSON.stringify(demo)}>
+              <div class="stream">
+                <div class="stream-head"><span>{hero.stream}</span><span class="mono">{stream.date}</span></div>
+                <div class="stream-rows" id="streamRows" aria-live="polite" aria-relevant="additions">
+                  {
+                    stream.rows.map((row: any) => (
+                      <div class="srow">
+                        <span class="t">{row.time}</span>
+                        <span class="txt">{row.text}</span>
+                        <span class:list={['badge', row.cls]}>{row.badge}</span>
+                      </div>
+                    ))
+                  }
                 </div>
-                <span class="mic">{hero.mic}</span>
-              </div>
-            </div>
-            <div class="cardpanel" id="cardPanel">
-              <div class="card show" id="infoCard">
-                <div class="ch">
-                  <span class="ct" id="cardType">{lastFiled.type}</span>
-                  <span class:list={['badge', lastFiled.cls]} id="cardBadge">{lastFiled.badge}</span>
-                </div>
-                <div class="cbody" id="cardBody">{lastFiled.text}</div>
-                <div class="fld">
-                  <b>{hero.fType}</b>
-                  <span id="cardTypeV">{lastFiled.type}</span>
-                </div>
-                <div class="fld">
-                  <b>{hero.fSource}</b>
-                  <span id="cardSource">{lastFiled.time} · {hero.stream}</span>
-                </div>
-                <div class="fld">
-                  <b>{hero.fStatus}</b>
-                  <span id="cardStatus">{lastFiled.status}</span>
+                <div class="typebar">
+                  <div class="typing">
+                    <span class="caret">▸</span>
+                    <span class="txt" id="typebar">{stream.prefix}{stream.idle}</span>
+                    <span class="cursor" id="cursor" aria-hidden="true"></span>
+                  </div>
+                  <span class="mic">{hero.mic}</span>
                 </div>
               </div>
-              <span class="card-hint">{hero.cardhint}</span>
+              <div class="cardpanel" id="cardPanel">
+                <div class="card show" id="infoCard">
+                  <div class="ch">
+                    <span class="ct" id="cardType">{lastFiled.type}</span>
+                    <span class:list={['badge', lastFiled.cls]} id="cardBadge">{lastFiled.badge}</span>
+                  </div>
+                  <div class="cbody" id="cardBody">{lastFiled.text}</div>
+                  <div class="fld">
+                    <b>{hero.fType}</b>
+                    <span id="cardTypeV">{lastFiled.type}</span>
+                  </div>
+                  <div class="fld">
+                    <b>{hero.fSource}</b>
+                    <span id="cardSource">{lastFiled.time} · {hero.stream}</span>
+                  </div>
+                  <div class="fld">
+                    <b>{hero.fStatus}</b>
+                    <span id="cardStatus">{lastFiled.status}</span>
+                  </div>
+                </div>
+                <span class="card-hint">{hero.cardhint}</span>
+              </div>
             </div>
           </div>
-          <div class="demo-qa" data-shot="hero-qa">
-            <div class="qa-head">
-              <p class="q">{qa.q}</p>
-              <span class="appwin-ctl">
-                <button type="button" id="qaToggle" aria-pressed="false" aria-controls="qaHits">{hero.pause}</button>
-              </span>
+          <div class="demo-panel" id="panel-qa" role="tabpanel" aria-labelledby="tab-qa" hidden>
+            <div class="demo-qa" data-shot="hero-qa">
+              <div class="qa-layout">
+                <div class="qa-main">
+                  <div class="qa-thread" id="qaThread">
+                    <div class="qa-exchange">
+                      <p class="qa-q" data-fade="1">{qa['1q']}</p>
+                      <p class="qa-a" data-fade="2">{qa['1a']}<span class="cite">{qa['1c']}</span></p>
+                    </div>
+                    <div class="qa-exchange">
+                      <p class="qa-q" data-fade="4">{qa['2q']}</p>
+                      <p class="qa-a" data-fade="5">{qa['2a']}<span class="cite">{qa['2c']}</span></p>
+                    </div>
+                    <div class="qa-exchange">
+                      <p class="qa-q" data-fade="7">{qa['3q']}</p>
+                      <p class="qa-a" data-fade="8">{qa['3a']}<span class="cite">{qa['3c']}</span></p>
+                    </div>
+                    <div class="qa-exchange">
+                      <p class="qa-q" data-fade="10">{qa['4q']}</p>
+                      <p class="qa-a" data-fade="11">{qa['4a']}<span class="cite">{qa['4c']}</span></p>
+                    </div>
+                  </div>
+                  <p class="qa-input" aria-hidden="true"><span class="caret">▸</span><span data-qa-input>{qa.input}</span></p>
+                </div>
+                <aside class="qa-sources" aria-label={qa.sources}>
+                  <h4 class="qa-src-h">{qa.sources}</h4>
+                  <div class="qa-src" data-fade="3">
+                    <div class="qa-src-top"><span>{qa['1k']}</span><span>{qa['1t']}</span></div>
+                    <p>{qa['1b']}</p>
+                  </div>
+                  <div class="qa-src" data-fade="6">
+                    <div class="qa-src-top"><span>{qa['2k']}</span><span>{qa['2t']}</span></div>
+                    <p>{qa['2b']}</p>
+                  </div>
+                  <div class="qa-src" data-fade="9">
+                    <div class="qa-src-top"><span>{qa['3k']}</span><span>{qa['3t']}</span></div>
+                    <p>{qa['3b']}</p>
+                  </div>
+                  <div class="qa-src" data-fade="12">
+                    <div class="qa-src-top"><span>{qa['4k']}</span><span>{qa['4t']}</span></div>
+                    <p>{qa['4b']}</p>
+                  </div>
+                </aside>
+              </div>
             </div>
-            <div class="hits" id="qaHits">
-              <span class="hit" data-fade="1">{qa.h1}</span>
-              <span class="hit" data-fade="2">{qa.h2}</span>
-            </div>
-            <p class="ans">{qa.ans}<span class="cite" data-fade="3">{qa.cite}</span></p>
           </div>
         </div>
       </div>
@@ -133,14 +170,30 @@ const demo = {
        原先叠的 22px 墨点阵随亮色体系删掉——ink 色点压在近黑底上不可见，要留这层质感得另立白色低透令牌。 */
     background: radial-gradient(560px 320px at 12% -8%, var(--glow-hero), transparent 70%);
   }
+  /* 2026-11-04：文字区与演示窗改上下单列；窗内仍是记录流 / 卡片两栏，不受影响。 */
   .hero-grid {
     display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 56px;
-    align-items: center;
+    grid-template-columns: 1fr;
+    gap: 44px;
   }
   .hero .h-title {
     font-size: clamp(38px, 6vw, 62px);
+  }
+  /* 首屏文字区整体居中：标题、扩展描述、两枚按钮一条中线（参考站形态是居中两行 + 下方留白）。 */
+  .hero .hero-copy {
+    text-align: center;
+  }
+  /* .lead 自带 max-width:680px，不补 margin-inline 就把这段居中文字钉在列的左缘 */
+  .hero .lead {
+    margin-inline: auto;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+    align-items: center;
+    justify-content: center;
   }
   /*
    * 主标题的两句是一拍让、一拍重：前半句退到次级墨并轻一档字重，重音整个交给后半句。
@@ -154,29 +207,12 @@ const demo = {
   .hero .h-title .accent {
     color: var(--accent-400);
   }
-  .hero .situation {
-    margin-top: 12px;
-    max-width: 640px;
-    /* §4.1：--text-2 一行、--fs-lead 档；三段中点分隔，不加句号 */
-    font-size: var(--fs-lead);
-    color: var(--text-2);
+  /* 并成一行后，窄屏仍要一行读完一拍：CJK 默认任意汉字间都能断，会把「一个」劈成两半。
+     锁住两拍内部，换行只发生在两句之间（英文的空格也在这里，所以词距不受影响）。 */
+  .hero .h-title .h-lead,
+  .hero .h-title .accent {
+    white-space: nowrap;
   }
-  .hero .guard {
-    margin-top: 14px;
-    max-width: 560px;
-    font-size: 15.5px;
-    color: var(--text-2);
-    border-left: 2px solid var(--accent-fill);
-    padding-left: 14px;
-  }
-  .hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 30px;
-    align-items: center;
-  }
-
   /* ---------- 记录流窗口：首帧即终态，不靠 JS 才成型 ---------- */
   .appwin {
     position: relative;
@@ -186,6 +222,12 @@ const demo = {
     border-radius: 14px;
     background: var(--surface-2);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* 参考 DeepSeek Harness：演示窗最宽 1020，1440 下左右各留 210 */
+    width: 100%;
+    max-width: 1020px;
+    margin-inline: auto;
   }
   .appwin-top {
     display: flex;
@@ -240,10 +282,61 @@ const demo = {
     color: var(--text-1);
     border-color: var(--hair-2);
   }
+  .appwin-ctl button[hidden] {
+    display: none;
+  }
+  /* 两段演示共用一扇窗：tab 条只做切换，不新增一层壳 */
+  .demo-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--hair-1);
+    background: var(--surface-2);
+  }
+  .demo-tabs button {
+    appearance: none;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    line-height: 1;
+    padding: 6px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .demo-tabs button[aria-selected="true"] {
+    color: var(--text-1);
+    background: var(--surface-3);
+    border-color: var(--hair-1);
+  }
+  .demo-tabs button:hover {
+    color: var(--text-1);
+  }
+  .demo-tabs button:focus-visible {
+    outline: 2px solid var(--accent-300);
+    outline-offset: 2px;
+  }
   .appwin-body {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    flex: 1;
+    min-height: 0;
     background: var(--surface-2);
+  }
+  .demo-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .demo-panel[hidden] {
+    display: none;
+  }
+  .demo-panel > .demo-flow,
+  .demo-panel > .demo-qa {
+    flex: 1;
+    min-height: 0;
   }
   .appwin .demo-flow {
     display: grid;
@@ -252,6 +345,9 @@ const demo = {
   .appwin .stream {
     border-right: 1px solid var(--hair-1);
     padding: 18px;
+    /* 固定高度下把输入条压到流底部：新增记录从下方进来，空白留在记录与输入条之间 */
+    display: flex;
+    flex-direction: column;
   }
   .appwin .stream-head {
     font-family: var(--mono);
@@ -418,7 +514,7 @@ const demo = {
     font-size: 13px;
     color: var(--text-2);
     border-top: 1px dashed var(--hair-1);
-    margin-top: 16px;
+    margin-top: auto;
     padding-top: 14px;
   }
   .appwin .typebar .typing {
@@ -527,67 +623,117 @@ const demo = {
     overflow-wrap: anywhere;
   }
   .appwin .card-hint {
+    margin-top: auto;
     font-size: 11.5px;
     color: var(--text-3);
     font-family: var(--mono);
   }
 
-  /* ---------- 问答段：SSR 终态 + 共用驱动；pre 态与演示一同一形状 ---------- */
+  /* ---------- 问答段：左对话、右来源卡；输入框固定在主内容区底部 ---------- */
   .appwin .demo-qa {
-    border-top: 1px solid var(--hair-1);
-    padding: 16px 18px 18px;
-  }
-  .appwin .demo-qa .qa-head {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    flex-direction: column;
+    padding: 0;
   }
-  .appwin .demo-qa .q {
+  .qa-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    height: 100%;
+    min-height: 0;
+  }
+  .qa-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border-right: 1px solid var(--hair-1);
+  }
+  .qa-thread {
     flex: 1;
-    min-width: 0;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-1);
-  }
-  .appwin .demo-qa .hits {
+    min-height: 0;
+    overflow: auto;
+    padding: 16px 18px 10px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 9px;
+    flex-direction: column;
+    gap: 12px;
   }
-  .appwin .demo-qa .hit {
-    position: relative;
-    padding: 3px 8px 3px 16px;
-    font-family: var(--mono);
-    font-size: var(--fs-mono);
-    color: var(--text-2);
-    background: var(--surface-3);
+  .qa-exchange {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .qa-q {
+    align-self: flex-end;
+    max-width: 88%;
+    padding: 7px 10px;
     border: 1px solid var(--hair-1);
-    border-radius: 6px;
-  }
-  /* 装饰点走几何而不是 content 字符：装饰层不占文案叶子，也不给 EN 页添汉字风险。
-     --text-2 压 --surface-3 ≈7.0（--text-3 只 4.19，未过 4.5）。 */
-  .appwin .demo-qa .hit::before {
-    content: "";
-    position: absolute;
-    left: 7px;
-    top: 50%;
-    width: 5px;
-    height: 5px;
-    margin-top: -2.5px;
-    border-radius: 50%;
-    background: var(--accent-400);
-  }
-  .appwin .demo-qa .ans {
-    margin-top: 9px;
+    border-radius: 10px 10px 2px 10px;
+    background: var(--surface-3);
+    color: var(--text-1);
     font-size: 12.5px;
-    color: var(--text-2);
+    line-height: 1.45;
   }
-  .appwin .demo-qa .cite {
+  .qa-a {
+    max-width: 94%;
+    color: var(--text-2);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .qa-a .cite {
     margin-left: 6px;
     font-family: var(--mono);
     font-size: var(--fs-mono);
     color: var(--accent-400);
+    white-space: nowrap;
+  }
+  .qa-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 18px 14px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--hair-1);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text-3);
+  }
+  .qa-input .caret {
+    color: var(--accent-400);
+    flex: none;
+  }
+  .qa-sources {
+    min-height: 0;
+    overflow: auto;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .qa-src-h {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .qa-src {
+    border: 1px solid var(--hair-1);
+    border-radius: 8px;
+    background: var(--surface-3);
+    padding: 8px 10px;
+  }
+  .qa-src-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--accent-400);
+  }
+  .qa-src p {
+    margin-top: 4px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--text-2);
   }
   .js .appwin .demo-qa.demo-running [data-fade] {
     opacity: 0;
@@ -595,6 +741,28 @@ const demo = {
   }
   .js .appwin .demo-qa.demo-running [data-fade].demo-in {
     opacity: 1;
+  }
+  /* 对话是逐句长出来的：未轮到的句子不占位，线程才能从底部持续上推 */
+  .js .appwin .demo-qa.demo-running .qa-q[data-fade],
+  .js .appwin .demo-qa.demo-running .qa-a[data-fade],
+  .js .appwin .demo-qa.demo-running .qa-src[data-fade] {
+    display: none;
+  }
+  .js .appwin .demo-qa.demo-running .qa-q[data-fade].demo-in,
+  .js .appwin .demo-qa.demo-running .qa-a[data-fade].demo-in,
+  .js .appwin .demo-qa.demo-running .qa-src[data-fade].demo-in {
+    display: block;
+    animation: qaIn 0.25s ease;
+  }
+  @keyframes qaIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .js .appwin .srow.living {
@@ -613,26 +781,49 @@ const demo = {
       display: none;
     }
   }
-  @media (max-width: 900px) {
-    .hero-grid {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-  }
   @media (max-width: 640px) {
-    /* 移动端退化：静态流 + 卡片，不参与循环 */
+    /* 移动端退化：日志流只留左侧流，右侧卡片栏整栏隐藏 */
     .appwin .demo-flow {
       grid-template-columns: 1fr;
     }
     .appwin .stream {
       border-right: 0;
-      border-bottom: 1px solid var(--hair-1);
+      border-bottom: 0;
+    }
+    .appwin .cardpanel {
+      display: none;
     }
     .appwin-ctl {
       display: none;
     }
     .hero-actions .btn {
       width: 100%;
+    }
+    /* 两段演示共窗：tab 切换时窗高不跳；600 能装下堆叠后的日志流 */
+    .appwin {
+      height: 600px;
+    }
+    /* 问答窄屏只留主对话：右侧来源栏整栏隐藏；出处仍在每条答案的角标里 */
+    .qa-layout {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
+    .qa-main {
+      border-right: 0;
+      border-bottom: 0;
+    }
+    .qa-sources {
+      display: none;
+    }
+  }
+  /*
+   * 两段演示共用一扇窗：tab 只切面板，窗高固定，切 tab 不推页面。
+   * 高度取 500：日志流 5 行放得下，四组问答的中英对话也刚好不裁。
+   * 移动端 600：堆叠后的日志流更高；切 tab 仍不跳。
+   */
+  @media (min-width: 641px) {
+    .appwin {
+      height: 500px;
     }
   }
 </style>
@@ -711,7 +902,7 @@ const demo = {
       // 回帧要与 SSR 终态逐字一致，否则暂停会停在没有文字的语音条上。
       typebar.textContent = demo.prefix + demo.idle;
       for (const scene of demo.rows) rowsBox.appendChild(rowEl(scene, false));
-      setCard(demo.rows[demo.rows.length - 1]);
+      setCard(demo.rows[demo.rows.length - 1]!);
     };
 
     const showVoice = (scene: Scene) => {
@@ -745,9 +936,10 @@ const demo = {
     };
 
     // 演示一：SSR 已经交出终态（三条记录 + 一张展开卡片），循环只做增量。
+    // watch 用本面板而不是 .hero：切到问答 tab 后 display:none，观察器会把本演示暂停。
     mountDemo({
       root: flowFace,
-      watch: document.querySelector<HTMLElement>('.hero') ?? undefined,
+      watch: flowFace,
       toggle: document.getElementById('streamToggle'),
       labels: { play: demo.play, pause: demo.pause },
       reset: () => renderFrame(),
@@ -774,16 +966,103 @@ const demo = {
       },
     });
 
-    // 演示二：问句 → 命中两条记录 → 角标落回回答。循环演，因为它是首屏的一段演示（NB-8）。
+    // 演示二：四组问答。输入框逐字打出问题，问句落进对话，答句与来源卡随后出现。
+    const qaThread = document.getElementById('qaThread');
+    const qaInput = document.querySelector<HTMLElement>('[data-qa-input]');
+    const qaPlaceholder = qaInput?.textContent ?? '';
+    const exchanges = Array.from(document.querySelectorAll<HTMLElement>('.qa-exchange'));
+    const sources = Array.from(document.querySelectorAll<HTMLElement>('.qa-src'));
+    const scrollQa = () => {
+      if (qaThread) qaThread.scrollTop = qaThread.scrollHeight;
+    };
+    const typeQuestion = (rt: DemoRuntime, text: string, done: () => void) => {
+      if (!qaInput) {
+        done();
+        return;
+      }
+      let i = 0;
+      const step = () => {
+        qaInput.textContent = text.slice(0, i);
+        if (i >= text.length) {
+          done();
+          return;
+        }
+        i += 1;
+        rt.at(24, step);
+      };
+      step();
+    };
     mountDemo({
       root: document.querySelector<HTMLElement>('.demo-qa')!,
       toggle: document.getElementById('qaToggle'),
       labels: { play: demo.play, pause: demo.pause },
+      reset(rt) {
+        rt.none();
+        if (qaInput) qaInput.textContent = qaPlaceholder;
+        if (qaThread) qaThread.scrollTop = 0;
+      },
       run(rt) {
-        const els = rt.fades();
-        els.forEach((el, i) => rt.at(500 + i * 800, () => rt.show(el)));
-        rt.at(500 + els.length * 800 + rt.stepMs + rt.dwellMs, () => rt.loop());
+        const step = (i: number) => {
+          const ex = exchanges[i];
+          if (!ex) {
+            rt.at(2600, () => rt.loop());
+            return;
+          }
+          const qEl = ex.querySelector<HTMLElement>('.qa-q');
+          const aEl = ex.querySelector<HTMLElement>('.qa-a');
+          const src = sources[i];
+          typeQuestion(rt, qEl?.textContent?.trim() ?? '', () => {
+            if (qEl) rt.show(qEl);
+            if (qaInput) qaInput.textContent = qaPlaceholder;
+            scrollQa();
+            rt.at(650, () => {
+              if (aEl) rt.show(aEl);
+              if (src) rt.show(src);
+              scrollQa();
+              rt.at(1900, () => step(i + 1));
+            });
+          });
+        };
+        step(0);
       },
     });
+
+    // 两个 demo 共用一扇窗，tab 只切面板；隐藏面板的交互动效交给观察器暂停。
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.demo-tabs [role="tab"]'));
+    const panelFor = (tab: HTMLButtonElement) =>
+      document.getElementById(tab.getAttribute('aria-controls') || '');
+    const pauseFor: Record<string, HTMLElement | null> = {
+      'tab-flow': document.getElementById('streamToggle'),
+      'tab-qa': document.getElementById('qaToggle'),
+    };
+    const activate = (tab: HTMLButtonElement) => {
+      for (const item of tabs) {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', String(selected));
+        item.tabIndex = selected ? 0 : -1;
+        const panel = panelFor(item);
+        if (panel) panel.hidden = !selected;
+        if (pauseFor[item.id]) pauseFor[item.id]!.hidden = !selected;
+      }
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activate(tab));
+      tab.addEventListener('keydown', (event) => {
+        const key = event.key;
+        if (key !== 'ArrowLeft' && key !== 'ArrowRight' && key !== 'Home' && key !== 'End') return;
+        event.preventDefault();
+        const next =
+          key === 'Home'
+            ? tabs[0]
+            : key === 'End'
+              ? tabs[tabs.length - 1]
+              : tabs[(index + (key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+        if (next) {
+          activate(next);
+          next.focus();
+        }
+      });
+    });
+    activate(tabs[0]!);
   }
 </script>

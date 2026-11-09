@@ -27,8 +27,8 @@
           "en": "To-do"
         },
         "status": {
-          "zh": "已整理 · 可撤回",
-          "en": "Filed · revocable"
+          "zh": "已整理",
+          "en": "Filed"
         }
       },
       {
@@ -48,8 +48,8 @@
           "en": "Competitor update"
         },
         "status": {
-          "zh": "已整理 · 可撤回",
-          "en": "Filed · revocable"
+          "zh": "已整理",
+          "en": "Filed"
         }
       },
       {
@@ -69,8 +69,8 @@
           "en": "Meeting notes"
         },
         "status": {
-          "zh": "已整理 · 可撤回",
-          "en": "Filed · revocable"
+          "zh": "已整理",
+          "en": "Filed"
         }
       }
     ],
@@ -92,8 +92,8 @@
           "en": "Decision"
         },
         "status": {
-          "zh": "已整理 · 可撤回",
-          "en": "Filed · revocable"
+          "zh": "已整理",
+          "en": "Filed"
         },
         "dur": "0:07"
       },
@@ -114,66 +114,130 @@
           "en": "Requirement"
         },
         "status": {
-          "zh": "已整理 · 可撤回",
-          "en": "Filed · revocable"
+          "zh": "已整理",
+          "en": "Filed"
         }
       }
     ]
   },
   "qa": {
-    "q": {
+    "sources": {
+      "zh": "信息来源",
+      "en": "Sources"
+    },
+    "input": {
+      "zh": "问一句，答案带出处",
+      "en": "Ask a question; the answer comes with its source"
+    },
+    "1q": {
       "zh": "「先做桌面」这句，是什么时候定下的？",
       "en": "When did we settle on desktop first?"
     },
-    "h1": {
-      "zh": "决策 · 11:48 · 先做桌面",
-      "en": "Decision · 11:48 · desktop first"
+    "1a": {
+      "zh": "11:48 的决策：先做桌面，移动端下阶段。同一段记录里还有一条 12:05 的导出需求。",
+      "en": "The 11:48 decision: desktop first, mobile next. The same entry also carries a 12:05 export request."
     },
-    "h2": {
-      "zh": "需求 · 12:05 · 导出带图",
-      "en": "Request · 12:05 · exports carry images"
-    },
-    "cite": {
+    "1c": {
       "zh": "出处 · 11:48 决策",
       "en": "source · 11:48 decision"
     },
-    "ans": {
-      "zh": "不用回忆。它带着时间戳回来了。",
-      "en": "No need to remember. It came back with its timestamp."
-    }
-  },
-  "file": {
-    "m1t": {
-      "zh": "待办",
-      "en": "To-do"
+    "1k": {
+      "zh": "决策",
+      "en": "Decision"
     },
-    "m1a": {
-      "zh": "周五前给客户回话：进度 / 风险 / 下周计划",
-      "en": "Reply to the client by Friday: progress / risks / next week"
+    "1t": "11:48",
+    "1b": {
+      "zh": "定了：先做桌面，移动端下阶段",
+      "en": "Desktop first, mobile next"
     },
-    "m1b": {
+    "2q": {
+      "zh": "周报先按什么出？",
+      "en": "What did we settle on for the weekly report?"
+    },
+    "2a": {
+      "zh": "10:26 的评审结论：周报先按模板出，智能化留给下个版本。",
+      "en": "The 10:26 review call: template-based report first; intelligence next release."
+    },
+    "2c": {
+      "zh": "出处 · 10:26 会议纪要",
+      "en": "source · 10:26 meeting notes"
+    },
+    "2k": {
       "zh": "会议纪要",
       "en": "Meeting notes"
     },
-    "m1c": {
-      "zh": "评审结论：周报先模板化，智能化留给下个版本",
-      "en": "Review call: ship the template-based report first, intelligence next release"
+    "2t": "10:26",
+    "2b": {
+      "zh": "评审定了：周报先按模板出",
+      "en": "Settled: template report first"
     },
-    "m1d": {
+    "3q": {
+      "zh": "竞品语音转写有什么动态？",
+      "en": "What's new with the rival's voice transcription?"
+    },
+    "3a": {
+      "zh": "10:02 的竞品动态：竞品上了语音转写，主打会议场景。",
+      "en": "The 10:02 competitor update: a rival shipped voice transcription for meetings."
+    },
+    "3c": {
+      "zh": "出处 · 10:02 竞品动态",
+      "en": "source · 10:02 competitor update"
+    },
+    "3k": {
       "zh": "竞品动态",
       "en": "Competitor update"
     },
-    "m1e": {
-      "zh": "竞品 App 上了语音转写，主打会议场景",
-      "en": "A rival app shipped voice transcription for meeting use cases"
+    "3t": "10:02",
+    "3b": {
+      "zh": "竞品上了语音转写，主打会议",
+      "en": "A rival shipped voice notes for meetings"
     },
-    "link": {
-      "zh": "⌁ 与客户回话互链",
-      "en": "⌁ cross-linked to the client reply"
+    "4q": {
+      "zh": "这周还要回谁？",
+      "en": "Who still needs a reply this week?"
     },
-    "toStream": {
-      "zh": "↓ 已进当日流 · 11:48",
-      "en": "↓ into today's stream · 11:48"
+    "4a": {
+      "zh": "09:41 的待办：周五前给客户回话，带上进度和风险。",
+      "en": "The 09:41 todo: reply to the client by Friday, with progress and risks."
+    },
+    "4c": {
+      "zh": "出处 · 09:41 待办",
+      "en": "source · 09:41 todo"
+    },
+    "4k": {
+      "zh": "待办",
+      "en": "To-do"
+    },
+    "4t": "09:41",
+    "4b": {
+      "zh": "周五前给客户回话：进度与风险",
+      "en": "Reply to the client by Friday: progress and risks"
+    }
+  },
+  "file": {
+    "topic": {
+      "zh": "主题",
+      "en": "Topic"
+    },
+    "root": {
+      "zh": "创作知识",
+      "en": "Creation knowledge"
+    },
+    "concept": {
+      "zh": "概念",
+      "en": "Concept"
+    },
+    "c1": {
+      "zh": "记忆 → 检索",
+      "en": "Memory → retrieval"
+    },
+    "c2": {
+      "zh": "检索 → 引用 → 成品",
+      "en": "Retrieval → citation → finished work"
+    },
+    "c3": {
+      "zh": "本地优先 → 数据主权",
+      "en": "Local-first → data sovereignty"
     }
   },
   "recall": {
@@ -190,12 +254,16 @@
       "en": "The gap is not accuracy — it is the default flow in a meeting."
     },
     "m5b": {
-      "zh": "竞品动态 · 评审结论 · 客户回话",
-      "en": "competitor news · review call · client reply"
+      "zh": "竞品转写 · 识别率对比 · 会议动线",
+      "en": "rival transcription · accuracy comparison · meeting flow"
     },
-    "hit2": {
-      "zh": "数据指标 · 转写平均 42 秒",
-      "en": "Metric · transcription averages 42s"
+    "hit2t": {
+      "zh": "数据指标",
+      "en": "Metric"
+    },
+    "hit2v": {
+      "zh": "转写平均 42 秒",
+      "en": "transcription averages 42s"
     },
     "cite": {
       "zh": "[42 秒 · 本周]",

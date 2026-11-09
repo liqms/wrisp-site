@@ -1,15 +1,14 @@
 ---
 import type { Copy } from '@/lib/copy';
 import { leafKey } from '@/lib/copy';
-import { localePath, localeSegment } from '@/lib/locales';
-import LangSwitch from '@/components/LangSwitch.astro';
+import { localePath } from '@/lib/locales';
 
 interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
 const foot = copy.foot;
-const here = leafKey(Astro.currentLocale);
+const here = leafKey(Astro.currentLocale || '');
 const releases = 'https://github.com/liqms/wrisp-releases';
 ---
 
@@ -18,7 +17,6 @@ const releases = 'https://github.com/liqms/wrisp-releases';
     <span class="foot-brand">◆ Wrisp</span>
     <span>{foot.copy}</span>
     <div class="foot-links">
-      <LangSwitch seg={localeSegment(Astro.url.pathname)} />
       <a href={releases} target="_blank" rel="noopener">{foot.releases}</a>
       <a href={`${releases}/issues`} target="_blank" rel="noopener">{foot.feedback}</a>
       <a href={localePath(here, 'privacy/')}>{foot.privacy}</a>
@@ -42,7 +40,9 @@ const releases = 'https://github.com/liqms/wrisp-releases';
     flex-wrap: wrap;
     gap: 18px;
     align-items: center;
-    justify-content: space-between;
+    /* 2026-11-06 裁决：页脚去掉语言切换后剩余三件（品牌行 / 版权 / 链接组）作为一组居中，
+       不再两端分开；gap 与换行规则不动，窄屏换行后每行同样居中。 */
+    justify-content: center;
   }
   .foot-links {
     display: flex;

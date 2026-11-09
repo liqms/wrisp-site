@@ -1,14 +1,12 @@
 ---
+import WaitlistForm from '@/components/WaitlistForm.astro';
 import type { Copy } from '@/lib/copy';
-import { leafKey } from '@/lib/copy';
-import { localePath } from '@/lib/locales';
 
 interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
 const cta = copy.cta;
-const here = leafKey(Astro.currentLocale);
 ---
 
 <section class="cta" id="next">
@@ -16,7 +14,17 @@ const here = leafKey(Astro.currentLocale);
     <div class="cta-box">
       <h2>{cta.title}</h2>
       <p class="lead">{cta.sub}</p>
-      <p class="cta-priv"><a href={localePath(here, 'privacy/')}>{cta.privacy}</a></p>
+      <WaitlistForm
+        labels={{
+          ph: cta.formph,
+          q: cta.formq,
+          btn: cta.btn,
+          err: cta.formerr,
+          ok: cta.formok,
+          note: cta.formnote,
+          ...copy.form,
+        }}
+      />
       <svg class="cta-ghost" viewBox="0 0 360 200" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
         <rect x="2" y="2" width="356" height="196" rx="16" fill="none" stroke="var(--hair-2)" stroke-width="1.5"/>
         <rect x="18" y="18" width="36" height="140" rx="6" fill="none" stroke="var(--hair-1)"/>
@@ -58,7 +66,8 @@ const here = leafKey(Astro.currentLocale);
   .cta-ghost {
     position: absolute;
     left: 50%;
-    bottom: -44px;
+    /* -44px 时线稿上缘正好压在表单说明那行上；表单加高后把窗口整体下移，只留下半截从面板底缘出血 */
+    bottom: -96px;
     transform: translateX(-50%);
     width: min(360px, 62%);
     pointer-events: none;
@@ -76,17 +85,8 @@ const here = leafKey(Astro.currentLocale);
     color: var(--text-2);
     margin: 14px auto 0;
   }
-  /* relative 浮到 ::before 辉光之上；z-index:1 压过 z-index:0 的 ghost */
-  .cta-box .cta-priv {
-    position: relative;
-    z-index: 1;
-    margin: 26px auto 0;
-    font-size: 13.5px;
-    color: var(--text-2);
-  }
-  .cta-box .cta-priv a {
-    color: var(--accent-300);
-  }
+  /* 2026-11-06 裁决：`.cta-priv`（隐私一行）整件撤下，样式随件删除，勿复加。
+     隐私声明的入口现只剩页脚一枚。 */
   @media (max-width: 760px) {
     .cta-box {
       padding: 44px 22px;

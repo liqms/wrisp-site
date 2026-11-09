@@ -46,7 +46,7 @@ export const checkRefs = (tokens, used) =>
 
 /* ---- 契约表：改这里等于改设计裁决，须同步 spec §5 ---- */
 const TEXT_ON_BG = [
-  { text: '--text-1', bgs: ['--bg', '--surface-1', '--surface-2', '--surface-3', '--band'], min: 4.5 },
+  { text: '--text-1', bgs: ['--bg', '--surface-1', '--surface-2', '--surface-3'], min: 4.5 },
   { text: '--text-2', bgs: ['--bg', '--surface-1', '--surface-2', '--surface-3'], min: 4.5 },
   { text: '--text-3', bgs: ['--bg', '--surface-1', '--surface-2', '--surface-3'], min: 4.5 },
   { text: '--accent-300', bgs: ['--bg', '--surface-1', '--surface-2', '--surface-3'], min: 4.5 },
@@ -215,7 +215,7 @@ if (process.argv.includes('--selftest')) {
   // 契约表本身也要被测到：夹具纯内存，不碰文件，所以 Task 3 前后都恒绿
   const FIX = {
     '--bg': '#0b0d12', '--surface-1': '#12151c', '--surface-2': '#171b23', '--surface-3': '#1e232c',
-    '--band': '#2e609f', '--text-1': '#f2f3f5', '--text-2': '#a6adba', '--text-3': '#7b8496',
+    '--text-1': '#f2f3f5', '--text-2': '#a6adba', '--text-3': '#7b8496',
     '--accent-fill': '#4c5fd5', '--accent-400': '#6d82f5', '--accent-300': '#8fa0ff',
     '--ok': '#4ed17e', '--warn': '#f7ad31', '--err': '#f25a5a',
     '--badge-todo': '#f2a08c', '--badge-todo-bg': '#2a1a16', '--badge-comp': '#6fdba0',

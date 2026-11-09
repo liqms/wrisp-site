@@ -7,7 +7,7 @@ interface Props {
   seg?: string;
 }
 const { seg = '' } = Astro.props;
-const here = leafKey(Astro.currentLocale);
+const here = leafKey(Astro.currentLocale || '');
 /*
  * 显式选择要落到 cookie，而不是 localStorage：边缘层（一个 Worker）读得到请求头里的 cookie，
  * 读不到浏览器存储。path 必须是站点根——首屏请求打的是 '/'，作用域窄了就带不上这份偏好。

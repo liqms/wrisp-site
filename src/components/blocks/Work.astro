@@ -6,12 +6,10 @@ interface Props {
 }
 const { copy } = Astro.props;
 const work = copy.work;
-const road = copy.road;
 ---
 
 <section class="reveal" id="how">
   <div class="wrap">
-    <div class="eyebrow">{work.eyebrow}</div>
     <h2 class="h-2">{work.title}</h2>
     <p class="lead">{work.sub}</p>
     <div class="steps">
@@ -36,51 +34,18 @@ const road = copy.road;
         <p>{work['4b']}</p>
       </div>
     </div>
-    <h3 class="phase-h">{road.title}</h3>
-    <div class="road">
-      <div class="road-row current">
-        <div class="road-rail">
-          <span class="pnode filled"></span>
-          <div class="road-phase"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h5l2 2h11v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>V1</div>
-          <div class="road-sub">{road.v1sub}</div>
-        </div>
-        <div class="road-body">
-          <h3><span>{road.v1t}</span><span class="road-tag now">{road.now}</span></h3>
-          <p>{road.v1b}</p>
-        </div>
-      </div>
-      <div class="road-row">
-        <div class="road-rail">
-          <span class="pnode"></span>
-          <div class="road-phase"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 11l10-4M7 13l10 4"/></svg>V2</div>
-          <div class="road-sub">{road.v2sub}</div>
-        </div>
-        <div class="road-body">
-          <h3>{road.v2t}</h3>
-          <p>{road.v2b}</p>
-        </div>
-      </div>
-      <div class="road-row">
-        <div class="road-rail">
-          <span class="pnode"></span>
-          <div class="road-phase"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>V3</div>
-          <div class="road-sub">{road.v3sub}</div>
-        </div>
-        <div class="road-body">
-          <h3>{road.v3t}</h3>
-          <p>{road.v3b}</p>
-        </div>
-      </div>
-    </div>
-    <p class="phase-pro">{road.pro}</p>
-    <div class="road-note">
-      <span class="pulse"></span>
-      <span>{road.note}</span>
-    </div>
   </div>
 </section>
 
 <style>
+  /* 2026-11-07：路线图卡移出本区，四步之后直接接产物区；区标题与副句居中，步骤正文左对齐。 */
+  .h-2,
+  .lead {
+    text-align: center;
+  }
+  .lead {
+    margin-inline: auto;
+  }
   .steps {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -96,10 +61,9 @@ const road = copy.road;
     content: "";
     position: absolute;
     top: 22px;
-    left: calc(100% - 18px);
-    width: calc(2 * 18px);
+    left: 62px;
+    right: -18px;
     height: 1px;
-    /* 步骤之间的连接线是装饰线，走发丝族 */
     background: var(--hair-2);
   }
   .step .snum {
@@ -107,14 +71,12 @@ const road = copy.road;
     height: 44px;
     border-radius: 50%;
     border: 1px solid var(--hair-2);
-    /* 44px 圆号是凸起点（--surface-1 凹 / --surface-2 卡 / --surface-3 凸） */
     background: var(--surface-3);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-size: 14px;
-    /* 序号是字符，强调档走非正文强调 --accent-400（4.63 压 --surface-3），不是被 §5.3 锁定的 300 */
     color: var(--accent-400);
     margin-bottom: 16px;
   }
@@ -128,9 +90,6 @@ const road = copy.road;
   }
   .step.current .snum {
     background: var(--accent-fill);
-    /* 填充仍是主按钮那一档（本区不再铺交替面，圆号压的是 --bg，实测 3.61，过非文字 3:1）；
-       但这条 1px 描边表达的是「当前步骤」这一状态，按台账通则 3 走 --accent-400，
-       不跟着填充写 --accent-fill。 */
     border-color: var(--accent-400);
     color: var(--text-1);
   }
@@ -142,156 +101,5 @@ const road = copy.road;
     .step:not(:last-child)::after {
       display: none;
     }
-  }
-  .road {
-    position: relative;
-    margin-top: 44px;
-    display: flex;
-    flex-direction: column;
-  }
-  .road-row {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 24px;
-    padding-bottom: 30px;
-    position: relative;
-  }
-  .road-row::before {
-    content: "";
-    position: absolute;
-    left: -1px;
-    top: 6px;
-    bottom: 6px;
-    width: 2px;
-    /* 时间线主轴是装饰线，走发丝族 */
-    background: var(--hair-2);
-  }
-  .road-rail {
-    position: relative;
-    padding-left: 22px;
-  }
-  .road-rail .pnode {
-    position: absolute;
-    left: -6px;
-    top: 4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    /* 未到的节点是凸起小圆点（判面规则：--surface-3 凸） */
-    background: var(--surface-3);
-    border: 2px solid var(--hair-2);
-  }
-  .road-rail .pnode.filled {
-    background: var(--accent-fill);
-    /* 节点边框在此表达「当前阶段」，是状态描边不是填充：走 --accent-400（台账通则 3）。
-       此「当前阶段」的前提是现模板里 .filled 只落在 .current 节点上；SP-2 若加入「已完成但非当前」节点，这条前提失效、注释要重判。 */
-    border-color: var(--accent-400);
-  }
-  .road-row.current .pnode {
-    background: var(--accent-fill);
-    border-color: var(--accent-400);
-    /* 呼吸圈是装饰：旧值 --accent-soft #edf0fb 本就近乎不可见，--glow-strong rgba(76,95,213,.55) 的硬边 5px 圈会把装饰抬成前景，且计划限定它只服务 CTA 径向辉光（唯一消费者）；当前阶段信息已由上方 --accent-400 状态描边承担（通则 3），发丝族仅作装饰（spec §5.4），故此处走 --hair-2 */
-    box-shadow: 0 0 0 5px var(--hair-2);
-  }
-  .road-phase {
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-1);
-    margin-bottom: 2px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .road-phase svg {
-    color: var(--text-3);
-    flex: none;
-  }
-  .road-sub {
-    font-size: 12.5px;
-    color: var(--text-3);
-  }
-  .road-body {
-    border: 1px solid var(--hair-1);
-    border-radius: var(--r-card);
-    background: var(--surface-2);
-    padding: 20px 22px;
-  }
-  .road-row.current .road-body {
-    border-color: var(--accent-400);
-    box-shadow: 0 0 0 3px var(--hair-2);
-  }
-  .road-body h3 {
-    font-size: 17px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .road-tag {
-    font-family: var(--mono);
-    font-size: var(--fs-micro);
-    border-radius: 5px;
-    padding: 2px 8px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .road-tag.now {
-    /* 非徽标的 chip 底按映射表落凸面；11px 的字压 --surface-3 走 --accent-400（4.63 过 AA），
-       --text-3 在此档只有 4.19、--accent-300 又被 spec §5.3 锁定给链接与焦点环 */
-    background: var(--surface-3);
-    color: var(--accent-400);
-  }
-  .road-body p {
-    font-size: 13.5px;
-    color: var(--text-2);
-  }
-  .road-note {
-    display: inline-flex;
-    gap: 8px;
-    align-items: center;
-    margin-top: 34px;
-    font-size: 13.5px;
-    color: var(--text-2);
-    border: 1px solid var(--hair-1);
-    background: var(--surface-2);
-    border-radius: 999px;
-    padding: 8px 16px;
-  }
-  .road-note .pulse {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--ok);
-    animation: pulse 2s ease infinite;
-    flex: none;
-  }
-  @keyframes pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 var(--ok-weak);
-    }
-    50% {
-      box-shadow: 0 0 0 6px transparent;
-    }
-  }
-  @media (max-width: 760px) {
-    .road-row {
-      grid-template-columns: 1fr;
-      gap: 6px;
-      padding-left: 22px;
-    }
-  }
-  .phase-h {
-    margin-top: 72px;
-    font-size: var(--fs-3);
-    color: var(--text-1);
-  }
-  .phase-pro {
-    margin-top: 18px;
-    font-size: 13.5px;
-    color: var(--text-2);
-    max-width: 720px;
   }
 </style>

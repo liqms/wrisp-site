@@ -1,47 +1,43 @@
 {
-  "kicker": {
-    "zh": "01 · 本地优先 · 个人创作 AI",
-    "en": "01 · Local-first · Personal creation AI"
-  },
   "title1": {
     "zh": "今天，你需要",
     "en": "Today, you need"
   },
   "title2": {
-    "zh": "一个创作分身。",
-    "en": "a creation twin."
+    "zh": "一个创作助手",
+    "en": "a creation assistant."
   },
   "sub": {
-    "zh": "说话代替打字，整理交给 AI，数据永远留在你的机器。",
-    "en": "Talk instead of type. AI does the organizing. Your data stays on your machine."
-  },
-  "situation": {
-    "zh": "散落的记录 · 沉底的收藏 · 调不回来的记忆",
-    "en": "scattered notes · sunken saves · memory you can't call back"
-  },
-  "guard": {
-    "zh": "现在能用上的是它的记忆底座：说一句话，它替你记好、整理好、在你写东西时找回来。",
-    "en": "What works today is its memory core: say a line, and it files it, organizes it, and surfaces it when you write."
+    "zh": "随时记录你的想法，并自动整理成卡片；写作时随时调用，并基于卡片创作内容。",
+    "en": "Record your ideas anytime and have them automatically organized into cards. Call on them anytime while writing and create content based on the cards."
   },
   "cta1": {
-    "zh": "怎么拿到",
-    "en": "How to get it"
-  },
-  "cta2": {
-    "zh": "看它怎么工作",
-    "en": "See how it works"
+    "zh": "加入内测",
+    "en": "Join the beta"
   },
   "window": {
-    "zh": "Wrisp · 日志流",
-    "en": "Wrisp · Journal stream"
+    "zh": "Wrisp · 演示",
+    "en": "Wrisp · Demo"
+  },
+  "tabLabel": {
+    "zh": "演示切换",
+    "en": "Demo switcher"
+  },
+  "tabFlow": {
+    "zh": "日志流",
+    "en": "Journal"
+  },
+  "tabQa": {
+    "zh": "问答",
+    "en": "Q&A"
   },
   "stream": {
     "zh": "今天",
     "en": "Today"
   },
   "mic": {
-    "zh": "🎙 也可以直接说",
-    "en": "🎙 or just talk"
+    "zh": "🎙 语音",
+    "en": "🎙 Voice"
   },
   "micLabel": {
     "zh": "口述中",
@@ -52,12 +48,12 @@
     "en": "Dictated"
   },
   "pause": {
-    "zh": "暂停演示",
-    "en": "Pause demo"
+    "zh": "暂停",
+    "en": "Pause"
   },
   "play": {
-    "zh": "播放演示",
-    "en": "Play demo"
+    "zh": "播放",
+    "en": "Play"
   },
   "fType": {
     "zh": "类型",
@@ -72,7 +68,7 @@
     "en": "Status"
   },
   "cardhint": {
-    "zh": "卡片由这条记录直接生成 · 可改写 · 可撤回",
-    "en": "Card generated from this entry · editable · revocable"
+    "zh": "卡片由这条记录直接生成",
+    "en": "Card generated from this entry"
   }
 }

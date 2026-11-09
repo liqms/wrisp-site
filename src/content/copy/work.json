@@ -1,46 +1,42 @@
 {
-  "eyebrow": {
-    "zh": "03 · 工作流",
-    "en": "03 · Workflow"
-  },
   "title": {
-    "zh": "碎片，变成你的知识",
-    "en": "Fragments become your knowledge"
+    "zh": "从记录到信息卡片",
+    "en": "From notes to info cards"
   },
   "sub": {
-    "zh": "一条记录从你嘴里到能召回，走这四步。",
-    "en": "Four steps from something you said to something you can recall."
+    "zh": "说一句、认类型、进日志流、整理成信息卡片",
+    "en": "Say it, identify the type, add it to the journal, file it as an info card. "
   },
   "1t": {
-    "zh": "说或写一句",
-    "en": "Say it or type it"
+    "zh": "自然语言输入",
+    "en": "Natural language input"
   },
   "1b": {
-    "zh": "自然语言进来，不用先想该放哪个文件夹。",
-    "en": "Plain language in — no deciding which folder it belongs to first."
+    "zh": "在记录时，不用想存到哪个文件夹",
+    "en": "Recording time: no folder to pick first."
   },
   "2t": {
-    "zh": "它认类型",
-    "en": "It works out the type"
+    "zh": "自动识别类型",
+    "en": "Type detection"
   },
   "2b": {
-    "zh": "认得清就直接往下走；认不清最多追问两轮，也可以跳过。",
-    "en": "Clear enough, it just proceeds; unclear, at most two quick follow-ups you can skip."
+    "zh": "类型清楚就直接记录，最多追问两轮",
+    "en": "Clear type: it proceeds. Unclear: at most two follow-ups."
   },
   "3t": {
-    "zh": "落进今天的记录流",
-    "en": "It lands in today's stream"
+    "zh": "记录到日志流",
+    "en": "Add to the journal"
   },
   "3b": {
-    "zh": "落下来还能改：改文字、换类型都算数。",
-    "en": "Still yours to fix afterwards: change the text, change the type."
+    "zh": "进入日志流后仍可修改",
+    "en": "Still editable afterwards: change the text or the type."
   },
   "4t": {
-    "zh": "整理成卡片",
-    "en": "Organized into cards"
+    "zh": "生成信息卡片",
+    "en": "Generate a info card"
   },
   "4b": {
-    "zh": "有把握的直接整理好，拿不准的先问你；之后随时能改写、能撤回。",
-    "en": "Confident ones get filed right away, unsure ones ask first — and every one stays editable and revocable."
+    "zh": "有把握的直接整理，拿不准的先问你",
+    "en": "Confident ones are filed directly; unsure ones ask first."
   }
 }

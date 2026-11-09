@@ -1,34 +1,58 @@
 {
-  "eyebrow": {
-    "zh": "02 · 产品特性",
-    "en": "02 · Product features"
-  },
   "title": {
-    "zh": "三件你现在就能核验的事",
-    "en": "Three things you can check today"
+    "zh": "你的记忆属于你",
+    "en": "Your memory is yours"
+  },
+  "sub": {
+    "zh": "本地存储，本地模型，本地计算",
+    "en": "Local storage, local models, local computing."
   },
   "1t": {
-    "zh": "本地笔记还是你的",
-    "en": "Your local notes stay yours"
+    "zh": "隐私优先",
+    "en": "Privacy first"
   },
   "1b": {
-    "zh": "现有目录指进来就能用，Markdown 还是你原来的那些文件；记录与作品都在自己的文件夹里，想走随时原样带走。",
-    "en": "Point it at your folder and go — the Markdown stays your own files. Entries and works live in that folder, ready to take with you as they are."
+    "zh": "识别、整理、检索默认使用本地模型完成；云端只走你填的 Key",
+    "en": "Recognition, organizing and retrieval run on local models by default; cloud only through the key you add."
   },
   "2t": {
+    "zh": "Markdown 文件",
+    "en": "Markdown files"
+  },
+  "2b": {
+    "zh": "在其他工具中打开笔记",
+    "en": "Open your notes in other tools."
+  },
+  "3t": {
+    "zh": "模板",
+    "en": "Templates"
+  },
+  "3b": {
+    "zh": "信息卡片模板和作品模板",
+    "en": "Info card templates and work templates."
+  },
+  "4t": {
     "zh": "Community 免费",
     "en": "Community is free"
   },
-  "2b": {
-    "zh": "当前阶段的能力完整可用；AI 用量走你自己的 Key，模型账单落在你的账户上，不经我们。",
-    "en": "Everything in the current stage is usable; AI usage runs on your own key, billed to your account, never through us."
+  "4b": {
+    "zh": "本地模型免费，不限使用。",
+    "en": "Local models are free, no usage limit."
   },
-  "3t": {
-    "zh": "模板与技能",
-    "en": "Templates and skills"
+  "5t": {
+    "zh": "Windows 与 macOS",
+    "en": "Windows and macOS"
   },
-  "3b": {
-    "zh": "取用别人整理好的结构与能力，装好就能用在你自己的作品里。",
-    "en": "Take a structure or an ability someone else put up, install it, and use it inside your own work."
+  "5b": {
+    "zh": "Linux 在下一阶段。",
+    "en": "Linux is next."
+  },
+  "6t": {
+    "zh": "无需独立显卡",
+    "en": "No dedicated GPU"
+  },
+  "6b": {
+    "zh": "建议配置 16GB 以上内存",
+    "en": "Recommend configuring 16GB or more of memory."
   }
 }

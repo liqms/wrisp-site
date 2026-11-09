@@ -1,24 +1,28 @@
 ---
 import type { Copy } from '@/lib/copy';
+import { leafKey } from '@/lib/copy';
+import { localePath } from '@/lib/locales';
 
 interface Props {
   copy: Copy;
 }
 const { copy } = Astro.props;
 const features = copy.features;
-const cards = ['1', '2', '3'];
+const cards = [1, 2, 3, 4, 5, 6];
+const privacy = localePath(leafKey(Astro.currentLocale || ''), 'privacy/');
+const linkHref = (n: number) => (n === 1 ? privacy : '#faq');
 ---
 
 <section class="reveal">
   <div class="wrap">
-    <div class="eyebrow">{features.eyebrow}</div>
     <h2 class="h-2">{features.title}</h2>
+    <p class="lead">{features.sub}</p>
     <div class="feat-grid">
       {cards.map((n) => (
         <div class="feat-card">
-          <span class="tick" aria-hidden="true">✓</span>
           <h3>{features[`${n}t`]}</h3>
           <p>{features[`${n}b`]}</p>
+          {features[`${n}link`] && <a class="feat-link" href={linkHref(n)}>{features[`${n}link`]}</a>}
         </div>
       ))}
     </div>
@@ -26,34 +30,51 @@ const cards = ['1', '2', '3'];
 </section>
 
 <style>
-  /* §4.2：≥900px 三列并排，以下一行一张——不留「两列 + 一张跨列」那种第三态 */
+  section {
+    text-align: center;
+  }
+  .lead {
+    margin-inline: auto;
+  }
+  /* 六项小卡：640 起两列，900 起三列；卡内文字左对齐，标题仍居中 */
   .feat-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
-    margin-top: 44px;
+    gap: 12px;
+    margin-top: 36px;
   }
   .feat-card {
     border: 1px solid var(--hair-1);
-    border-radius: var(--r-card);
+    border-radius: var(--r-sm);
     background: var(--surface-2);
-    padding: 24px 26px 26px;
+    padding: 16px 18px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-  .feat-card .tick {
-    font-family: var(--mono);
-    font-size: 14px;
-    /* 非正文强调走 --accent-400（--accent-300 被 spec §5.3 锁给链接与焦点环） */
-    color: var(--accent-400);
+    gap: 6px;
+    text-align: left;
   }
   .feat-card h3 {
-    font-size: 17px;
+    font-size: 15px;
   }
   .feat-card p {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.55;
     color: var(--text-2);
+  }
+  .feat-link {
+    margin-top: auto;
+    padding-top: 4px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--accent-300);
+  }
+  .feat-link:hover {
+    color: var(--text-1);
+  }
+  @media (min-width: 640px) {
+    .feat-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
   @media (min-width: 900px) {
     .feat-grid {

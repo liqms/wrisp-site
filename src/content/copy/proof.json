@@ -1,19 +1,19 @@
 {
-  "eyebrow": {
-    "zh": "04 · 你会拿到什么",
-    "en": "04 · What you get"
-  },
   "title": {
-    "zh": "整理是过程，产物才是你能用的东西",
-    "en": "Organizing is the process; the output is what you use"
+    "zh": "从信息卡片到创作",
+    "en": "From info cards to creation"
+  },
+  "sub": {
+    "zh": "从信息卡片生成待办、周报、知识体系、创作空间",
+    "en": "Todos, weekly reports, knowledge system, Creation Space. Four outputs, all generated from your info cards."
   },
   "1t": {
-    "zh": "信息卡片",
-    "en": "Knowledge cards"
+    "zh": "待办清单",
+    "en": "Todo list"
   },
   "1b": {
-    "zh": "待办、会议纪要、竞品动态、用户需求、数据指标、用户故事、决策——七种常见卡片自动归位，随时可改写、可撤回。",
-    "en": "Todo, meeting notes, competitor news, user needs, metrics, user stories, decisions — seven everyday card types filed automatically, always editable and revocable."
+    "zh": "待办从信息卡片生成，勾完自动归档，不用另开清单应用",
+    "en": "Todos come from your info cards and archive themselves when done — no second checklist app."
   },
   "m2a": {
     "zh": "给客户回话（周五）",
@@ -28,12 +28,12 @@
     "en": "Try the rival's new feature"
   },
   "2t": {
-    "zh": "待办清单",
-    "en": "Todo list"
+    "zh": "周报",
+    "en": "Weekly report"
   },
   "2b": {
-    "zh": "待办从记录里长出来，勾完就沉进历史，不用另开一个清单应用。",
-    "en": "Todos grow out of your entries and sink into history once done — no second checklist app."
+    "zh": "按模板把这一周整理成稿，直接使用",
+    "en": "Your template turns the week into a draft you can use as is."
   },
   "m3a": {
     "zh": "本周 · W42",
@@ -64,23 +64,19 @@
     "en": "try the rival's new feature"
   },
   "3t": {
-    "zh": "周报",
-    "en": "Weekly report"
+    "zh": "知识体系",
+    "en": "Knowledge system"
   },
   "3b": {
-    "zh": "按你选的模板把这一周组织成稿，直接拿去发。",
-    "en": "Your template assembles the week into a draft you can send as is."
+    "zh": "自动提取概念和主题，形成可回溯的知识网络",
+    "en": "Extract concepts and themes into a traceable knowledge network."
   },
   "5t": {
     "zh": "创作空间",
     "en": "Creation Space"
   },
   "5b": {
-    "zh": "结构化编辑器，写作时随手把你自己的资料摆到手边。",
-    "en": "A structured editor that keeps your own material within reach while you write."
-  },
-  "band": {
-    "zh": "同一批记录，长成四种你直接能用的东西。",
-    "en": "The same entries, grown into four things you can use directly."
+    "zh": "按作品类型定义空间，创作时随时调用自己的资料",
+    "en": "Define spaces by work type, and call on your own materials anytime while creating."
   }
 }
