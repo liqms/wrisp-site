@@ -120,8 +120,8 @@
     "en": "The app does no usage tracking: no analytics events, no crash uploads. What reaches out is the rows in the table above — there is no other path."
   },
   "n3": {
-    "zh": "表单这一版还没有接通收件服务：你现在填的邮箱不会离开浏览器。等收件通道上线，本页会同步改口，不会悄悄开始收集。",
-    "en": "The form has no receiving service wired up yet: the email you type stays in your browser. When collection goes live, this page gets updated first — it will not start quietly."
+    "zh": "表单已接通内测通知收集：提交的邮箱会存入收集服务，仅用于内测通知，不用于营销。本页随站点同批发布，口径以最新发布版本为准。",
+    "en": "The form is wired to the beta-notice collector: submitted emails are stored for beta notices only, no marketing. This page is built and published with the site; the latest release is authoritative."
   },
   "t3": {
     "zh": "要退订或要求删除",
@@ -132,8 +132,8 @@
     "en": "Every beta notice explains how to leave the list. You can also write to us asking for deletion — the address alone is enough; we don't ask for anything beyond it."
   },
   "d2": {
-    "zh": "收件通道上线前，上面这条针对的是「将来会存到的数据」；现在提交不会产生任何记录。",
-    "en": "Until collection goes live, the sentence above describes data that would be stored; submitting today creates no record at all."
+    "zh": "提交的邮箱会存入收集服务；要退出名单或要求删除，见上一条。",
+    "en": "Submitted emails are stored by the collector; to leave the list or ask for deletion, see above."
   },
   "t4": {
     "zh": "本页的口径从哪来",
