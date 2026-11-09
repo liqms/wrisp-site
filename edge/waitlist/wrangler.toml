@@ -11,10 +11,8 @@ compatibility_date = "2026-10-01"
 binding = "WAITLIST"
 # 这两个 id 由 `wrangler kv namespace create WAITLIST` 生成后填回来；--local 模式下不读它们。
 # 真实 id 是部署秘密，不提交仓库：本地部署时用 --persist-to 的本地模拟即可。
-# id = "REPLACE_WITH_CREATED_NAMESPACE_ID"
-# preview_id = "REPLACE_WITH_CREATED_NAMESPACE_ID"
-id = "865bfe5bfb6f4fac8972df1511c6a3e8"
-preview_id = "865bfe5bfb6f4fac8972df1511c6a3e8"
+id = "REPLACE_WITH_CREATED_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_CREATED_NAMESPACE_ID"
 
 [vars]
 # 只放行站点自己的来源（跨源提交要 CORS 才读得到响应）。换成正式域时在这里加一条。
