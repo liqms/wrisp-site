@@ -31,6 +31,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
+        env:
+          # 等待名单收集端：由仓库 secret 注入，构建期打进静态页。
+          # 未配置时表单保持不可提交态（data-collecting=false），不谎称已加入。
+          PUBLIC_WAITLIST_ENDPOINT: ${{ secrets.PUBLIC_WAITLIST_ENDPOINT }}
         run: pnpm build
 
       - name: Sanity checks
