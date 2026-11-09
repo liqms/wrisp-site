@@ -10,12 +10,13 @@ compatibility_date = "2026-10-01"
 [[kv_namespaces]]
 binding = "WAITLIST"
 # 这两个 id 由 `wrangler kv namespace create WAITLIST` 生成后填回来；--local 模式下不读它们。
+# 真实 id 是部署秘密，不提交仓库：本地部署时用 --persist-to 的本地模拟即可。
 id = "REPLACE_WITH_CREATED_NAMESPACE_ID"
 preview_id = "REPLACE_WITH_CREATED_NAMESPACE_ID"
 
 [vars]
 # 只放行站点自己的来源（跨源提交要 CORS 才读得到响应）。换成正式域时在这里加一条。
-ALLOWED_ORIGINS = "https://liqms.github.io,https://wrisp.io"
+ALLOWED_ORIGINS = "https://liqms.github.io,https://trywrisp.com"
 # 确认信的可选参数；不发信时全部留空即可。发信地址建议用无收件箱的别名，回填会捞到一堆退信。
 WELCOME_FROM = ""
 WELCOME_SUBJECT = ""

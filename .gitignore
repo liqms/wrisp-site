@@ -161,3 +161,6 @@ output/
 
 # 隔离工作区（superpowers worktree 落点，内容绝不入库）
 .worktrees/
+
+.dev.vars*
+!.dev.vars.example

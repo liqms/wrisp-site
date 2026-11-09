@@ -12,9 +12,15 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/gen-seo.mjs",
     "check": "node scripts/check-copy-coverage.mjs && node scripts/check-tokens.mjs && node scripts/check-anchors.mjs",
-    "preview": "astro preview"
+    "preview": "pnpm run build && wrangler dev",
+    "generate-types": "wrangler types",
+    "deploy": "pnpm run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.4.6",
     "astro": "^7.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.158.0"
   }
 }
