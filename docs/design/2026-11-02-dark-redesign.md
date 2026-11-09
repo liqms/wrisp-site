@@ -19,7 +19,7 @@
 |---|---|---|
 | D-1 | 主题形态 | 纯暗色，暗底是唯一形态；亮色纸面体系整体作废 |
 | D-2 | 迁移路线 | 路线 A「先拆后装」：SP-1 令牌 → SP-2 拆区 → SP-3 首屏 → SP-4 演示 → SP-5 收口 |
-| D-3 | 区块骨架 | 12 区收到 8 区，映射见 §6 |
+| D-3 | 区块骨架 | ~~12 区收到 8 区，映射见 §6~~ **已被 2026-11-03 五区结构重定替换**（12→5，见 `docs/design/2026-11-03-five-blocks-design.md` NB-1…NB-3）；§6 的映射表仅作沿革保留 |
 | D-4 | 首要行动 | 下载（V-3：维护者发出内测包），首屏主行动从 `#waitlist` 锚点换成下载胶囊 |
 | D-5 | 主按钮配色 | 填品牌蓝 `--accent-fill`，白字（实测 5.38:1 过 AA）；不照抄参考站的白底幽灵胶囊 |
 | D-6 | 地址来源 | 写死 `releases/latest/download/<固定名>`，不走构建期变量、不构建时拉 API |
@@ -28,7 +28,7 @@
 | D-9 | 字体 | 不加 webfont，Newsreader 700 子集与系统栈保持；只借字号阶梯与字距做法，负字距仅拉丁侧生效 |
 | D-10 | 标题尺度 | 收小：h1 max 44、h2 max 30（原 62 / 58） |
 | D-11 | 窄口留白 | 区块纵向 `clamp(88px, 12vw, 160px)`，窄口收到 88 |
-| D-12 | 演示形态 | 一条三段流水线（§8），不做三个并列面板，不在参考站意义上重绘 App 壳 |
+| D-12 | 演示形态 | ~~一条三段流水线（§8），不做三个并列面板，不在参考站意义上重绘 App 壳~~ **已被 2026-11-03 结构重定替换**：拆成「首屏两段演示 + 产物区两处动效」，见 `docs/design/2026-11-03-five-blocks-design.md` NB-8；§8 的三段契约仅作沿革保留；§8 第 5 条的实现方式已于 2026-11-04 由 `docs/design/2026-11-04-sp4-demo-motion.md` 裁决④改判（动机不变、手段更强：不复制 DOM，`aria-hidden` 下移到装饰性中间帧），§8 的六条硬约束在该件 §6 逐条对账 |
 | D-13 | 等待名单 | 表单彻底移除，`edge/` 收集端一并删除（D-14） |
 | D-14 | 收集端 | **仅** `edge/waitlist/`（worker.js + wrangler.toml + smoke.mjs）、`edge/README.md` 中收集端段落、`.env.example` 的端点变量删除。`edge/router/` 是独立的语言跳转层，27 条冒烟自成一套且 `priv.json` 的 `wrisp_lang` cookie 声明依赖它，**保留** |
 | D-15 | 孤儿叶子 | 删冗余，不留备用（保留等于永久放宽 `check-copy-coverage`） |
@@ -39,8 +39,8 @@
 
 | 前提 | 结论 | 证据 |
 |---|---|---|
-| 存在可下载构建产物 | ❌ 当前零 | `GET /repos/liqms/wrisp-releases/releases` → `[]`；`/tags` → `[]`；repo size 36KB；`resources/` 只有 `manifest.json` 与 model-meta/page/schemas/skills/slash 元数据目录 |
-| `manifest.json` 定义安装包命名 | ❌ 不含 | 该文件 `version 1.0.0`，条目 type 全为内容类（model-meta / page），无二进制资产 |
+| 存在可下载构建产物 | ❌ 当前零 | `GET /repos/liqms/wrisp-releases/releases` → `[]`；`/tags` → `[]`；repo size 36KB；分发仓除元数据目录外没有二进制资产 |
+| 分发仓清单文件定义安装包命名 | ❌ 不含 | 其清单文件 `version 1.0.0`，条目 type 全为内容类（模型元数据 / 页面类），无二进制资产 |
 | 文案支持「有下载」 | ❌ 反向 | `src/content/copy/road.json:51`「现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱」；`faq.json:56`「haven't published a date」 |
 | 页脚 releases 链接有去处 | ⚠️ 指向空仓 | `src/components/blocks/SiteFooter.astro:14,23` 指向 `liqms/wrisp-releases`，release 列表当前为空 |
 | 等待名单通道已接通 | ❌ 未部署 | `src/components/WaitlistForm.astro:30-31` 由 `PUBLIC_WAITLIST_ENDPOINT` 决定；`.env.example` 该值为空 |
@@ -51,6 +51,8 @@
 | 该冲突是否已暴露 | ❌ 未暴露 | `origin/main` 停在 fde4ac3（2026-10-23），本地 main 领先 15 个提交；唯一一次 Workflow 运行是 2026-10-22 的 success。**下一次推送会在 Sanity checks 直接变红** |
 
 **外部依赖（阻塞 SP-3 上线，不由本仓完成）**：维护者向 `wrisp-releases` 发出第一个 release，且资产名严格等于 D-7 的三个固定名。`releases/latest` 在没有任何 release 时同样 404，因此 **SP-3 不得在包发出前合入 `main`**——这是顺序约束，不设「未发布」视觉态。
+
+> **2026-11-03 更正注（两处）**：① 上表第 42 / 43 行的证据列原写有应用本仓的内部目录与清单文件名，属公共仓不应承载的内部指涉，已改写为「分发仓 / 其清单文件」的类别表述——**结论与判定不变，只是把内部结构从证据里撤走**；② 本文件与 SP-1 plan 已从 `.superpowers/` 搬入 `docs/design/`（`.superpowers/` 只剩被忽略的 SDD 台账目录），`src/styles/tokens.css:4` 的路径指涉同批更新。
 
 ## 4. 子项目切分与顺序
 
@@ -72,7 +74,7 @@
 | `--surface-1` | `#12151c` | .0075 | 卡内凹面、band |
 | `--surface-2` | `#171b23` | .0109 | 卡片、演示面板 |
 | `--surface-3` | `#1e232c` | — | 抬升面板、输入底 |
-| `--band` | `#2e609f` | — | 新 08 区收束带，全站唯一一次换底色 |
+| `--band` | `#2e609f` | — | 新 08 区收束带，全站唯一一次换底色（**2026-11-06 已退役**：收束带整件删除，令牌定义与 `check-tokens.mjs` 契约表、夹具各一处同批撤，`tokens=63 → 62`；详见 `2026-11-03-five-blocks-design.md` NB-7 同日裁决） |
 
 层次只靠面与底的亮度差，不引入投影。
 
@@ -131,7 +133,7 @@
 | 新区 | 名称 | 来源 |
 |---|---|---|
 | 01 | 首屏 | Hero（保留主标题两拍 f7e4ecb 与语音演示） |
-| 02 | 我是 Wrisp | 新增，吸收 `hero.guard` 与 Diff 的判断权论述 |
+| 02 | 我是 Wrisp | 新增，吸收 `hero.guard` 与 Diff 的判断权论述（**2026-11-06 补**：`hero.guard` 这枚叶子已随首屏并行删除，它承载的「当下能用上的是记忆底座」口径现住在合并后的 `hero.sub` 后半句；吸收的对象是口径不是叶子名） |
 | 03 | 为什么是它 | Pain（散落/沉不下/用不出）+ Diff |
 | 04 | 它怎么工作，你会拿到什么 | Work + Import + Proofs（SP-4 流水线落此） |
 | 05 | 你是谁 | Persona 原样（49b60d6 不动） |
@@ -141,9 +143,11 @@
 
 `SiteNav.chapters` 由 11 条改为 8 条，Faq 自此有目录项。1e6550c「03 区后半句上强调色」重定位到新 03 的后半句。
 
-同批移除：`WaitlistForm.astro`、`global.css:295-345` 的 `.waitlist` 一族、`Cta.astro` 表单挂载、`cta.json` 与 `form.json` 全部叶子、`Hero.astro:38` / `SiteNav.astro:25,47` / `Privacy.astro:30` 四处 `#waitlist` 锚点、`edge/waitlist/`（保留 `edge/router/`）、`.env.example`、README 与 `edge/README.md` 中的收集端段落。
+同批移除：`WaitlistForm.astro`、`global.css:295-345` 的 `.waitlist` 一族、`Cta.astro` 表单挂载、`cta.json` 与 `form.json` 全部叶子、`Hero.astro:38` / `SiteNav.astro:25,47` / `Privacy.astro:30` 四处 `#waitlist` 锚点、`edge/waitlist/`（保留 `edge/router/`）、`.env.example`、README 与 `edge/README.md` 中的收集端段落。（**2026-11-06 事实核对**：这一段只执行到前端件——`0800c2c` 的改动面就是 `WaitlistForm.astro` + `Cta.astro` + `cta.json` + `form.json` + `global.css` 五个文件；`edge/waitlist/`、`.env.example`、README `:25/:26/:61` 与 `edge/README.md` 的收集端段落**从未被删过**（`git log --diff-filter=D` 对这三处零命中）。锚点四处则确实改口 `#next`。）
 
-序号纪律：chapters + 各区 eyebrow + 维护者侧清单三处必须同号（README 明写）。
+**2026-11-06 维护者裁决：D-13 / D-14 的「表单彻底移除」局部重开**——「怎么拿到」改口「加入内测」后邮箱要有去处，故表单挂回 05 区 CTA 面板，端点留空保持不可提交态（细则与实测见 `2026-11-03-five-blocks-design.md` §4.1 同日更正）。上面那段移除清单里被执行的那一半据此作废；正因 `edge/waitlist/` 与 `.env.example` 原样在位，恢复只动了五个前端文件。
+
+序号纪律：chapters + 各区 eyebrow + 维护者侧清单三处必须同号（README 明写）。（**2026-11-04 维护者裁决：首页各区 eyebrow 已全部移除，此条收窄为维护者侧清单与设计文档内编号。**）
 
 ## 7. SP-3 首屏与下载机关
 
@@ -198,7 +202,7 @@ SP-1 的暗色翻转单独成 commit，不混内容改动，便于一次 `git re
 
 以下口径在本次重设计裁决后**作废**，实施时须在原位置留下显式改写而非静默删除：
 
-1. `road.json:51`「现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱」→ 作废；新口径：首屏有下载，平台 macOS/Windows，2026-11-02 裁决。
+1. `road.json:51`「现在还在内测迭代，所以这一页没有下载按钮——先留个邮箱」→ 作废；新口径：首屏有下载，平台 macOS/Windows，2026-11-02 裁决。（**2026-11-06 终态**：该句先按「邮箱彻底移除」改写为「…；就绪时会在这里公布」，同日第二批裁决连叶子带 `.road-note` 整件删除，本行指向的 `road.json:51` 已不存在。口径未丢，现由 `cta.json:7`、`faq.json:51` 两处承担；本行留作历史证据，不再是需要执行的改写项。）
 2. `faq.json:56`「haven't published a date / Join the waitlist」→ 作废改写为下载说明。
 3. `priv.json:7` docDesc 尾句「表单邮箱只在你主动提交时」→ 删除该从句，离开本机的路径清单减一项。
 4. `priv.json:74-76` 第 5 条路径 `5b`（表单邮箱与那句「现在最挡着你的一件事」）→ 整条撤销。
@@ -206,6 +210,8 @@ SP-1 的暗色翻转单独成 commit，不混内容改动，便于一次 `git re
 6. `cta.json` 全部叶子、`form.json` 整档 → 删除（D-15）。
 7. `Home.astro:26` JSON-LD `operatingSystem: "Windows, macOS, Linux"` → 改两平台（D-8）。
 8. 8ec8be2「首屏撤下未接通的等待名单表单」→ 本次是其延伸：连 11 区表单一起撤，不与之冲突。
+
+**2026-11-06 更正**：上面第 3、4、5、6 条**一条都没执行过**，且前提已随表单挂回而消失——`priv.json` 的 `docDesc` 尾句「表单邮箱只在你主动提交时」、第 5 条路径 `5b/5s`（由 `Privacy.astro:20` 渲染）、`n3`「表单这一版还没有接通收件服务…」（由 `Privacy.astro:70` 渲染）三处原样在位且**现在重新算数**：表单确实存在、端点确实没配、填不出去的邮箱确实不出浏览器。第 6 条只执行到 `cta.json` 的六枚表单叶子与 `form.json` 整档（`0800c2c`），两者已于同日恢复。因此本清单里与「表单/名单」相关的四条整体作废，隐私页无需任何补写——它一直是按有表单的口径写的。
 
 ## 13. 不照搬清单
 

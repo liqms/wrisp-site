@@ -8,7 +8,7 @@
 
 **Tech Stack:** Astro 7（`^7.0.0`，唯一运行时依赖）、Node `>=22.23.4`、pnpm `11.0.9`、纯 CSS 自定义属性、GitHub Actions（`.github/workflows/deploy.yml`）。无测试框架：校验脚本沿用 `edge/router/smoke.mjs` 的 `check(name, pass, detail)` 收集 + `✓/✗` 打印 + 非零退出这一套进程内断言风格。
 
-**Spec:** [.superpowers/specs/2026-11-02-wrisp-site-dark-redesign-design.md](../specs/2026-11-02-wrisp-site-dark-redesign-design.md) —— 本计划实现其 §5（令牌契约）、§10（验收与机检）、§11（边界与错误处理）、§3 里 CI webfont 守卫那条。**先读 §2 的 15 条裁决**，任务里出现的每个数值都来自那里。
+**Spec:** [docs/design/2026-11-02-dark-redesign.md](../../docs/design/2026-11-02-dark-redesign.md) —— 本计划实现其 §5（令牌契约）、§10（验收与机检）、§11（边界与错误处理）、§3 里 CI webfont 守卫那条。**先读 §2 的 15 条裁决**，任务里出现的每个数值都来自那里。（本文件是**过程件**，按 2026-11-03 口径不落 `docs/`；定稿方案才进 `docs/design/`。）
 
 ## Global Constraints
 
@@ -509,7 +509,7 @@ process.exit(miss.length?1:0);
 /*
  * 设计令牌：蓝调暗底 + 三档面 + 单一品牌蓝。
  * 颜色一律走这里，组件不得写死十六进制——这条现在由 scripts/check-tokens.mjs 在 CI 里拦。
- * 数值改动须同步 .superpowers/specs/2026-11-02-wrisp-site-dark-redesign-design.md 的 §5。
+ * 数值改动须同步 docs/design/2026-11-02-dark-redesign.md 的 §5。
  */
 :root {
   /* 底与面：层次只靠面与底的亮度差，不引入投影 */
@@ -1304,7 +1304,7 @@ git switch main
 git merge --squash feat/sp1-dark-tokens
 git commit -m "feat(theme): 全站令牌层翻成蓝调暗色（SP-1）
 
-按 .superpowers/specs/2026-11-02-wrisp-site-dark-redesign-design.md 的 §5 落地：
+按 docs/design/2026-11-02-dark-redesign.md 的 §5 落地：
 底与三档面、文字三档实色、强调色拆填充与文字两族、字阶 20 档收到 7 档加两地板、
 间距 11 档、圆角四级并让交互件走胶囊、reveal 40px、打印回亮色。
 
