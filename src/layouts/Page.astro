@@ -39,6 +39,8 @@ const canonical = Astro.url.href;
 const bingVerification = '279497BAB24BC3ED00FEAFFACDF54F4A';
 // 百度站长验证：同 Bing，公开验证码，随页面发布。
 const baiduVerification = 'codeva-pkFWCLrDI7';
+// Google 站长验证：同 Bing，公开验证码，随页面发布。
+const googleVerification = 'A7q12b8I9qYF32rRLSVxcoMwzsyeLQ3x4VXawBEfVPc';
 /*
  * hreflang 只认绝对地址：相对值在分享卡片与爬虫里都无法解析。
  * 每页把自己这一族的两种语言写全（含自己），互指成对才成立；x-default 落在无前缀的英文侧。
@@ -61,6 +63,7 @@ const alternates: { lang: string; href: string }[] = [
     <meta name="theme-color" content="#0b0d12" />
     <meta name="msvalidate.01" content={bingVerification} />
     <meta name="baidu-site-verification" content={baiduVerification} />
+    <meta name="google-site-verification" content={googleVerification} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     <meta property="og:type" content="website" />
