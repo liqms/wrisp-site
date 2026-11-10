@@ -37,6 +37,8 @@ const fontFace = `@font-face{font-family:'Newsreader';font-style:normal;font-wei
 const canonical = Astro.url.href;
 // Bing 站长验证：meta 验证码属站点公开信息，随页面发布；四页共用此布局即全部覆盖。
 const bingVerification = '279497BAB24BC3ED00FEAFFACDF54F4A';
+// 百度站长验证：同 Bing，公开验证码，随页面发布。
+const baiduVerification = 'codeva-pkFWCLrDI7';
 /*
  * hreflang 只认绝对地址：相对值在分享卡片与爬虫里都无法解析。
  * 每页把自己这一族的两种语言写全（含自己），互指成对才成立；x-default 落在无前缀的英文侧。
@@ -58,6 +60,7 @@ const alternates: { lang: string; href: string }[] = [
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0b0d12" />
     <meta name="msvalidate.01" content={bingVerification} />
+    <meta name="baidu-site-verification" content={baiduVerification} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     <meta property="og:type" content="website" />
