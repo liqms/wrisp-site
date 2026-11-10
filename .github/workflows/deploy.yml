@@ -49,9 +49,9 @@ jobs:
             # 资产路径不得上跳站点根
             if grep -nE '(src|href|content)="[^"]*\.\./' "$f"; then
               echo "::error::$f escapes the site root"; exit 1; fi
-            # base 前缀只能出现一次（手工拼 URL 的回归风险）
-            if grep -n '/wrisp-site/wrisp-site/' "$f"; then
-              echo "::error::$f has a doubled base path"; exit 1; fi
+            # 自定义域名下 base 为根：页面不得再出现 /wrisp-site/ 前缀（手工拼 URL 的回归风险）
+            if grep -n '/wrisp-site/' "$f"; then
+              echo "::error::$f still carries the old /wrisp-site/ base prefix"; exit 1; fi
             # 写在模板里的说明注释会随 HTML 一起发给访问者（也顺带说明实现细节）：产物不留注释
             # 页面是单行压缩 HTML，用 -o 只摘注释片段，别把整页打进 CI 日志
             if hits=$(grep -o '<!--[^>]\{0,60\}' "$f"); then
@@ -76,7 +76,7 @@ jobs:
               if [[ -e "dist/${base}" || -e "dist/${base}/index.html" ]]; then continue; fi
               echo "::error::${page} links to /${target}, which is not in dist"
               exit 1
-            done < <(grep -o 'href="/wrisp-site/[^"#]*' "$page" | sed 's|href="/wrisp-site/||' | sort -u)
+            done < <(grep -o 'href="/[^"#]*' "$page" | sed 's|href="/||' | sort -u)
           done
           # 自托管子集只许 Newsreader 700 这一份：四个页面各发一次、规则只许一条、来源必须是站内 /assets。
           # 两个 grep 在无匹配时退出 1；这一步开着 pipefail，所以显式 || true，
@@ -89,7 +89,7 @@ jobs:
             echo "::error::html carries @font-face but the rule shape matched nothing - output format changed, update this guard"; exit 1; fi
           if [[ $(printf '%s\n' "$faces" | wc -l) -ne 1 ]]; then
             echo "::error::expected exactly one @font-face rule, found $(printf '%s\n' "$faces" | wc -l): ${faces//$'\n'/, }"; exit 1; fi
-          if [[ "$faces" != *"font-family:'Newsreader'"* || "$faces" != *"font-weight:700"* || "$faces" != *"src:url('/wrisp-site/assets/newsreader-700-latin.woff2')"* ]]; then
+          if [[ "$faces" != *"font-family:'Newsreader'"* || "$faces" != *"font-weight:700"* || "$faces" != *"src:url('/assets/newsreader-700-latin.woff2')"* ]]; then
             echo "::error::@font-face is not the sanctioned Newsreader 700 subset: ${faces//$'\n'/, }"; exit 1; fi
           if grep -rq '@font-face' dist --include='*.css'; then
             echo "::error::@font-face leaked into a css bundle; it must stay inline in html"; exit 1; fi

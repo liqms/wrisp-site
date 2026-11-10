@@ -1,9 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// GitHub Pages 项目站：仓库名即路径前缀，二者必须同步，否则 canonical/og:url 会指错。
-const SITE = 'https://liqms.github.io/wrisp-site/';
-const BASE = '/wrisp-site/';
+// 站点已绑定自定义域名 www.trywrisp.com：资源路径以根为准，base 为空串。
+const SITE = 'https://www.trywrisp.com/';
+const BASE = '/';
 
 export default defineConfig({
   site: SITE,

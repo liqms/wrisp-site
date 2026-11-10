@@ -15,8 +15,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(root, 'dist');
-// 与 astro.config.mjs 的 BASE 同值；改 base 必须同改这里，否则跨页锚点全被当成站外。
-const BASE = '/wrisp-site/';
+// 与 astro.config.mjs 的 BASE 同值；站点绑定自定义域名后 base 为根路径。
+const BASE = '/';
 
 // spec §6：改完后站内 href="#…" 的取值集合收敛为这五个。
 export const ALLOWED = ['top', 'how', 'proofs', 'faq', 'next'];
@@ -55,8 +55,8 @@ export const hrefsIn = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) =
 
 /**
  * 把一条 href 拆成「哪一页的哪个锚点」。
- * 三种在用的形态：`#how`（同页）、`/wrisp-site/zh/#next`（跨语言首页）、
- * `/wrisp-site/#next`（首页）；其余带 `#` 的一律视为站外，不断链。
+ * 三种在用的形态：`#how`（同页）、`/zh/#next`（跨语言首页）、
+ * `/#next`（首页）；其余带 `#` 的一律视为站外，不断链。
  * `href="#"` 不在此拦——CI 的占位死链守卫已经盯着它，重复断言只会多一处漂移点。
  */
 export const resolveAnchor = (href) => {
@@ -140,15 +140,15 @@ const check = (name, pass, detail) => {
 
 if (process.argv.includes('--selftest')) {
   check('裸锚点算同页', resolveAnchor('#how')?.page === '.', resolveAnchor('#how'));
-  check('首页带 base 的锚点也归同页', resolveAnchor('/wrisp-site/#next')?.page === '.', resolveAnchor('/wrisp-site/#next'));
-  check('中文首页的锚点解析到 zh', resolveAnchor('/wrisp-site/zh/#next')?.page === 'zh', resolveAnchor('/wrisp-site/zh/#next'));
+  check('首页带 base 的锚点也归同页', resolveAnchor('/#next')?.page === '.', resolveAnchor('/#next'));
+  check('中文首页的锚点解析到 zh', resolveAnchor('/zh/#next')?.page === 'zh', resolveAnchor('/zh/#next'));
   check('站外带 # 的链接不参与断链判断', resolveAnchor('https://example.com/a#b') === null, resolveAnchor('https://example.com/a#b'));
-  check('没有 # 的链接返回 null', resolveAnchor('/wrisp-site/privacy/') === null, null);
+  check('没有 # 的链接返回 null', resolveAnchor('/privacy/') === null, null);
   check('空锚点交给 CI 的死链守卫', resolveAnchor('#') === null, null);
 
   const OK = [
-    { at: 'index.html', html: '<main id="top"><a href="#how">x</a><a href="/wrisp-site/zh/#next">y</a></main><section id="how"></section><section id="proofs"></section><section id="faq"></section><section id="next"></section>' },
-    { at: 'zh/index.html', html: '<main id="top"></main><section id="how"></section><section id="proofs"></section><section id="faq"></section><section id="next"></section><a href="/wrisp-site/zh/#next">z</a>' },
+    { at: 'index.html', html: '<main id="top"><a href="#how">x</a><a href="/zh/#next">y</a></main><section id="how"></section><section id="proofs"></section><section id="faq"></section><section id="next"></section>' },
+    { at: 'zh/index.html', html: '<main id="top"></main><section id="how"></section><section id="proofs"></section><section id="faq"></section><section id="next"></section><a href="/zh/#next">z</a>' },
   ];
   check('双语首页锚点齐全 → 零失败', checkAnchors(OK).length === 0, checkAnchors(OK));
   // 负用例必须逐条证伪：少了这三格，上面那句「零失败」可能只是断言没咬住。

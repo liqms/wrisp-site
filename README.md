@@ -9,7 +9,7 @@ Wrisp 是一款本地优先的创作助手：Markdown 存在你自己的目录�
 
 ## 线上地址
 
-<https://liqms.github.io/wrisp-site/>
+<https://www.trywrisp.com/>
 
 ## 目录
 
