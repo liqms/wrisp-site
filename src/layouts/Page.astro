@@ -35,6 +35,8 @@ const displayFont = new URL(asset('newsreader-700-latin.woff2')).pathname;
  */
 const fontFace = `@font-face{font-family:'Newsreader';font-style:normal;font-weight:700;font-display:swap;src:url('${displayFont}') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}`;
 const canonical = Astro.url.href;
+// Bing 站长验证：meta 验证码属站点公开信息，随页面发布；四页共用此布局即全部覆盖。
+const bingVerification = '279497BAB24BC3ED00FEAFFACDF54F4A';
 /*
  * hreflang 只认绝对地址：相对值在分享卡片与爬虫里都无法解析。
  * 每页把自己这一族的两种语言写全（含自己），互指成对才成立；x-default 落在无前缀的英文侧。
@@ -55,6 +57,7 @@ const alternates: { lang: string; href: string }[] = [
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0b0d12" />
+    <meta name="msvalidate.01" content={bingVerification} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     <meta property="og:type" content="website" />
