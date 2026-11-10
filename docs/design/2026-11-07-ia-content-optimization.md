@@ -26,6 +26,7 @@
 - **产物区**：四卡改为待办、周报、知识体系、创作空间；知识体系卡用「主题 / 概念」节点与箭头示意概念关联（创作知识：记忆→检索、检索→引用→成品；本地优先→数据主权）。`data-shot` 的 `info-cards` 改为 `knowledge`，`check-anchors` 的取景清单同步。四卡 mock 区在 ≥761px 统一 224px 高，并用 subgrid 两行对齐；创作空间卡的两行示例值用 subgrid 共用标签列。
 - **FAQ**：六问改七问，补闭源信任、差异、平台；Q1 加隐私页链接；区标题居中。
 - **文案风格**：按 DeepSeek Harness 的直白结构做了一轮描述层收敛（H1 与 CTA 主句保留），规则见 §5.8。
+- **统计（2026-11-10）**：接 Cloudflare Web Analytics——`Page.astro` 以 `PUBLIC_CF_WEB_ANALYTICS_TOKEN` 条件注入 beacon，未配置不渲染；隐私页 `n1/n2` 改口为「仅页面级聚合访问统计、无 cookie、不追踪个人」。GA 方案因大陆可达性放弃。
 - **文档与注释**：`.env.example`、README、`edge/README.md` 的过期「收集通道尚未开通」说明已改。
 
 验收（2026-11-07）：
