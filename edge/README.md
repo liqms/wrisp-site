@@ -100,6 +100,20 @@ Workers KV 免费档每天 1000 次写。没有门槛的话，一个脚本就能
 
 ## 跳转层 router/
 
+**2026-11-11 更新：本站点路由层已用 Cloudflare Redirect Rules 实现并上线**（`www.trywrisp.com`，3 条规则）：
+
+| 规则 | 匹配 | 动作 |
+|---|---|---|
+| 1 | `path == "/"` 且 cookie 含 `wrisp_lang=zh` | 302 → `/zh/` |
+| 2 | `path == "/zh/"` 且 cookie 含 `wrisp_lang=en` | 302 → `/` |
+| 3 | `path == "/"`、无 cookie、语言头含 `zh` | 302 → `/zh/` |
+
+免费计划限制：不能用 `matches`/`starts_with` 运算符（需 Business / WAF Advanced），也不能用 `cf.ipcountry` 字段，所以语言猜测用 `contains`、国家规则放弃。cookie 优先、只发 302、只动两个根路径，与下方 worker.js 的判定表一致；查询串保留。
+
+本目录的 `worker.js` 保留作**参考实现**（判定表、透传头白名单、smoke 测试），当前架构（内容源 = Pages 自定义域本身）下部署 Worker 会产生自引用循环，不再需要。
+
+### 历史设计（供参考）
+
 **它只做一件事**：访客落到站点根（`/` 或 `/zh/`）时，决定要不要把他送到另一版，其余一概不碰。
 
 判定顺序（三条铁律的出处在方案文档，这里只写行为）：

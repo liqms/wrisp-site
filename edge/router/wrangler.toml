@@ -1,10 +1,11 @@
 # 边缘路由层的配置。
 #
-# 【这一层挂在哪里】Worker 只能挡在它自己的域名前面，而 github.io 不是你的域名——
-# 所以只要站点还托管在 https://liqms.github.io/wrisp-site/ ，这个 Worker 就没有地方上线。
-# 它要等最终国际域（Cloudflare DNS + 一条指向 Pages 的记录）定下来之后才谈部署；
-# 原因与届时要改的几处写在 edge/README.md 的「跳转层 router/」一节。
-# 现在能做的只有两件事：代码写完（worker.js）+ 进程内验通（smoke.mjs，27 条）。
+# 【这一层还挂不挂】2026-11-11 起路由层改用 Cloudflare Redirect Rules 实现并上线
+# （www.trywrisp.com，3 条规则见 edge/README.md「跳转层 router/」），本站点的 Worker
+# 不再需要部署——内容源就是 Pages 自定义域本身，Worker 挡在前面会自引用循环。
+# 本文件与 worker.js 保留作参考实现（判定表 / 透传头白名单 / smoke.mjs 27 条）。
+#
+# 若未来要把入口与内容源拆开（例如裸域入口 + 子路径内容源），按下面的模板恢复部署。
 
 name = "wrisp-router"
 main = "worker.js"
