@@ -1,0 +1,114 @@
+---
+import type { Copy } from '@/lib/copy';
+import { leafKey } from '@/lib/copy';
+
+interface Props {
+  copy: Copy;
+}
+
+const { copy } = Astro.props;
+const press = copy.press;
+const key = leafKey(Astro.currentLocale || '');
+
+/*
+ * 一条资讯一种语言：中文页只取 lang=zh 的条目，英文页只取 lang=en 的条目。
+ * 条目形状：{ lang: 'zh' | 'en', outlet, title, date: 'YYYY-MM', url }。
+ * outlet/title/date/url 是纯标量，不是双语叶子——不要给它们起 zh/en 键名，
+ * content.config.ts 会把那种对象当双语叶子校验，缺一侧直接构建失败。
+ */
+const items = (press.items ?? [])
+  .filter((item: { lang: string }) => item.lang === key)
+  .sort((a: { date?: string }, b: { date?: string }) =>
+    String(b.date ?? '').localeCompare(String(a.date ?? '')),
+  );
+---
+
+<section class="reveal" id="press">
+  <div class="wrap">
+    <h2 class="h-2">{press.title}</h2>
+    <p class="lead">{press.sub}</p>
+    {
+      items.length > 0 && (
+        <div class="press-list">
+          {items.map((item: any) => (
+            /* 没有 url 的条目（纸质报道）退回成不可点的行，不造死链 */
+            <a
+              class="press-item"
+              href={item.url || undefined}
+              target={item.url ? '_blank' : undefined}
+              rel={item.url ? 'noopener' : undefined}
+            >
+              <span class="p-date mono">{item.date}</span>
+              <span class="p-outlet mono">{item.outlet}</span>
+              <span class="p-title">{item.title}</span>
+              <span class="p-arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  /* 与 03/04 区同一刀法：只居中区标题与副句，列表行左对齐 */
+  section {
+    text-align: center;
+  }
+  .lead {
+    margin-inline: auto;
+  }
+  .press-list {
+    margin-top: 40px;
+    border-top: 1px solid var(--hair-1);
+    text-align: left;
+  }
+  .press-item {
+    display: grid;
+    grid-template-columns: 96px 170px 1fr 20px;
+    grid-template-areas: 'date outlet title arrow';
+    column-gap: 20px;
+    align-items: baseline;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--hair-1);
+    color: var(--text-2);
+  }
+  .p-date {
+    grid-area: date;
+    font-size: var(--fs-xs);
+    color: var(--text-3);
+  }
+  .p-outlet {
+    grid-area: outlet;
+    font-size: var(--fs-xs);
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+  .p-title {
+    grid-area: title;
+    font-size: var(--fs-sm);
+    color: var(--text-2);
+    transition: color 0.15s;
+  }
+  .p-arrow {
+    grid-area: arrow;
+    color: var(--text-3);
+    text-align: right;
+  }
+  /* 只有带 url 的条目才是链接，悬停反馈也只给它们 */
+  .press-item[href]:hover {
+    color: var(--text-1);
+  }
+  .press-item[href]:hover .p-title {
+    color: var(--accent-300);
+  }
+  @media (max-width: 760px) {
+    .press-item {
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        'date outlet'
+        'title arrow';
+      row-gap: 6px;
+    }
+  }
+</style>

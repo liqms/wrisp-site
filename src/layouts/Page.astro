@@ -21,6 +21,18 @@ const analyticsToken = (import.meta.env.PUBLIC_CF_WEB_ANALYTICS_TOKEN as string 
 const asset = (name: string) => new URL(`${import.meta.env.BASE_URL}assets/${name}`, Astro.url.origin).href;
 const ogImage = asset(key === 'zh' ? 'og-zh.png' : 'og-en.png');
 /*
+ * 图标是同站资源，按根相对发：跟着当前 origin 走，本地验证台不会去拉生产域的图标；
+ * 也正因为写成 `/...`，CI 的「站内绝对 href 必须落在 dist 里」那一步能顺带守住它们不变成死链。
+ */
+const sitePath = (path: string) => new URL(`${import.meta.env.BASE_URL}${path}`, Astro.url.origin).pathname;
+const icon = (name: string) => sitePath(`assets/${name}`);
+/*
+ * /favicon.ico 是浏览器自己的请求，不受 <link rel="icon"> 支配：标签页兜底、书签与部分爬虫
+ * 都会直接拿站点根上这个文件，缺一次就每次访问留一条 404。public/favicon.ico 是 16–256 的
+ * 多尺寸 ICO（与 logo 同源导出），head 里再声明它一次，浏览器与探测请求都落到同一张图上。
+ */
+const faviconIco = sitePath('favicon.ico');
+/*
  * 标题字体只子集到拉丁：unicode-range 里没有汉字，中文一律不触发下载，
  * 仍然走系统栈（§4.2 的硬约束）。这份文件是本仓自托管的静态资产，不发向任何内容网络，
  * 所以 /privacy 里「不向任何内容网络发请求」照旧成立——但「字体全用系统栈」那句不再成立，已同步改口径。
@@ -28,7 +40,7 @@ const ogImage = asset(key === 'zh' ? 'og-zh.png' : 'og-en.png');
  * 地址用根相对而不是绝对：字体是同站资源，跟着当前 origin 走才对——绝对地址在本地验证台上永远加载不到，
  * 换域名时也要重生成；og:image 那类才必须绝对（分享卡片要能被外部抓取）。
  */
-const displayFont = new URL(asset('newsreader-700-latin.woff2')).pathname;
+const displayFont = sitePath('assets/newsreader-700-latin.woff2');
 /*
  * 这段 @font-face 只能在这里发，不能放进 tokens.css：
  * Astro 的 <style is:inline> 原样输出不插值，所以字符串在此处拼好后用 set:html 注进去。
@@ -80,9 +92,10 @@ const alternates: { lang: string; href: string }[] = [
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <link rel="icon" type="image/svg+xml" href={asset("logo.svg")} />
-    <link rel="icon" type="image/png" sizes="512x512" href={asset("logo.png")} />
-    <link rel="apple-touch-icon" href={asset("logo.png")} />
+    <link rel="icon" href={faviconIco} sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href={icon("logo.svg")} />
+    <link rel="icon" type="image/png" sizes="512x512" href={icon("logo.png")} />
+    <link rel="apple-touch-icon" href={icon("logo.png")} />
     <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <style is:inline set:html={fontFace}></style>
     {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}

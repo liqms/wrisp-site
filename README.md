@@ -24,6 +24,7 @@ src/styles/       设计令牌与共享基元
 scripts/          构建期生成 sitemap/robots，并校验文案落地与英文页语言纯净度
 edge/             等待名单收集端（Worker + KV）与它的部署 runbook、冒烟验
 .env.example      等待名单收集端点的开关，含字段与响应码约定
+public/favicon.ico  站点根上的多尺寸图标（16–256）——浏览器/书签/爬虫对 /favicon.ico 的默认探测落在这里
 public/assets/    图标与社交分享卡片（og-zh.png / og-en.png，1200×630）
 ```
 
