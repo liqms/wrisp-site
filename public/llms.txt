@@ -1,0 +1,31 @@
+# Wrisp
+
+> Wrisp is a local-first writing assistant. You record your ideas in plain language or by voice; it files them into info cards automatically, and you call on those cards while writing to create content. Your data stays on your machine by default.
+
+## Introduction
+
+Wrisp is a local-first AI writing assistant currently in private beta. It turns spoken or typed notes into an organized journal and info cards, supports retrieval with sources, and keeps Markdown files as the source of truth. Recognition, organizing, embedding and Q&A run locally by default; cloud requests only go through the user's own API key.
+
+Key differentiators:
+- **Local-first**: data stays on your machine by default; the only outbound paths are listed on the privacy page.
+- **Markdown is the source of truth**: Wrisp points at your existing folder, no conversion or re-tagging; exports are those same files.
+- **Retrieval with sources**: asking a question returns an answer with the original entry cited.
+- **Free Community tier**: local models are free with no usage limit; cloud usage bills to your own key.
+
+## Key pages
+
+- [Home](https://www.trywrisp.com/): product overview and interactive demos (journal stream, Q&A)
+- [How it works](https://www.trywrisp.com/how-it-works/): data flow, local/cloud boundary, platform requirements, file format
+- [Changelog](https://www.trywrisp.com/changelog/): release history and what's next
+- [FAQ](https://www.trywrisp.com/#faq): data, capability and privacy questions
+- [Privacy & data](https://www.trywrisp.com/privacy/): every path that can leave your machine, listed row by row
+- 中文首页：https://www.trywrisp.com/zh/
+- 工作原理（中文）：https://www.trywrisp.com/zh/how-it-works/
+
+## Key facts
+
+- Platforms: Windows and macOS (Linux in the next stage)
+- No dedicated GPU required; local inference uses the CPU by default
+- Optional local models: about 4.4 GB for all three (roughly 5 GB memory for the largest at runtime); you can skip them and use a cloud key
+- Pricing: Community is free; AI usage runs on your own key (BYOK)
+- Status: private beta; a downloadable build will be announced on the site when ready
