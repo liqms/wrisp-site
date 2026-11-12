@@ -13,21 +13,57 @@ import { leafKey, loadCopy } from '@/lib/copy';
 const key = leafKey(Astro.currentLocale || '');
 const copy = await loadCopy(key);
 const meta = copy.meta;
+const faq = copy.faq;
+// FAQ 按编号键取问答，生成 FAQPage 的 mainEntity（与页面可见文本一致）。
+const faqItems = Object.keys(faq)
+  .filter((k) => /^\d+q$/.test(k))
+  .sort((a, b) => Number(a.slice(0, -1)) - Number(b.slice(0, -1)))
+  .map((k) => ({
+    '@type': 'Question',
+    name: faq[k],
+    acceptedAnswer: { '@type': 'Answer', text: faq[`${k.slice(0, -1)}a`] },
+  }));
 // 产品实体只在首页声明：辅助页描述的是口径，不是一个可下载的东西。
+// @graph 一次声明四个实体：Organization / WebSite / SoftwareApplication / FAQPage，
+// 让生成式引擎能解析品牌、站点与问答单元（GEO §3.3）。
 const jsonld = {
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Wrisp',
-  applicationCategory: 'ProductivityApplication',
-  operatingSystem: 'Windows, macOS',
-  url: Astro.url.href,
-  description: meta.jsonldDesc,
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    description: meta.jsonldOfferDesc,
-  },
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: 'Wrisp',
+      url: Astro.url.origin,
+      logo: new URL(`${import.meta.env.BASE_URL}assets/logo.png`, Astro.url.origin).href,
+      sameAs: ['https://github.com/liqms/wrisp-releases'],
+    },
+    {
+      '@type': 'WebSite',
+      url: Astro.url.origin,
+      inLanguage: key === 'zh' ? ['zh-CN'] : ['en'],
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Wrisp',
+      applicationCategory: 'ProductivityApplication',
+      operatingSystem: 'Windows, macOS',
+      url: Astro.url.href,
+      description: meta.jsonldDesc,
+      inLanguage: key === 'zh' ? ['zh-CN'] : ['en'],
+      isAccessibleForFree: true,
+      featureList: ['Voice and text capture', 'Journal stream', 'Info cards', 'Retrieval with sources', 'Creation Space', 'Templates and skills'],
+      softwareRequirements: 'Windows and macOS; runs without a dedicated GPU; optional local models, about 4.4 GB for all three.',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        description: meta.jsonldOfferDesc,
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqItems,
+    },
+  ],
 };
 ---
 

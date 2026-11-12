@@ -1,0 +1,65 @@
+{
+  "docTitle": {
+    "zh": "更新日志 — Wrisp",
+    "en": "Changelog — Wrisp"
+  },
+  "docDesc": {
+    "zh": "Wrisp 官网与产品的发布记录：站点上线、功能进展与后续安排。",
+    "en": "Release notes for the Wrisp site and product: launches, progress and what's next."
+  },
+  "eyebrow": {
+    "zh": "更新日志",
+    "en": "Changelog"
+  },
+  "title": {
+    "zh": "Wrisp 的更新记录",
+    "en": "What's new with Wrisp"
+  },
+  "sub": {
+    "zh": "站点与产品的发布进展都记在这里，可下载版本就绪时也会从这里公布。",
+    "en": "Site and product releases are recorded here; a downloadable build will be announced here when ready."
+  },
+  "hBack": {
+    "zh": "← 回到首页",
+    "en": "← Back to the site"
+  },
+  "entries": [
+    {
+      "date": "2026-11-12",
+      "title": {
+        "zh": "官网上线",
+        "en": "Site launch"
+      },
+      "items": [
+        {
+          "zh": "双语首页与隐私页上线（www.trywrisp.com）",
+          "en": "Bilingual home and privacy pages live at www.trywrisp.com"
+        },
+        {
+          "zh": "日志流与问答演示、产品特性区",
+          "en": "Journal & Q&A demos, and the product features section"
+        },
+        {
+          "zh": "邮箱收集端（Cloudflare Worker）",
+          "en": "Email collector (Cloudflare Worker)"
+        },
+        {
+          "zh": "Cloudflare Web Analytics 访问统计",
+          "en": "Cloudflare Web Analytics traffic stats"
+        },
+        {
+          "zh": "Google / Bing / 百度站长验证",
+          "en": "Google, Bing and Baidu webmaster verification"
+        },
+        {
+          "zh": "语言路由（Cookie 优先 + 语言头猜测）",
+          "en": "Language routing (cookie first, language header fallback)"
+        }
+      ]
+    }
+  ],
+  "next": {
+    "zh": "接下来：可下载版本就绪时，会在这里公布。",
+    "en": "Next: a downloadable build will be announced here when it's ready."
+  }
+}

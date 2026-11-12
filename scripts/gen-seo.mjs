@@ -60,8 +60,12 @@ const sitemap =
   body +
   '\n</urlset>\n';
 
+const AI_BOTS = ['GPTBot', 'PerplexityBot', 'ClaudeBot', 'CCBot', 'anthropic-ai', 'Baiduspider'];
+// robots.txt：显式放行主流 AI 爬虫（GEO 前提是能被抓取）；`*` 保持允许，不屏蔽任何爬虫。
 const robots =
-  'User-agent: *\nAllow: /\n\n' + `Sitemap: ${new URL('sitemap.xml', config.site).href}\n`;
+  'User-agent: *\nAllow: /\n\n' +
+  AI_BOTS.map((bot) => `User-agent: ${bot}\nAllow: /\n`).join('\n') +
+  `\nSitemap: ${new URL('sitemap.xml', config.site).href}\n`;
 
 await writeFile(`${DIST}/sitemap.xml`, sitemap, 'utf8');
 await writeFile(`${DIST}/robots.txt`, robots, 'utf8');

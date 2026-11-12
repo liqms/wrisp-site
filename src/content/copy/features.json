@@ -4,8 +4,8 @@
     "en": "Your memory is yours"
   },
   "sub": {
-    "zh": "本地存储，本地模型，本地计算",
-    "en": "Local storage, local models, local computing."
+    "zh": "Wrisp 在本地存储、用本地模型、做本地计算：你的记忆留在自己的设备上。",
+    "en": "Wrisp stores locally, computes locally and runs local models — your memory stays on your own device."
   },
   "1t": {
     "zh": "隐私优先",

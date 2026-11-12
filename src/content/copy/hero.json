@@ -8,8 +8,8 @@
     "en": "a creation assistant."
   },
   "sub": {
-    "zh": "随时记录你的想法，并自动整理成卡片；写作时随时调用，并基于卡片创作内容。",
-    "en": "Record your ideas anytime and have them automatically organized into cards. Call on them anytime while writing and create content based on the cards."
+    "zh": "Wrisp 是一个本地优先的创作助手：你用自然语言或语音记录想法，它会自动整理成信息卡片；写作时随时调用这些卡片来创作内容。",
+    "en": "Wrisp is a local-first writing assistant. Record your ideas in plain language or by voice; it files them into info cards automatically, and you call on those cards while writing to create content."
   },
   "cta1": {
     "zh": "加入内测",

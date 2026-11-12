@@ -1,0 +1,103 @@
+---
+import Page from '@/layouts/Page.astro';
+import SiteFooter from '@/components/blocks/SiteFooter.astro';
+import LangSwitch from '@/components/LangSwitch.astro';
+import { leafKey, loadCopy } from '@/lib/copy';
+import { localePath } from '@/lib/locales';
+
+const key = leafKey(Astro.currentLocale || '');
+const copy = await loadCopy(key);
+const log = copy.changelog;
+const home = localePath(key);
+---
+
+<Page title={log.docTitle} description={log.docDesc} ogLocale={copy.meta.ogLocale}>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href={home}><span class="dot">◆</span>Wrisp</a>
+      <div class="nav-spacer"></div>
+      <LangSwitch seg="changelog/" />
+      <a class="btn btn-primary btn-sm nowrap" href={`${home}#next`}>{copy.nav.cta}</a>
+    </div>
+  </header>
+
+  <main class="doc">
+    <div class="wrap">
+      <a class="back mono" href={home}>{log.hBack}</a>
+      <div class="eyebrow">{log.eyebrow}</div>
+      <h1 class="h-title">{log.title}</h1>
+      <p class="lead">{log.sub}</p>
+
+      <div class="log-list">
+        {
+          log.entries.map((entry: any) => (
+            <article class="log-entry">
+              <h2 class="log-date mono">{entry.date}</h2>
+              <h3 class="log-title">{entry.title}</h3>
+              <ul>
+                {entry.items.map((item: any) => <li>{item}</li>)}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="log-next mono">{log.next}</p>
+    </div>
+  </main>
+
+  <SiteFooter copy={copy} />
+</Page>
+
+<style>
+  .doc {
+    padding-block: 56px 96px;
+  }
+  .back {
+    display: inline-block;
+    font-size: 12.5px;
+    color: var(--text-3);
+    margin-bottom: 34px;
+  }
+  .back:hover {
+    color: var(--accent-300);
+  }
+  .doc h1 {
+    margin-top: 14px;
+    max-width: 900px;
+  }
+  .log-list {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .log-entry {
+    border-left: 2px solid var(--hair-2);
+    padding-left: 20px;
+  }
+  .log-date {
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .log-title {
+    margin-top: 6px;
+    font-size: 20px;
+  }
+  .log-entry ul {
+    margin: 12px 0 0;
+    padding-left: 18px;
+    font-size: 14.5px;
+    color: var(--text-2);
+  }
+  .log-entry li {
+    margin-bottom: 6px;
+  }
+  .log-next {
+    margin-top: 48px;
+    font-size: 12px;
+    color: var(--text-3);
+  }
+</style>

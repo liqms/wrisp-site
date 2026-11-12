@@ -14,5 +14,9 @@
   "privacy": {
     "zh": "隐私与数据声明",
     "en": "Privacy & data"
+  },
+  "changelog": {
+    "zh": "更新日志",
+    "en": "Changelog"
   }
 }
