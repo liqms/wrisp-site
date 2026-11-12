@@ -80,13 +80,13 @@ jobs:
               exit 1
             done < <(grep -o 'href="/[^"#]*' "$page" | sed 's|href="/||' | sort -u)
           done
-          # 自托管子集只许 Newsreader 700 这一份：四个页面各发一次、规则只许一条、来源必须是站内 /assets。
+          # 自托管子集只许 Newsreader 700 这一份：每个页面各发一次、规则只许一条、来源必须是站内 /assets。
           # 两个 grep 在无匹配时退出 1；这一步开着 pipefail，所以显式 || true，
           # 让下面的条数断言去报错，而不是整步静默中止。
           faces=$(grep -rho '@font-face[[:space:]]*{[^}]*}' dist --include='*.html' | sort -u || true)
           n=$(grep -rl '@font-face' dist --include='*.html' | wc -l || true)
-          if [[ "$n" -ne 4 ]]; then
-            echo "::error::@font-face found in $n html pages, expected exactly 4: $(grep -rl '@font-face' dist --include='*.html' | tr '\n' ' ' || true)"; exit 1; fi
+          if [[ "$n" -ne "${#pages[@]}" ]]; then
+            echo "::error::@font-face found in $n html pages, expected all ${#pages[@]}: $(grep -rl '@font-face' dist --include='*.html' | tr '\n' ' ' || true)"; exit 1; fi
           if [[ -z "$faces" ]]; then
             echo "::error::html carries @font-face but the rule shape matched nothing - output format changed, update this guard"; exit 1; fi
           if [[ $(printf '%s\n' "$faces" | wc -l) -ne 1 ]]; then
