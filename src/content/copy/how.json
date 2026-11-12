@@ -1,0 +1,72 @@
+{
+  "docTitle": {
+    "zh": "工作原理 — Wrisp",
+    "en": "How it works — Wrisp"
+  },
+  "docDesc": {
+    "zh": "Wrisp 的工作原理：记录如何变成信息卡片，哪些在本机、哪些走云端，平台要求与文件格式。",
+    "en": "How Wrisp works: how entries become info cards, what stays local versus cloud, platform requirements and file format."
+  },
+  "eyebrow": {
+    "zh": "工作原理",
+    "en": "How it works"
+  },
+  "title": {
+    "zh": "Wrisp 怎么工作",
+    "en": "How Wrisp works"
+  },
+  "sub": {
+    "zh": "从记录到可用的知识，四步都在本机完成。",
+    "en": "From notes to usable knowledge — all four steps run on your machine."
+  },
+  "hBack": {
+    "zh": "← 回到首页",
+    "en": "← Back to the site"
+  },
+  "sections": [
+    {
+      "t": {
+        "zh": "一条记录怎么变成你的知识",
+        "en": "How an entry becomes your knowledge"
+      },
+      "b": {
+        "zh": "先说一句或写一段，Wrisp 自动识别类型（待办、会议纪要、决策等），进入当日日志流，再整理成信息卡片。写东西时，这些卡片随时可以调出来；问一个问题，答案会带着原记录的出处回来。",
+        "en": "Say or type a line and Wrisp identifies its type (todo, meeting notes, decision and so on), drops it into the day's journal, then files it as an info card. While writing you can pull those cards up anytime; ask a question and the answer comes back with the source entry."
+      }
+    },
+    {
+      "t": {
+        "zh": "哪些在本机，哪些走云端",
+        "en": "What stays local and what goes to the cloud"
+      },
+      "b": {
+        "zh": "识别、整理、嵌入和问答默认都在本机完成。只有你在设置里填入自己的云端 Key 并主动发起请求时，那次请求的内容才会通过你的账户发送。隐私页逐条列出了会离开本机的路径。",
+        "en": "Recognition, organizing, embedding and Q&A run locally by default. Only when you add your own cloud key in Settings and make a request does that request's content travel through your account. The privacy page lists every outbound path."
+      }
+    },
+    {
+      "t": {
+        "zh": "平台与运行要求",
+        "en": "Platform and requirements"
+      },
+      "b": {
+        "zh": "Wrisp 支持 Windows 与 macOS（Linux 在下一阶段）。不需要独立显卡，本地推理默认使用 CPU；本地模型可选，三个共约 4.4 GB，全部不下载也能用云端 Key。",
+        "en": "Wrisp runs on Windows and macOS (Linux is next). No dedicated GPU is required — local inference uses the CPU by default. The three local models total about 4.4 GB and are all optional; skip them and use a cloud key."
+      }
+    },
+    {
+      "t": {
+        "zh": "文件还是你的 Markdown",
+        "en": "The files are still your Markdown"
+      },
+      "b": {
+        "zh": "Markdown 是文件真源：Wrisp 直接指向你的现有目录，不转格式、不重打标。数据库与索引是可重建的派生数据，想走的时候，导出还是这些 Markdown。",
+        "en": "Markdown is the source of truth: Wrisp points at your existing folder with no conversion or re-tagging. The database and indexes are rebuildable derived data — if you leave, the export is still those Markdown files."
+      }
+    }
+  ],
+  "note": {
+    "zh": "内测阶段，能力以最新发布版本为准。",
+    "en": "Private beta — capabilities follow the latest release."
+  }
+}

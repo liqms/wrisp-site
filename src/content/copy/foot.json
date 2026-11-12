@@ -18,5 +18,9 @@
   "changelog": {
     "zh": "更新日志",
     "en": "Changelog"
+  },
+  "how": {
+    "zh": "工作原理",
+    "en": "How it works"
   }
 }

@@ -54,6 +54,10 @@
         {
           "zh": "语言路由（Cookie 优先 + 语言头猜测）",
           "en": "Language routing (cookie first, language header fallback)"
+        },
+        {
+          "zh": "工作原理页与 FAQ 对比问题",
+          "en": "How-it-works page and comparison FAQs"
         }
       ]
     }

@@ -32,26 +32,34 @@
     "en": "Generic AI starts from a blank page and waits for your material. Wrisp starts from the journal, pulls them up while you write, and traces an answer back to its entry. It isn't a cloud notebook either: the Markdown lives in your folder, and recognition, organizing and retrieval run locally by default."
   },
   "4q": {
+    "zh": "Wrisp 和 Obsidian 这类本地笔记应用有什么不同？",
+    "en": "How is Wrisp different from local note apps like Obsidian?"
+  },
+  "4a": {
+    "zh": "Obsidian 擅长组织和链接 Markdown 笔记，但整理和检索要靠你自己。Wrisp 以同样的 Markdown 文件为真源，额外帮你自动识别类型、整理成卡片、回答问题时带出处——笔记还是你的，整理交给了 AI。",
+    "en": "Obsidian is great at organizing and linking Markdown notes, but the filing and retrieval are on you. Wrisp treats the same Markdown files as the source of truth and additionally auto-detects types, files entries into cards, and answers questions with sources — the notes stay yours, the organizing goes to AI."
+  },
+  "5q": {
     "zh": "我现有的笔记怎么办？",
     "en": "What about the notes I already have?"
   },
-  "4a": {
+  "5a": {
     "zh": "你可以快速导入你的笔记到 Wrisp。",
     "en": "You can quickly import your notes to Wrisp."
   },
-  "5q": {
+  "6q": {
     "zh": "我的电脑跑得动吗？",
     "en": "Will my machine run it?"
   },
-  "5a": {
+  "6a": {
     "zh": "不需要独立显卡。本地推理默认使用 CPU；兼容显卡可在设置中开启加速，显存不足自动回退。三个本地模型共约 4.4 GB，生成模型运行时约需 5 GB 内存；全部可选，不下载也能使用云端 Key。",
     "en": "No. Local inference uses the CPU by default; a supported GPU can be enabled in Settings, and low VRAM falls back automatically. The three local models total about 4.4 GB, with roughly 5 GB of memory for the largest at runtime. All are optional — skip them and use your own cloud key."
   },
-  "6q": {
+  "7q": {
     "zh": "支持哪些平台？",
     "en": "Which platforms are supported?"
   },
-  "6a": {
+  "7a": {
     "zh": "Windows 与 macOS。Linux 在下一阶段。内测包就绪时会在这里公布。",
     "en": "Windows and macOS. Linux is next. We'll say so here when a beta build is ready."
   }

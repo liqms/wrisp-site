@@ -1,0 +1,87 @@
+---
+import Page from '@/layouts/Page.astro';
+import SiteFooter from '@/components/blocks/SiteFooter.astro';
+import LangSwitch from '@/components/LangSwitch.astro';
+import { leafKey, loadCopy } from '@/lib/copy';
+import { localePath } from '@/lib/locales';
+
+const key = leafKey(Astro.currentLocale || '');
+const copy = await loadCopy(key);
+const how = copy.how;
+const home = localePath(key);
+---
+
+<Page title={how.docTitle} description={how.docDesc} ogLocale={copy.meta.ogLocale}>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href={home}><span class="dot">◆</span>Wrisp</a>
+      <div class="nav-spacer"></div>
+      <LangSwitch seg="how-it-works/" />
+      <a class="btn btn-primary btn-sm nowrap" href={`${home}#next`}>{copy.nav.cta}</a>
+    </div>
+  </header>
+
+  <main class="doc">
+    <div class="wrap">
+      <a class="back mono" href={home}>{how.hBack}</a>
+      <div class="eyebrow">{how.eyebrow}</div>
+      <h1 class="h-title">{how.title}</h1>
+      <p class="lead">{how.sub}</p>
+
+      <div class="how-sections">
+        {
+          how.sections.map((sec: any) => (
+            <section class="how-sec">
+              <h2>{sec.t}</h2>
+              <p>{sec.b}</p>
+            </section>
+          ))
+        }
+      </div>
+
+      <p class="how-note mono">{how.note}</p>
+    </div>
+  </main>
+
+  <SiteFooter copy={copy} />
+</Page>
+
+<style>
+  .doc {
+    padding-block: 56px 96px;
+  }
+  .back {
+    display: inline-block;
+    font-size: 12.5px;
+    color: var(--text-3);
+    margin-bottom: 34px;
+  }
+  .back:hover {
+    color: var(--accent-300);
+  }
+  .doc h1 {
+    margin-top: 14px;
+    max-width: 900px;
+  }
+  .how-sections {
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+  }
+  .how-sec h2 {
+    font-size: 20px;
+  }
+  .how-sec p {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-2);
+    max-width: 760px;
+  }
+  .how-note {
+    margin-top: 52px;
+    font-size: 11.5px;
+    color: var(--text-3);
+  }
+</style>
