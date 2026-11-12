@@ -10,12 +10,15 @@ const { copy } = Astro.props;
 const foot = copy.foot;
 const here = leafKey(Astro.currentLocale || '');
 const releases = 'https://github.com/liqms/wrisp-releases';
+// 最后更新日期取自 changelog 最新条目，与发布记录同源，不会各说一套。
+const latestDate = copy.changelog?.entries?.[0]?.date;
 ---
 
 <footer>
   <div class="foot-inner">
     <span class="foot-brand">◆ Wrisp</span>
     <span>{foot.copy}</span>
+    {latestDate && <span class="foot-updated">{foot.lastUpdated} {latestDate}</span>}
     <div class="foot-links">
       <a href={releases} target="_blank" rel="noopener">{foot.releases}</a>
       <a href={`${releases}/issues`} target="_blank" rel="noopener">{foot.feedback}</a>
@@ -58,5 +61,9 @@ const releases = 'https://github.com/liqms/wrisp-releases';
     font-weight: 600;
     color: var(--text-1);
     white-space: nowrap;
+  }
+  .foot-updated {
+    font-family: var(--mono);
+    font-size: 11.5px;
   }
 </style>
