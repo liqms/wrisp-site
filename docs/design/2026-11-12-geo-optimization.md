@@ -100,15 +100,15 @@ Allow: /
 
 保留现有 `User-agent: *` 与 `Sitemap:` 行。注意：**不屏蔽任何爬虫**——GEO 的前提是被抓取；屏蔽 AI 爬虫会直接出局。
 
-### 3.2 语言跳转排除 AI 爬虫 UA
+### 3.2 语言跳转排除 SEO 与 AI 爬虫 UA
 
-Cloudflare Redirect Rules 规则 3（语言头猜测）追加「非 AI 爬虫」条件（免费计划用 `contains`，`matches` 不可用）：
+Cloudflare Redirect Rules 规则 3（语言头猜测）追加「非爬虫」条件（免费计划用 `contains`，`matches` 不可用）。SEO 与 AI 爬虫**一起排除**——它们抓 `/` 时若语言头含 zh 会被 302 误导，影响收录与 AI 引用；规则只能合并（Redirect Rules 没有「跳过」动作）：
 
 ```
-(http.request.uri.path eq "/") and (not http.request.headers["cookie"][0] contains "wrisp_lang") and (http.request.headers["accept-language"][0] contains "zh") and (not http.request.headers["user-agent"] contains "GPTBot") and (not http.request.headers["user-agent"] contains "PerplexityBot") and (not http.request.headers["user-agent"] contains "ClaudeBot") and (not http.request.headers["user-agent"] contains "Baiduspider")
+(http.request.uri.path eq "/") and (not http.request.headers["cookie"][0] contains "wrisp_lang") and (http.request.headers["accept-language"][0] contains "zh") and (not http.request.headers["user-agent"] contains "Googlebot") and (not http.request.headers["user-agent"] contains "Bingbot") and (not http.request.headers["user-agent"] contains "Baiduspider") and (not http.request.headers["user-agent"] contains "YandexBot") and (not http.request.headers["user-agent"] contains "DuckDuckBot") and (not http.request.headers["user-agent"] contains "GPTBot") and (not http.request.headers["user-agent"] contains "ChatGPT-User") and (not http.request.headers["user-agent"] contains "PerplexityBot") and (not http.request.headers["user-agent"] contains "ClaudeBot") and (not http.request.headers["user-agent"] contains "CCBot") and (not http.request.headers["user-agent"] contains "Google-Extended") and (not http.request.headers["user-agent"] contains "Bytespider")
 ```
 
-效果：AI 爬虫抓 `/` 恒 200，不会因语言头被 302 误导；真人行为不变。
+效果：SEO 与 AI 爬虫抓 `/` 恒 200，不因语言头被 302 误导；真人行为不变。
 
 ### 3.3 JSON-LD 扩展
 
